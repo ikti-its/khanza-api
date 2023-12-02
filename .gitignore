@@ -1,0 +1,11 @@
+# Environment variables
+.env
+
+# Storage files
+resource/*
+
+# Keep empty directories
+!.gitkeep
+
+# GoLand
+.idea/
