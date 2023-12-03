@@ -4,6 +4,9 @@
 # Storage files
 resource/*
 
+# Seeder
+core/database/seed/*
+
 # Keep empty directories
 !.gitkeep
 

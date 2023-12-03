@@ -1,0 +1,4706 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SIMKES RESTful API",
+    "description": "API Specification for SIMKES RESTful API",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://dev.fathoor.cloud/api",
+        "description": "Development"
+    }
+  ],
+  "paths": {
+    "/auth": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login",
+        "description": "Login to get access token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 20,
+                    "example": "admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+                        },
+                        "type": {
+                          "type": "string",
+                          "example": "Bearer"
+                        },
+                        "expired": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Bad Request"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": "Username or password is incorrect"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/akun": {
+      "get": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Get all akun",
+        "description": "Get all akun",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "example": "admin"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "admin@fathoor.cloud"
+                          },
+                          "role": {
+                            "type": "string",
+                            "example": "Admin"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Create akun",
+        "description": "Create akun",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "admin@fathoor.cloud"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 20,
+                    "example": "password"
+                  },
+                  "role": {
+                    "type": "integer",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/akun/detail/{nip}": {
+      "get": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Get akun by NIP",
+        "description": "Get akun by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "path",
+            "description": "NIP of akun",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@fathoor.cloud"
+                        },
+                        "role": {
+                          "type": "string",
+                          "example": "Admin"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Update akun by NIP",
+        "description": "Update akun by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "path",
+            "description": "NIP of akun",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "admin@fathoor.cloud"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 20,
+                    "example": "password"
+                  },
+                  "role": {
+                    "type": "integer",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@fathoor.cloud"
+                        },
+                        "role": {
+                          "type": "integer",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Delete akun by NIP",
+        "description": "Delete akun by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "path",
+            "description": "NIP of akun",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/akun/role": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Get all role",
+        "description": "Get all role",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "role": {
+                            "type": "string",
+                            "maxLength": 20,
+                            "example": "Admin"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Create role",
+        "description": "Create role",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "Admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/akun/role/{id}": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Get role by ID",
+        "description": "Get role by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of role",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "role": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "Admin"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Update role by ID",
+        "description": "Update role by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of role",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "Admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "role": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "Admin"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Role"
+        ],
+        "summary": "Delete role by ID",
+        "description": "Delete role by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of role",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/view/{filename}": {
+      "get": {
+        "tags": [
+          "File"
+        ],
+        "summary": "Get file preview",
+        "description": "Get file preview",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "Filename of file",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "default"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/upload": {
+      "post": {
+        "tags": [
+          "File"
+        ],
+        "summary": "Upload file",
+        "description": "Upload file",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": "/resource/default.png"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pegawai": {
+      "get": {
+        "tags": [
+          "Pegawai"
+        ],
+        "summary": "Get all pegawai",
+        "description": "Get all pegawai",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "nik": {
+                            "type": "string",
+                            "maxLength": 20,
+                            "example": "3501010101010001"
+                          },
+                          "nama": {
+                            "type": "string",
+                            "maxLength": 50,
+                            "example": "Nama Admin"
+                          },
+                          "jenis_kelamin": {
+                            "type": "string",
+                            "maxLength": 1,
+                            "example": "L"
+                          },
+                          "jabatan_id": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Admin"
+                          },
+                          "departemen_id": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "IT"
+                          },
+                          "status_kerja": {
+                            "type": "string",
+                            "maxLength": 20,
+                            "example": "Tetap"
+                          },
+                          "pendidikan": {
+                            "type": "string",
+                            "maxLength": 25,
+                            "example": "S1"
+                          },
+                          "tempat_lahir": {
+                            "type": "string",
+                            "maxLength": 20,
+                            "example": "Jakarta"
+                          },
+                          "tanggal_lahir": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "alamat": {
+                            "type": "string",
+                            "example": "Kampus ITS Surabaya"
+                          },
+                          "alamat_lat": {
+                            "type": "string",
+                            "example": "7.2575"
+                          },
+                          "alamat_lon": {
+                            "type": "string",
+                            "example": "112.7521"
+                          },
+                          "no_telepon": {
+                            "type": "string",
+                            "maxLength": 15,
+                            "example": "081234567890"
+                          },
+                          "tanggal_masuk": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "foto": {
+                            "type": "string",
+                            "example": "/resource/default.png"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Pegawai"
+        ],
+        "summary": "Create pegawai",
+        "description": "Create pegawai",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "nik": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "3501010101010001"
+                  },
+                  "nama": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "Nama Admin"
+                  },
+                  "jenis_kelamin": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "example": "L"
+                  },
+                  "jabatan_id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Admin"
+                  },
+                  "departemen_id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "IT"
+                  },
+                  "status_kerja": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "Tetap"
+                  },
+                  "pendidikan": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "example": "S1"
+                  },
+                  "tempat_lahir": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "Jakarta"
+                  },
+                  "tanggal_lahir": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "alamat": {
+                    "type": "string",
+                    "example": "Kampus ITS Surabaya"
+                  },
+                  "alamat_lat": {
+                    "type": "string",
+                    "example": "7.2575"
+                  },
+                  "alamat_lon": {
+                    "type": "string",
+                    "example": "112.7521"
+                  },
+                  "no_telepon": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "example": "081234567890"
+                  },
+                  "tanggal_masuk": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "foto": {
+                    "type": "string",
+                    "example": "/resource/default.png"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "example": "2023-12-01 00:00:00+07"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "example": "2023-12-01 00:00:00+07"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pegawai/detail/{nip}": {
+      "get": {
+        "tags": [
+          "Pegawai"
+        ],
+        "summary": "Get pegawai by NIP",
+        "description": "Get pegawai by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "path",
+            "description": "NIP of pegawai",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "maxLength": 5,
+                          "example": "admin"
+                        },
+                        "nik": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "3501010101010001"
+                        },
+                        "nama": {
+                          "type": "string",
+                          "maxLength": 50,
+                          "example": "Nama Admin"
+                        },
+                        "jenis_kelamin": {
+                          "type": "string",
+                          "maxLength": 1,
+                          "example": "L"
+                        },
+                        "jabatan_id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Admin"
+                        },
+                        "departemen_id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "IT"
+                        },
+                        "status_kerja": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "Tetap"
+                        },
+                        "pendidikan": {
+                          "type": "string",
+                          "maxLength": 25,
+                          "example": "S1"
+                        },
+                        "tempat_lahir": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "Jakarta"
+                        },
+                        "tanggal_lahir": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "alamat": {
+                          "type": "string",
+                          "example": "Kampus ITS Surabaya"
+                        },
+                        "alamat_lat": {
+                          "type": "string",
+                          "example": "7.2575"
+                        },
+                        "alamat_lon": {
+                          "type": "string",
+                          "example": "112.7521"
+                        },
+                        "no_telepon": {
+                          "type": "string",
+                          "maxLength": 15,
+                          "example": "081234567890"
+                        },
+                        "tanggal_masuk": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "foto": {
+                          "type": "string",
+                          "example": "/resource/default.png"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pegawai"
+        ],
+        "summary": "Update pegawai by NIP",
+        "description": "Update pegawai by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "path",
+            "description": "NIP of pegawai",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "nik": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "3501010101010001"
+                  },
+                  "nama": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "Nama Admin"
+                  },
+                  "jenis_kelamin": {
+                    "type": "string",
+                    "maxLength": 1,
+                    "example": "L"
+                  },
+                  "jabatan_id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Admin"
+                  },
+                  "departemen_id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "IT"
+                  },
+                  "status_kerja": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "Tetap"
+                  },
+                  "pendidikan": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "example": "S1"
+                  },
+                  "tempat_lahir": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "example": "Jakarta"
+                  },
+                  "tanggal_lahir": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "alamat": {
+                    "type": "string",
+                    "example": "Kampus ITS Surabaya"
+                  },
+                  "alamat_lat": {
+                    "type": "string",
+                    "example": "7.2575"
+                  },
+                  "alamat_lon": {
+                    "type": "string",
+                    "example": "112.7521"
+                  },
+                  "no_telepon": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "example": "081234567890"
+                  },
+                  "tanggal_masuk": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "foto": {
+                    "type": "string",
+                    "example": "/resource/default.png"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "example": "2023-12-01 00:00:00+07"
+                  },
+                  "updated_at": {
+                    "type": "string",
+                    "example": "2023-12-01 00:00:00+07"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "maxLength": 5,
+                          "example": "admin"
+                        },
+                        "nik": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "3501010101010001"
+                        },
+                        "nama": {
+                          "type": "string",
+                          "maxLength": 50,
+                          "example": "Nama Admin"
+                        },
+                        "jenis_kelamin": {
+                          "type": "string",
+                          "maxLength": 1,
+                          "example": "L"
+                        },
+                        "jabatan_id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Admin"
+                        },
+                        "departemen_id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "IT"
+                        },
+                        "status_kerja": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "Tetap"
+                        },
+                        "pendidikan": {
+                          "type": "string",
+                          "maxLength": 25,
+                          "example": "S1"
+                        },
+                        "tempat_lahir": {
+                          "type": "string",
+                          "maxLength": 20,
+                          "example": "Jakarta"
+                        },
+                        "tanggal_lahir": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "alamat": {
+                          "type": "string",
+                          "example": "Kampus ITS Surabaya"
+                        },
+                        "alamat_lat": {
+                          "type": "string",
+                          "example": "7.2575"
+                        },
+                        "alamat_lon": {
+                          "type": "string",
+                          "example": "112.7521"
+                        },
+                        "no_telepon": {
+                          "type": "string",
+                          "maxLength": 15,
+                          "example": "081234567890"
+                        },
+                        "tanggal_masuk": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "foto": {
+                          "type": "string",
+                          "example": "/resource/default.png"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pegawai"
+        ],
+        "summary": "Delete pegawai by NIP",
+        "description": "Delete pegawai by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "path",
+            "description": "NIP of pegawai",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pegawai/jabatan": {
+      "get": {
+        "tags": [
+          "Jabatan"
+        ],
+        "summary": "Get all jabatan",
+        "description": "Get all jabatan",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "ADMIN"
+                          },
+                          "jabatan": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Admin"
+                          },
+                          "jenjang": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Staff"
+                          },
+                          "gaji_pokok": {
+                            "type": "integer",
+                            "example": 10000000
+                          },
+                          "tunjangan": {
+                            "type": "integer",
+                            "example": 1000000
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Jabatan"
+        ],
+        "summary": "Create jabatan",
+        "description": "Create jabatan",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "ADMIN"
+                  },
+                  "jabatan": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Admin"
+                  },
+                  "jenjang": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Staff"
+                  },
+                  "gaji_pokok": {
+                    "type": "integer",
+                    "example": 10000000
+                  },
+                  "tunjangan": {
+                    "type": "integer",
+                    "example": 1000000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pegawai/jabatan/{id}": {
+      "get": {
+        "tags": [
+          "Jabatan"
+        ],
+        "summary": "Get jabatan by ID",
+        "description": "Get jabatan by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of jabatan",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "example": "ADMIN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "ADMIN"
+                        },
+                        "jabatan": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Admin"
+                        },
+                        "jenjang": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Staff"
+                        },
+                        "gaji_pokok": {
+                          "type": "integer",
+                          "example": 10000000
+                        },
+                        "tunjangan": {
+                          "type": "integer",
+                          "example": 1000000
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Jabatan"
+        ],
+        "summary": "Update jabatan by ID",
+        "description": "Update jabatan by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of jabatan",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "example": "ADMIN"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "ADMIN"
+                  },
+                  "jabatan": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Admin"
+                  },
+                  "jenjang": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Staff"
+                  },
+                  "gaji_pokok": {
+                    "type": "integer",
+                    "example": 10000000
+                  },
+                  "tunjangan": {
+                    "type": "integer",
+                    "example": 1000000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "ADMIN"
+                        },
+                        "jabatan": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Admin"
+                        },
+                        "jenjang": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Staff"
+                        },
+                        "gaji_pokok": {
+                          "type": "integer",
+                          "example": 10000000
+                        },
+                        "tunjangan": {
+                          "type": "integer",
+                          "example": 1000000
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Jabatan"
+        ],
+        "summary": "Delete jabatan by ID",
+        "description": "Delete jabatan by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of jabatan",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "example": "ADMIN"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pegawai/departemen": {
+      "get": {
+        "tags": [
+          "Departemen"
+        ],
+        "summary": "Get all departemen",
+        "description": "Get all departemen",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "IT"
+                          },
+                          "departemen": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "IT"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Departemen"
+        ],
+        "summary": "Create departemen",
+        "description": "Create departemen",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "IT"
+                  },
+                  "departemen": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "IT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pegawai/departemen/{id}": {
+      "get": {
+        "tags": [
+          "Departemen"
+        ],
+        "summary": "Get departemen by ID",
+        "description": "Get departemen by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of departemen",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "example": "IT"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "IT"
+                        },
+                        "departemen": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "IT"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Departemen"
+        ],
+        "summary": "Update departemen by ID",
+        "description": "Update departemen by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of departemen",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "example": "IT"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "IT"
+                  },
+                  "departemen": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "IT"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "IT"
+                        },
+                        "departemen": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "IT"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Departemen"
+        ],
+        "summary": "Delete departemen by ID",
+        "description": "Delete departemen by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of departemen",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 10,
+              "example": "IT"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran": {
+      "get": {
+        "tags": [
+          "Kehadiran"
+        ],
+        "summary": "Get all kehadiran",
+        "description": "Get all kehadiran",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tanggal",
+            "in": "query",
+            "description": "Tanggal of kehadiran",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2023-12-01"
+            }
+          },
+          {
+            "name": "tahun",
+            "in": "query",
+            "description": "Tahun of kehadiran",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2023"
+            }
+          },
+          {
+            "name": "bulan",
+            "in": "query",
+            "description": "Bulan of kehadiran",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "tanggal": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "tahun": {
+                            "type": "string",
+                            "example": "2023"
+                          },
+                          "bulan": {
+                            "type": "string",
+                            "example": "12"
+                          },
+                          "shift": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Pagi"
+                          },
+                          "jam_masuk": {
+                            "type": "string",
+                            "example": "07:00:00"
+                          },
+                          "jam_keluar": {
+                            "type": "string",
+                            "example": "15:00:00"
+                          },
+                          "keterangan": {
+                            "type": "string",
+                            "maxLength": 25,
+                            "example": "Hadir"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Kehadiran"
+        ],
+        "summary": "Create kehadiran",
+        "description": "Create kehadiran",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "tanggal": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "tahun": {
+                    "type": "string",
+                    "example": "2023"
+                  },
+                  "bulan": {
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "shift": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Pagi"
+                  },
+                  "jam_masuk": {
+                    "type": "string",
+                    "example": "07:00:00"
+                  },
+                  "jam_keluar": {
+                    "type": "string",
+                    "example": "15:00:00"
+                  },
+                  "keterangan": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "example": "Hadir"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/detail/{nip}": {
+      "get": {
+        "tags": [
+          "Kehadiran"
+        ],
+        "summary": "Get kehadiran by NIP",
+        "description": "Get kehadiran by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tanggal",
+            "in": "query",
+            "description": "Tanggal of kehadiran",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2023-12-01"
+            }
+          },
+          {
+            "name": "tahun",
+            "in": "query",
+            "description": "Tahun of kehadiran",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2023"
+            }
+          },
+          {
+            "name": "bulan",
+            "in": "query",
+            "description": "Bulan of kehadiran",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "tanggal": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "tahun": {
+                            "type": "string",
+                            "example": "2023"
+                          },
+                          "bulan": {
+                            "type": "string",
+                            "example": "12"
+                          },
+                          "shift": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Pagi"
+                          },
+                          "jam_masuk": {
+                            "type": "string",
+                            "example": "07:00:00"
+                          },
+                          "jam_keluar": {
+                            "type": "string",
+                            "example": "15:00:00"
+                          },
+                          "keterangan": {
+                            "type": "string",
+                            "maxLength": 25,
+                            "example": "Hadir"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Kehadiran"
+        ],
+        "summary": "Update kehadiran by NIP",
+        "description": "Update kehadiran by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "tanggal": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "tahun": {
+                    "type": "string",
+                    "example": "2023"
+                  },
+                  "bulan": {
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "shift": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Pagi"
+                  },
+                  "jam_masuk": {
+                    "type": "string",
+                    "example": "07:00:00"
+                  },
+                  "jam_keluar": {
+                    "type": "string",
+                    "example": "15:00:00"
+                  },
+                  "keterangan": {
+                    "type": "string",
+                    "maxLength": 25,
+                    "example": "Hadir"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "maxLength": 5,
+                          "example": "admin"
+                        },
+                        "tanggal": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "tahun": {
+                          "type": "string",
+                          "example": "2023"
+                        },
+                        "bulan": {
+                          "type": "string",
+                          "example": "12"
+                        },
+                        "shift": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Pagi"
+                        },
+                        "jam_masuk": {
+                          "type": "string",
+                          "example": "07:00:00"
+                        },
+                        "jam_keluar": {
+                          "type": "string",
+                          "example": "15:00:00"
+                        },
+                        "keterangan": {
+                          "type": "string",
+                          "maxLength": 25,
+                          "example": "Hadir"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Kehadiran"
+        ],
+        "summary": "Delete kehadiran by NIP",
+        "description": "Delete kehadiran by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/jadwal": {
+      "get": {
+        "tags": [
+          "Jadwal Pegawai"
+        ],
+        "summary": "Get all jadwal",
+        "description": "Get all jadwal",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tahun",
+            "in": "query",
+            "description": "Tahun of jadwal",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2023"
+            }
+          },
+          {
+            "name": "bulan",
+            "in": "query",
+            "description": "Bulan of jadwal",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "tahun": {
+                            "type": "string",
+                            "example": "2023"
+                          },
+                          "bulan": {
+                            "type": "string",
+                            "example": "12"
+                          },
+                          "hari": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "shift": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Pagi"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Jadwal Pegawai"
+        ],
+        "summary": "Create jadwal",
+        "description": "Create jadwal",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "tahun": {
+                    "type": "string",
+                    "example": "2023"
+                  },
+                  "bulan": {
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "hari": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "shift": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Pagi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/jadwal/{nip}": {
+      "get": {
+        "tags": [
+          "Jadwal Pegawai"
+        ],
+        "summary": "Get jadwal by NIP",
+        "description": "Get jadwal by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tahun",
+            "in": "query",
+            "description": "Tahun of jadwal",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "2023"
+            }
+          },
+          {
+            "name": "bulan",
+            "in": "query",
+            "description": "Bulan of jadwal",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "12"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "tahun": {
+                            "type": "string",
+                            "example": "2023"
+                          },
+                          "bulan": {
+                            "type": "string",
+                            "example": "12"
+                          },
+                          "hari": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "shift": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Pagi"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Jadwal Pegawai"
+        ],
+        "summary": "Update jadwal by NIP",
+        "description": "Update jadwal by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "tahun": {
+                    "type": "string",
+                    "example": "2023"
+                  },
+                  "bulan": {
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "hari": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "shift": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Pagi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "maxLength": 5,
+                          "example": "admin"
+                        },
+                        "tahun": {
+                          "type": "string",
+                          "example": "2023"
+                        },
+                        "bulan": {
+                          "type": "string",
+                          "example": "12"
+                        },
+                        "hari": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "shift": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Pagi"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Jadwal Pegawai"
+        ],
+        "summary": "Delete jadwal by NIP",
+        "description": "Delete jadwal by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/shift": {
+      "get": {
+        "tags": [
+          "Shift Pegawai"
+        ],
+        "summary": "Get all shift",
+        "description": "Get all shift",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "maxLength": 10,
+                            "example": "Pagi"
+                          },
+                          "jam_masuk": {
+                            "type": "string",
+                            "example": "07:00:00"
+                          },
+                          "jam_keluar": {
+                            "type": "string",
+                            "example": "15:00:00"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Shift Pegawai"
+        ],
+        "summary": "Create shift",
+        "description": "Create shift",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Pagi"
+                  },
+                  "jam_masuk": {
+                    "type": "string",
+                    "example": "07:00:00"
+                  },
+                  "jam_keluar": {
+                    "type": "string",
+                    "example": "15:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/shift/{id}": {
+      "get": {
+        "tags": [
+          "Shift Pegawai"
+        ],
+        "summary": "Get shift by ID",
+        "description": "Get shift by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Pagi"
+                        },
+                        "jam_masuk": {
+                          "type": "string",
+                          "example": "07:00:00"
+                        },
+                        "jam_keluar": {
+                          "type": "string",
+                          "example": "15:00:00"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Shift Pegawai"
+        ],
+        "summary": "Update shift by ID",
+        "description": "Update shift by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 10,
+                    "example": "Pagi"
+                  },
+                  "jam_masuk": {
+                    "type": "string",
+                    "example": "07:00:00"
+                  },
+                  "jam_keluar": {
+                    "type": "string",
+                    "example": "15:00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 10,
+                          "example": "Pagi"
+                        },
+                        "jam_masuk": {
+                          "type": "string",
+                          "example": "07:00:00"
+                        },
+                        "jam_keluar": {
+                          "type": "string",
+                          "example": "15:00:00"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Shift Pegawai"
+        ],
+        "summary": "Delete shift by ID",
+        "description": "Delete shift by ID",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/cuti": {
+      "get": {
+        "tags": [
+          "Cuti Pegawai"
+        ],
+        "summary": "Get all cuti",
+        "description": "Get all cuti",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "tanggal_mulai": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "tanggal_selesai": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "keterangan": {
+                            "type": "string",
+                            "example": "Cuti Tahunan"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cuti Pegawai"
+        ],
+        "summary": "Create cuti",
+        "description": "Create cuti",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "tanggal_mulai": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "tanggal_selesai": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "keterangan": {
+                    "type": "string",
+                    "example": "Cuti Tahunan"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kehadiran/cuti/{nip}": {
+      "get": {
+        "tags": [
+          "Cuti Pegawai"
+        ],
+        "summary": "Get cuti by NIP",
+        "description": "Get cuti by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "nip": {
+                            "type": "string",
+                            "maxLength": 5,
+                            "example": "admin"
+                          },
+                          "tanggal_mulai": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "tanggal_selesai": {
+                            "type": "string",
+                            "example": "2023-12-01"
+                          },
+                          "keterangan": {
+                            "type": "string",
+                            "example": "Cuti Tahunan"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2023-12-01 00:00:00+07"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Cuti Pegawai"
+        ],
+        "summary": "Update cuti by NIP",
+        "description": "Update cuti by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nip": {
+                    "type": "string",
+                    "maxLength": 5,
+                    "example": "admin"
+                  },
+                  "tanggal_mulai": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "tanggal_selesai": {
+                    "type": "string",
+                    "example": "2023-12-01"
+                  },
+                  "keterangan": {
+                    "type": "string",
+                    "example": "Cuti Tahunan"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "maxLength": 5,
+                          "example": "admin"
+                        },
+                        "tanggal_mulai": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "tanggal_selesai": {
+                          "type": "string",
+                          "example": "2023-12-01"
+                        },
+                        "keterangan": {
+                          "type": "string",
+                          "example": "Cuti Tahunan"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2023-12-01 00:00:00+07"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cuti Pegawai"
+        ],
+        "summary": "Delete cuti by NIP",
+        "description": "Delete cuti by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoContentSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "CreatedSuccess": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 201
+          },
+          "status": {
+            "type": "string",
+            "example": "Created"
+          },
+          "data": {
+            "type": "null",
+            "example": null
+          }
+        }
+      },
+      "NoContentSuccess": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 204
+          },
+          "status": {
+            "type": "string",
+            "example": "No Content"
+          },
+          "data": {
+            "type": "null",
+            "example": null
+          }
+        }
+      },
+      "BadRequestError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 400
+          },
+          "status": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "data": {
+            "type": "string",
+            "example": "Missing or malformed JWT"
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 401
+          },
+          "status": {
+            "type": "string",
+            "example": "Unauthorized"
+          },
+          "data": {
+            "type": "string",
+            "example": "Invalid or expired JWT"
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 404
+          },
+          "status": {
+            "type": "string",
+            "example": "Not Found"
+          },
+          "data": {
+            "type": "string",
+            "example": "Not Found"
+          }
+        }
+      }
+    }
+  }
+}
