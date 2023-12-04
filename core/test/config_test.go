@@ -11,6 +11,7 @@ var (
 	cfg = config.ProvideConfig()
 	db  = config.ProvideDB(cfg)
 	app = config.ProvideApp(cfg)
+	api = config.ProvideSwagger()
 )
 
 func TestConfig(t *testing.T) {
@@ -23,6 +24,10 @@ func TestGORM(t *testing.T) {
 
 func TestFiber(t *testing.T) {
 	assert.NotNil(t, app)
+}
+
+func TestSwagger(t *testing.T) {
+	assert.NotNil(t, api)
 }
 
 func TestConfig_Get(t *testing.T) {

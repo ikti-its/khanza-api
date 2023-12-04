@@ -10,13 +10,13 @@ import (
 func ProvideApp(cfg Config) *fiber.App {
 	var (
 		app = fiber.New(*ProvideFiber(cfg))
-		api = swagger.New(*ProvideSwagger()) // COMMENT WHILE TEST
+		api = swagger.New(*ProvideSwagger())
 		_   = ProvideDB(cfg)
 	)
 
 	app.Use(recover.New())
 	app.Use(cors.New())
-	app.Use(api) // COMMENT WHILE TEST
+	app.Use(api)
 
 	return app
 }
