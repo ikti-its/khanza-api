@@ -6,8 +6,8 @@ func ProvideSwagger() *swagger.Config {
 	return &swagger.Config{
 		Next:     nil,
 		BasePath: "/",
-		FilePath: "../../docs/swagger.json",
-		Path:     "api",
+		FilePath: "./docs/swagger.json",
+		Path:     "/",
 		Title:    "SIMKES RESTful API Documentation",
 	}
 }

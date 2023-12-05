@@ -1,11 +1,13 @@
 package test
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/fathoor/simkes-api/core/exception"
+	"github.com/fathoor/simkes-api/core/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
-	"io"
+	"net/http"
 	"net/http/httptest"
 	"testing"
 )
@@ -32,13 +34,17 @@ func TestException_Handler(t *testing.T) {
 			}
 		})
 
-		request := httptest.NewRequest("GET", "/", nil)
+		request := httptest.NewRequest(http.MethodGet, "/", nil)
 		response, err := app.Test(request)
 		assert.Nil(t, err)
 
-		bytes, err := io.ReadAll(response.Body)
+		var webResponse model.Response
+		err = json.NewDecoder(response.Body).Decode(&webResponse)
 		assert.Nil(t, err)
-		assert.Equal(t, 400, response.StatusCode)
-		assert.Equal(t, "{\"code\":400,\"data\":\"Bad Request Error\",\"message\":\"Bad Request\"}", string(bytes))
+		assert.Equal(t, model.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "Bad Request Error",
+		}, webResponse)
 	})
 }
