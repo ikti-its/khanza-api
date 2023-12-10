@@ -31,12 +31,12 @@ var app = ProvideTestApp()
 func TestRole_Create(t *testing.T) {
 	t.Run("When request is valid", func(t *testing.T) {
 		roleRequest := model.RoleRequest{
-			Role: "Dokter",
+			Name: "Perawat",
 		}
 		requestBody, err := json.Marshal(roleRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/akun/role", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun/role", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -46,22 +46,52 @@ func TestRole_Create(t *testing.T) {
 
 	t.Run("When request is invalid", func(t *testing.T) {
 		roleRequest := model.RoleRequest{
-			Role: "",
+			Name: "",
 		}
 		requestBody, err := json.Marshal(roleRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/akun/role", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun/role", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
 		assert.Equal(t, fiber.StatusBadRequest, response.StatusCode)
 	})
+
+	t.Run("When request is forbidden", func(t *testing.T) {
+		roleRequest := model.RoleRequest{
+			Name: "Admin",
+		}
+		requestBody, err := json.Marshal(roleRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun/role", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusForbidden, response.StatusCode)
+	})
+
+	t.Run("When request is duplicate", func(t *testing.T) {
+		roleRequest := model.RoleRequest{
+			Name: "Dokter",
+		}
+		requestBody, err := json.Marshal(roleRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun/role", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusInternalServerError, response.StatusCode)
+	})
 }
 
 func TestRole_GetAll(t *testing.T) {
-	request := httptest.NewRequest(http.MethodGet, "/api/v1/akun/role", nil)
+	request := httptest.NewRequest(http.MethodGet, "/v1/akun/role", nil)
 
 	response, err := app.Test(request)
 	assert.Nil(t, err)
@@ -70,7 +100,7 @@ func TestRole_GetAll(t *testing.T) {
 
 func TestRole_GetByID(t *testing.T) {
 	t.Run("When ID is valid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/akun/role/1", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/akun/role/1", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -78,7 +108,7 @@ func TestRole_GetByID(t *testing.T) {
 	})
 
 	t.Run("When ID is invalid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/akun/role/0", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/akun/role/0", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -89,12 +119,12 @@ func TestRole_GetByID(t *testing.T) {
 func TestRole_Update(t *testing.T) {
 	t.Run("When request and ID is valid", func(t *testing.T) {
 		roleRequest := model.RoleRequest{
-			Role: "Admin",
+			Name: "Dokter",
 		}
 		requestBody, err := json.Marshal(roleRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPut, "/api/v1/akun/role/1", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/role/2", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -104,12 +134,12 @@ func TestRole_Update(t *testing.T) {
 
 	t.Run("When request is invalid", func(t *testing.T) {
 		roleRequest := model.RoleRequest{
-			Role: "",
+			Name: "",
 		}
 		requestBody, err := json.Marshal(roleRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPut, "/api/v1/akun/role/1", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/role/1", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -119,23 +149,53 @@ func TestRole_Update(t *testing.T) {
 
 	t.Run("When ID is invalid", func(t *testing.T) {
 		roleRequest := model.RoleRequest{
-			Role: "Admin",
+			Name: "Dokter",
 		}
 		requestBody, err := json.Marshal(roleRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPut, "/api/v1/akun/role/0", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/role/0", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
 		assert.Equal(t, fiber.StatusNotFound, response.StatusCode)
 	})
+
+	t.Run("When request is forbidden", func(t *testing.T) {
+		roleRequest := model.RoleRequest{
+			Name: "Admin",
+		}
+		requestBody, err := json.Marshal(roleRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/role/1", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusForbidden, response.StatusCode)
+	})
+
+	t.Run("When request is duplicate", func(t *testing.T) {
+		roleRequest := model.RoleRequest{
+			Name: "Dokter",
+		}
+		requestBody, err := json.Marshal(roleRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/role/1", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusInternalServerError, response.StatusCode)
+	})
 }
 
 func TestRole_Delete(t *testing.T) {
 	t.Run("When ID is valid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodDelete, "/api/v1/akun/role/3", nil)
+		request := httptest.NewRequest(http.MethodDelete, "/v1/akun/role/3", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -143,7 +203,7 @@ func TestRole_Delete(t *testing.T) {
 	})
 
 	t.Run("When ID is invalid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodDelete, "/api/v1/akun/role/0", nil)
+		request := httptest.NewRequest(http.MethodDelete, "/v1/akun/role/0", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)

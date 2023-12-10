@@ -2,12 +2,10 @@ package controller
 
 import (
 	"github.com/fathoor/simkes-api/core/exception"
-	"github.com/fathoor/simkes-api/core/middleware"
 	web "github.com/fathoor/simkes-api/core/model"
 	"github.com/fathoor/simkes-api/module/akun/role/model"
 	"github.com/fathoor/simkes-api/module/akun/role/service"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 )
 
 type roleControllerImpl struct {
@@ -15,7 +13,7 @@ type roleControllerImpl struct {
 }
 
 func (controller *roleControllerImpl) Route(app *fiber.App) {
-	role := app.Group("/api/v1/akun/role", middleware.Authenticate(1))
+	role := app.Group("/v1/akun/role")
 
 	role.Post("/", controller.Create)
 	role.Get("/", controller.GetAll)
@@ -28,7 +26,11 @@ func (controller *roleControllerImpl) Create(c *fiber.Ctx) error {
 	var request model.RoleRequest
 
 	parse := c.BodyParser(&request)
-	exception.PanicIfError(parse)
+	if parse != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid request body",
+		})
+	}
 
 	err := controller.RoleService.Create(&request)
 	exception.PanicIfError(err)
@@ -48,11 +50,14 @@ func (controller *roleControllerImpl) GetAll(c *fiber.Ctx) error {
 }
 
 func (controller *roleControllerImpl) Get(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
-	exception.PanicIfError(err)
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid id",
+		})
+	}
 
-	response, err := controller.RoleService.GetByID(id)
-	exception.PanicIfError(err)
+	response, _ := controller.RoleService.GetByID(id)
 
 	return c.Status(fiber.StatusOK).JSON(web.Response{
 		Code:   fiber.StatusOK,
@@ -65,10 +70,18 @@ func (controller *roleControllerImpl) Update(c *fiber.Ctx) error {
 	var request model.RoleRequest
 
 	parse := c.BodyParser(&request)
-	exception.PanicIfError(parse)
+	if parse != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid request body",
+		})
+	}
 
-	id, err := strconv.Atoi(c.Params("id"))
-	exception.PanicIfError(err)
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid id",
+		})
+	}
 
 	response, err := controller.RoleService.Update(id, &request)
 	exception.PanicIfError(err)
@@ -81,8 +94,12 @@ func (controller *roleControllerImpl) Update(c *fiber.Ctx) error {
 }
 
 func (controller *roleControllerImpl) Delete(c *fiber.Ctx) error {
-	id, err := strconv.Atoi(c.Params("id"))
-	exception.PanicIfError(err)
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid id",
+		})
+	}
 
 	err = controller.RoleService.Delete(id)
 	exception.PanicIfError(err)

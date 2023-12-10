@@ -21,7 +21,7 @@ func (service *roleServiceImpl) Create(request *model.RoleRequest) error {
 	}
 
 	role := entity.Role{
-		Role: request.Role,
+		Name: request.Name,
 	}
 
 	return service.RoleRepository.Insert(&role)
@@ -34,7 +34,7 @@ func (service *roleServiceImpl) GetAll() ([]model.RoleResponse, error) {
 	for i, role := range roles {
 		response[i] = model.RoleResponse{
 			ID:   role.ID,
-			Role: role.Role,
+			Name: role.Name,
 		}
 	}
 
@@ -51,10 +51,10 @@ func (service *roleServiceImpl) GetByID(id int) (model.RoleResponse, error) {
 
 	response := model.RoleResponse{
 		ID:   role.ID,
-		Role: role.Role,
+		Name: role.Name,
 	}
 
-	return response, err
+	return response, nil
 }
 
 func (service *roleServiceImpl) Update(id int, request *model.RoleRequest) (model.RoleResponse, error) {
@@ -73,17 +73,15 @@ func (service *roleServiceImpl) Update(id int, request *model.RoleRequest) (mode
 	}
 
 	if role != (entity.Role{}) {
-		role.Role = request.Role
+		role.Name = request.Name
 	}
-
-	err = service.RoleRepository.Update(&role)
 
 	response := model.RoleResponse{
 		ID:   role.ID,
-		Role: role.Role,
+		Name: role.Name,
 	}
 
-	return response, err
+	return response, service.RoleRepository.Update(&role)
 }
 
 func (service *roleServiceImpl) Delete(id int) error {

@@ -2,10 +2,10 @@ package model
 
 type RoleRequest struct {
 	ID   int    `json:"id"`
-	Role string `json:"role" validate:"required,alphanum,max=20"`
+	Name string `json:"name" validate:"required,alphanum,max=20"`
 }
 
 type RoleResponse struct {
 	ID   int    `json:"id"`
-	Role string `json:"role"`
+	Name string `json:"name"`
 }

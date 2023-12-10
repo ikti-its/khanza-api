@@ -4,7 +4,7 @@ SET TIMEZONE='Asia/Jakarta';
 -- Create Role Table
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    role VARCHAR(20) NOT NULL,
+    name VARCHAR(20) UNIQUE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -14,16 +14,16 @@ CREATE TABLE akun (
     nip VARCHAR(5) PRIMARY KEY,
     email VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role_id INT NOT NULL,
+    role_name VARCHAR(20) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES role(id)
+    FOREIGN KEY (role_name) REFERENCES role(name)
 );
 
 -- Create Jabatan Table
 CREATE TABLE jabatan (
     id VARCHAR(10) PRIMARY KEY,
-    jabatan VARCHAR(25) NOT NULL,
+    nama VARCHAR(25) UNIQUE NOT NULL,
     jenjang VARCHAR(25) NOT NULL,
     gaji_pokok NUMERIC NOT NULL DEFAULT 0,
     tunjangan NUMERIC NOT NULL DEFAULT 0,
@@ -34,7 +34,7 @@ CREATE TABLE jabatan (
 -- Create Departemen Table
 CREATE TABLE departemen (
     id VARCHAR(10) PRIMARY KEY,
-    departemen VARCHAR(25) NOT NULL,
+    nama VARCHAR(25) UNIQUE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -54,9 +54,9 @@ CREATE TABLE pegawai (
     alamat VARCHAR(255) NOT NULL,
     alamat_lat FLOAT NOT NULL DEFAULT 7.2575,
     alamat_lon FLOAT NOT NULL DEFAULT 112.7521,
-    no_telepon VARCHAR(15) NOT NULL,
+    telepon VARCHAR(15) NOT NULL,
     tanggal_masuk DATE NOT NULL,
-    foto VARCHAR(255) NOT NULL DEFAULT '/resource/default.png',
+    foto VARCHAR(255) NOT NULL DEFAULT '/resource/image/default.png',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (jabatan_id) REFERENCES jabatan(id),
