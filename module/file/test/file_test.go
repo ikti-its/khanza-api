@@ -96,6 +96,29 @@ func TestFile_Upload(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, fiber.StatusBadRequest, response.StatusCode)
 	})
+
+	t.Run("When file size exceeds limit", func(t *testing.T) {
+		body := new(bytes.Buffer)
+		writer := multipart.NewWriter(body)
+
+		file, err := writer.CreateFormFile("file", "default.png")
+		assert.Nil(t, err)
+		_, err = file.Write(fileTest)
+		assert.Nil(t, err)
+
+		err = writer.WriteField("type", "image")
+		assert.Nil(t, err)
+
+		err = writer.Close()
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPost, "/v1/file", body)
+		request.Header.Set("Content-Type", writer.FormDataContentType())
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusBadRequest, response.StatusCode)
+	})
 }
 
 func TestFile_Download(t *testing.T) {

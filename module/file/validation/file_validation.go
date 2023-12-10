@@ -25,6 +25,12 @@ func ValidateFileRequest(request *model.FileRequest) (string, error) {
 				Message: fmt.Sprintf("Invalid file extension: %s is not supported", ext),
 			}
 		}
+
+		if request.File.Size > 2*1024*1024 {
+			return "", exception.BadRequestError{
+				Message: "File size exceeds limit",
+			}
+		}
 	default:
 		return "", exception.BadRequestError{
 			Message: fmt.Sprintf("Invalid file type: %s is not supported", request.Type),
