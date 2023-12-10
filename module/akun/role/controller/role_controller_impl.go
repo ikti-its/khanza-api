@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/fathoor/simkes-api/core/exception"
+	"github.com/fathoor/simkes-api/core/middleware"
 	web "github.com/fathoor/simkes-api/core/model"
 	"github.com/fathoor/simkes-api/module/akun/role/model"
 	"github.com/fathoor/simkes-api/module/akun/role/service"
@@ -13,7 +14,7 @@ type roleControllerImpl struct {
 }
 
 func (controller *roleControllerImpl) Route(app *fiber.App) {
-	role := app.Group("/v1/akun/role")
+	role := app.Group("/v1/akun/role", middleware.Authenticate("Admin"))
 
 	role.Post("/", controller.Create)
 	role.Get("/", controller.GetAll)

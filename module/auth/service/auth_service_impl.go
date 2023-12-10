@@ -34,7 +34,7 @@ func (service *authServiceImpl) Login(request *model.AuthRequest) (model.AuthRes
 		})
 	}
 
-	token, err := helper.GenerateJWT(akun.NIP, akun.RoleID)
+	token, err := helper.GenerateJWT(akun.NIP, akun.RoleName)
 	exception.PanicIfError(err)
 
 	response := model.AuthResponse{
@@ -43,7 +43,7 @@ func (service *authServiceImpl) Login(request *model.AuthRequest) (model.AuthRes
 		Expired: time.Now().Add(time.Hour * 24).Format("2006-01-02 15:04:05"),
 	}
 
-	return response, err
+	return response, nil
 }
 
 func ProvideAuthService(repository *repository.AkunRepository) AuthService {

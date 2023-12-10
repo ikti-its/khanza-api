@@ -13,7 +13,7 @@ type authControllerImpl struct {
 }
 
 func (controller *authControllerImpl) Route(app *fiber.App) {
-	auth := app.Group("/api/v1/auth")
+	auth := app.Group("/v1/auth")
 
 	auth.Post("/", controller.Login)
 }
@@ -22,10 +22,13 @@ func (controller *authControllerImpl) Login(c *fiber.Ctx) error {
 	var request model.AuthRequest
 
 	parse := c.BodyParser(&request)
-	exception.PanicIfError(parse)
+	if parse != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid request body",
+		})
+	}
 
-	response, err := controller.AuthService.Login(&request)
-	exception.PanicIfError(err)
+	response, _ := controller.AuthService.Login(&request)
 
 	return c.Status(fiber.StatusOK).JSON(web.Response{
 		Code:   fiber.StatusOK,

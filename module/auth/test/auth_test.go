@@ -37,7 +37,7 @@ func TestAuth_Login(t *testing.T) {
 		requestBody, err := json.Marshal(authRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/auth", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/auth", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -53,7 +53,7 @@ func TestAuth_Login(t *testing.T) {
 		requestBody, err := json.Marshal(authRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/auth", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/auth", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -69,7 +69,7 @@ func TestAuth_Login(t *testing.T) {
 		requestBody, err := json.Marshal(authRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/auth", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/auth", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -85,7 +85,7 @@ func TestAuth_Login(t *testing.T) {
 		requestBody, err := json.Marshal(authRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/auth", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/auth", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)

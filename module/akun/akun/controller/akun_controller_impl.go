@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/fathoor/simkes-api/core/exception"
+	"github.com/fathoor/simkes-api/core/middleware"
 	web "github.com/fathoor/simkes-api/core/model"
 	"github.com/fathoor/simkes-api/module/akun/akun/model"
 	"github.com/fathoor/simkes-api/module/akun/akun/service"
@@ -13,7 +14,7 @@ type akunControllerImpl struct {
 }
 
 func (controller *akunControllerImpl) Route(app *fiber.App) {
-	akun := app.Group("/v1/akun")
+	akun := app.Group("/v1/akun", middleware.Authenticate("Admin"))
 
 	akun.Post("/", controller.Create)
 	akun.Get("/", controller.GetAll)
@@ -21,7 +22,7 @@ func (controller *akunControllerImpl) Route(app *fiber.App) {
 	akun.Put("/detail/:nip", controller.Update)
 	akun.Delete("/detail/:nip", controller.Delete)
 
-	pegawai := app.Group("/v1/akun/pegawai")
+	pegawai := app.Group("/v1/akun/pegawai", middleware.Authenticate("Public"))
 
 	pegawai.Get("/detail/:nip", controller.PegawaiGet)
 	pegawai.Put("/detail/:nip", controller.PegawaiUpdate)

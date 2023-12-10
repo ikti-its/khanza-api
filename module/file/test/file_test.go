@@ -46,7 +46,7 @@ func TestFile_Upload(t *testing.T) {
 		err = writer.Close()
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/file", body)
+		request := httptest.NewRequest(http.MethodPost, "/v1/file", body)
 		request.Header.Set("Content-Type", writer.FormDataContentType())
 
 		response, err := app.Test(request)
@@ -66,7 +66,7 @@ func TestFile_Upload(t *testing.T) {
 		err = writer.Close()
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/file", body)
+		request := httptest.NewRequest(http.MethodPost, "/v1/file", body)
 		request.Header.Set("Content-Type", writer.FormDataContentType())
 
 		response, err := app.Test(request)
@@ -89,7 +89,7 @@ func TestFile_Upload(t *testing.T) {
 		err = writer.Close()
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/file", body)
+		request := httptest.NewRequest(http.MethodPost, "/v1/file", body)
 		request.Header.Set("Content-Type", writer.FormDataContentType())
 
 		response, err := app.Test(request)
@@ -100,7 +100,7 @@ func TestFile_Upload(t *testing.T) {
 
 func TestFile_Download(t *testing.T) {
 	t.Run("When file exist", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.png/download", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.png/download", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -108,7 +108,7 @@ func TestFile_Download(t *testing.T) {
 	})
 
 	t.Run("When file not exist", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.bmp/download", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.bmp/download", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -118,7 +118,7 @@ func TestFile_Download(t *testing.T) {
 
 func TestFile_Get(t *testing.T) {
 	t.Run("When file exist", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.png", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.png", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -126,7 +126,7 @@ func TestFile_Get(t *testing.T) {
 	})
 
 	t.Run("When file not exist", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.bmp", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.bmp", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -136,7 +136,7 @@ func TestFile_Get(t *testing.T) {
 
 func TestFile_Delete(t *testing.T) {
 	t.Run("When file exist", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodDelete, "/api/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.png", nil)
+		request := httptest.NewRequest(http.MethodDelete, "/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.png", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -144,7 +144,7 @@ func TestFile_Delete(t *testing.T) {
 	})
 
 	t.Run("When file not exist", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodDelete, "/api/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.bmp", nil)
+		request := httptest.NewRequest(http.MethodDelete, "/v1/file/image/4d32b23d-0927-457d-ab12-25bd632224b1.bmp", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)

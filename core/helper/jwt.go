@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GenerateJWT(nip string, role int) (string, error) {
+func GenerateJWT(nip string, role string) (string, error) {
 	var (
 		cfg       = config.ProvideConfig()
 		exp       = cfg.GetInt("JWT_EXPIRE")

@@ -14,7 +14,7 @@ type fileControllerImpl struct {
 }
 
 func (controller *fileControllerImpl) Route(app *fiber.App) {
-	file := app.Group("/api/v1/file", middleware.Authenticate(0))
+	file := app.Group("/v1/file", middleware.Authenticate("Public"))
 
 	file.Post("/", controller.Upload)
 	file.Get("/:filetype/:filename/download", controller.Download)

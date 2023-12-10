@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func Authenticate(role int) func(*fiber.Ctx) error {
+func Authenticate(role string) func(*fiber.Ctx) error {
 	cfg := config.ProvideConfig()
 	jwtSecret := cfg.Get("JWT_SECRET")
 
@@ -20,9 +20,9 @@ func Authenticate(role int) func(*fiber.Ctx) error {
 
 		SuccessHandler: func(c *fiber.Ctx) error {
 			claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
-			user := int(claims["role"].(float64))
+			user := claims["role"].(string)
 
-			if role == 0 || user == role || user == 1 {
+			if user == "Admin" || user == role || role == "Public" {
 				return c.Next()
 			} else {
 				panic(exception.ForbiddenError{
