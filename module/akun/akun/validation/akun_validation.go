@@ -8,3 +8,7 @@ import (
 func ValidateAkunRequest(request *model.AkunRequest) error {
 	return validation.Validator.Struct(request)
 }
+
+func ValidateAkunUpdateRequest(request *model.AkunUpdateRequest) error {
+	return validation.Validator.Struct(request)
+}

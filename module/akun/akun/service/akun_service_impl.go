@@ -28,7 +28,7 @@ func (service *akunServiceImpl) Create(request *model.AkunRequest) error {
 		NIP:      request.NIP,
 		Email:    request.Email,
 		Password: string(encrypted),
-		RoleID:   request.RoleID,
+		RoleName: request.RoleName,
 	}
 
 	return service.AkunRepository.Insert(&akun)
@@ -40,9 +40,9 @@ func (service *akunServiceImpl) GetAll() ([]model.AkunResponse, error) {
 	response := make([]model.AkunResponse, len(akun))
 	for i, akun := range akun {
 		response[i] = model.AkunResponse{
-			NIP:    akun.NIP,
-			Email:  akun.Email,
-			RoleID: akun.RoleID,
+			NIP:      akun.NIP,
+			Email:    akun.Email,
+			RoleName: akun.RoleName,
 		}
 	}
 
@@ -58,12 +58,35 @@ func (service *akunServiceImpl) GetByNIP(nip string) (model.AkunResponse, error)
 	}
 
 	response := model.AkunResponse{
-		NIP:    akun.NIP,
-		Email:  akun.Email,
-		RoleID: akun.RoleID,
+		NIP:      akun.NIP,
+		Email:    akun.Email,
+		RoleName: akun.RoleName,
 	}
 
-	return response, err
+	return response, nil
+}
+
+func (service *akunServiceImpl) PegawaiGetByNIP(nip string) (model.AkunResponse, error) {
+	if nip == "Admin" {
+		panic(exception.ForbiddenError{
+			Message: "You are not allowed to access this resource",
+		})
+	}
+
+	akun, err := service.AkunRepository.FindByNIP(nip)
+	if err != nil {
+		panic(exception.NotFoundError{
+			Message: "Akun not found",
+		})
+	}
+
+	response := model.AkunResponse{
+		NIP:      akun.NIP,
+		Email:    akun.Email,
+		RoleName: akun.RoleName,
+	}
+
+	return response, nil
 }
 
 func (service *akunServiceImpl) Update(nip string, request *model.AkunRequest) (model.AkunResponse, error) {
@@ -88,18 +111,54 @@ func (service *akunServiceImpl) Update(nip string, request *model.AkunRequest) (
 		akun.NIP = request.NIP
 		akun.Email = request.Email
 		akun.Password = string(encrypted)
-		akun.RoleID = request.RoleID
+		akun.RoleName = request.RoleName
 	}
-
-	err = service.AkunRepository.Update(&akun)
 
 	response := model.AkunResponse{
-		NIP:    akun.NIP,
-		Email:  akun.Email,
-		RoleID: akun.RoleID,
+		NIP:      akun.NIP,
+		Email:    akun.Email,
+		RoleName: akun.RoleName,
 	}
 
-	return response, err
+	return response, service.AkunRepository.Update(&akun)
+}
+
+func (service *akunServiceImpl) PegawaiUpdate(nip string, request *model.AkunUpdateRequest) (model.AkunResponse, error) {
+	if nip == "Admin" {
+		panic(exception.ForbiddenError{
+			Message: "You are not allowed to access this resource",
+		})
+	}
+
+	valid := validation.ValidateAkunUpdateRequest(request)
+	if valid != nil {
+		panic(exception.BadRequestError{
+			Message: "Invalid request data",
+		})
+	}
+
+	akun, err := service.AkunRepository.FindByNIP(nip)
+	if err != nil {
+		panic(exception.NotFoundError{
+			Message: "Akun not found",
+		})
+	}
+
+	encrypted, err := helper.EncryptPassword(request.Password)
+	exception.PanicIfError(err)
+
+	if akun != (entity.Akun{}) {
+		akun.Email = request.Email
+		akun.Password = string(encrypted)
+	}
+
+	response := model.AkunResponse{
+		NIP:      akun.NIP,
+		Email:    akun.Email,
+		RoleName: akun.RoleName,
+	}
+
+	return response, service.AkunRepository.Update(&akun)
 }
 
 func (service *akunServiceImpl) Delete(nip string) error {

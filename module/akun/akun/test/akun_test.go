@@ -28,18 +28,18 @@ func ProvideTestApp() *fiber.App {
 
 var app = ProvideTestApp()
 
-func TestRole_Create(t *testing.T) {
+func TestAkun_Create(t *testing.T) {
 	t.Run("When request is valid", func(t *testing.T) {
 		akunRequest := model.AkunRequest{
-			NIP:      "Admin",
-			Email:    "admin@fathoor.cloud",
-			Password: "admin",
-			RoleID:   1,
+			NIP:      "D0004",
+			Email:    "dokter4@fathoor.cloud",
+			Password: "dokter",
+			RoleName: "Dokter",
 		}
 		requestBody, err := json.Marshal(akunRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/akun", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -49,42 +49,60 @@ func TestRole_Create(t *testing.T) {
 
 	t.Run("When request is invalid", func(t *testing.T) {
 		akunRequest := model.AkunRequest{
-			NIP:      "Admin",
+			NIP:      "D0001",
 			Email:    "",
-			Password: "admin",
-			RoleID:   1,
+			Password: "dokter",
+			RoleName: "Dokter",
 		}
 		requestBody, err := json.Marshal(akunRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPost, "/api/v1/akun", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
 		assert.Equal(t, fiber.StatusBadRequest, response.StatusCode)
 	})
+
+	t.Run("When request is duplicate", func(t *testing.T) {
+		akunRequest := model.AkunRequest{
+			NIP:      "D0001",
+			Email:    "dokter@fathoor.cloud",
+			Password: "dokter",
+			RoleName: "Dokter",
+		}
+		requestBody, err := json.Marshal(akunRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPost, "/v1/akun", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusInternalServerError, response.StatusCode)
+	})
 }
 
-func TestRole_GetAll(t *testing.T) {
-	request := httptest.NewRequest(http.MethodGet, "/api/v1/akun", nil)
+func TestAkun_GetAll(t *testing.T) {
+	request := httptest.NewRequest(http.MethodGet, "/v1/akun", nil)
 
 	response, err := app.Test(request)
 	assert.Nil(t, err)
 	assert.Equal(t, fiber.StatusOK, response.StatusCode)
 }
 
-func TestRole_Get(t *testing.T) {
+func TestAkun_Get(t *testing.T) {
 	t.Run("When ID is valid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/akun/Admin", nil)
+		request := httptest.NewRequest(http.MethodGet, "/v1/akun/detail/D0001", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
 		assert.Equal(t, fiber.StatusOK, response.StatusCode)
 	})
 
-	t.Run("When ID is invalid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodGet, "/api/v1/akun/123", nil)
+	t.Run("When ID is not found", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/v1/akun/detail/P0001", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
@@ -92,18 +110,36 @@ func TestRole_Get(t *testing.T) {
 	})
 }
 
-func TestRole_Update(t *testing.T) {
+func TestAkun_PegawaiGet(t *testing.T) {
+	t.Run("When ID is valid", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/v1/akun/pegawai/detail/D0001", nil)
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusOK, response.StatusCode)
+	})
+
+	t.Run("When ID is not found", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/v1/akun/pegawai/detail/P0001", nil)
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusNotFound, response.StatusCode)
+	})
+}
+
+func TestAkun_Update(t *testing.T) {
 	t.Run("When request and ID is valid", func(t *testing.T) {
 		akunRequest := model.AkunRequest{
-			NIP:      "Admin",
-			Email:    "admin@fathoor.cloud",
-			Password: "admin",
-			RoleID:   1,
+			NIP:      "D0001",
+			Email:    "dokter@fathoor.cloud",
+			Password: "dokter",
+			RoleName: "Dokter",
 		}
 		requestBody, err := json.Marshal(akunRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPut, "/api/v1/akun/Admin", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/detail/D0001", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -113,15 +149,15 @@ func TestRole_Update(t *testing.T) {
 
 	t.Run("When request is invalid", func(t *testing.T) {
 		akunRequest := model.AkunRequest{
-			NIP:      "Admin",
+			NIP:      "D0001",
 			Email:    "",
-			Password: "admin",
-			RoleID:   1,
+			Password: "dokter",
+			RoleName: "Dokter",
 		}
 		requestBody, err := json.Marshal(akunRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPut, "/api/v1/akun/Admin", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/detail/D0001", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -129,17 +165,17 @@ func TestRole_Update(t *testing.T) {
 		assert.Equal(t, fiber.StatusBadRequest, response.StatusCode)
 	})
 
-	t.Run("When ID is invalid", func(t *testing.T) {
+	t.Run("When ID is not found", func(t *testing.T) {
 		akunRequest := model.AkunRequest{
-			NIP:      "Admin",
-			Email:    "admin@fathoor.cloud",
-			Password: "admin",
-			RoleID:   1,
+			NIP:      "D0001",
+			Email:    "dokter@fathoor.cloud",
+			Password: "dokter",
+			RoleName: "Dokter",
 		}
 		requestBody, err := json.Marshal(akunRequest)
 		assert.Nil(t, err)
 
-		request := httptest.NewRequest(http.MethodPut, "/api/v1/akun/123", strings.NewReader(string(requestBody)))
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/detail/P0001", strings.NewReader(string(requestBody)))
 		request.Header.Set("Content-Type", "application/json")
 
 		response, err := app.Test(request)
@@ -148,17 +184,67 @@ func TestRole_Update(t *testing.T) {
 	})
 }
 
-func TestRole_Delete(t *testing.T) {
+func TestAkun_PegawaiUpdate(t *testing.T) {
+	t.Run("When request and ID is valid", func(t *testing.T) {
+		akunUpdateRequest := model.AkunUpdateRequest{
+			Email:    "dokter@fathoor.cloud",
+			Password: "dokter",
+		}
+		requestBody, err := json.Marshal(akunUpdateRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/pegawai/detail/D0001", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusOK, response.StatusCode)
+	})
+
+	t.Run("When request is invalid", func(t *testing.T) {
+		akunUpdateRequest := model.AkunUpdateRequest{
+			Email:    "",
+			Password: "dokter",
+		}
+		requestBody, err := json.Marshal(akunUpdateRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/pegawai/detail/D0001", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusBadRequest, response.StatusCode)
+	})
+
+	t.Run("When ID is not found", func(t *testing.T) {
+		akunUpdateRequest := model.AkunUpdateRequest{
+			Email:    "pegawai@fathoor.cloud",
+			Password: "pegawai",
+		}
+		requestBody, err := json.Marshal(akunUpdateRequest)
+		assert.Nil(t, err)
+
+		request := httptest.NewRequest(http.MethodPut, "/v1/akun/pegawai/detail/P0001", strings.NewReader(string(requestBody)))
+		request.Header.Set("Content-Type", "application/json")
+
+		response, err := app.Test(request)
+		assert.Nil(t, err)
+		assert.Equal(t, fiber.StatusNotFound, response.StatusCode)
+	})
+}
+
+func TestAkun_Delete(t *testing.T) {
 	t.Run("When ID is valid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodDelete, "/api/v1/akun/Admin", nil)
+		request := httptest.NewRequest(http.MethodDelete, "/v1/akun/detail/D0001", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
 		assert.Equal(t, fiber.StatusNoContent, response.StatusCode)
 	})
 
-	t.Run("When ID is invalid", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodDelete, "/api/v1/akun/123", nil)
+	t.Run("When ID is not found", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodDelete, "/v1/akun/detail/P0001", nil)
 
 		response, err := app.Test(request)
 		assert.Nil(t, err)
