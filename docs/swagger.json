@@ -3,11 +3,11 @@
   "info": {
     "title": "SIMKES RESTful API",
     "description": "API Specification for SIMKES RESTful API",
-    "version": "0.1.0"
+    "version": "0.5.5"
   },
   "servers": [
     {
-      "url": "https://dev.fathoor.cloud/api",
+      "url": "https://dev.fathoor.cloud/v1",
         "description": "Development"
     }
   ],
@@ -31,7 +31,6 @@
                   },
                   "password": {
                     "type": "string",
-                    "minLength": 8,
                     "maxLength": 20,
                     "example": "admin"
                   }
@@ -69,33 +68,9 @@
                         },
                         "expired": {
                           "type": "string",
-                          "example": "2023-12-01 00:00:00+07"
+                          "example": "2023-12-01 00:00:00"
                         }
                       }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 400
-                    },
-                    "status": {
-                      "type": "string",
-                      "example": "Bad Request"
-                    },
-                    "data": {
-                      "type": "string",
-                      "example": "Username or password is incorrect"
                     }
                   }
                 }
@@ -146,42 +121,14 @@
                             "type": "string",
                             "example": "admin@fathoor.cloud"
                           },
-                          "role": {
+                          "role_name": {
                             "type": "string",
                             "example": "Admin"
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "example": "2023-12-01 00:00:00+07"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "example": "2023-12-01 00:00:00+07"
                           }
                         }
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -216,13 +163,13 @@
                   },
                   "password": {
                     "type": "string",
-                    "minLength": 8,
+                    "minLength": 6,
                     "maxLength": 20,
                     "example": "password"
                   },
-                  "role": {
-                    "type": "integer",
-                    "example": "1"
+                  "role_name": {
+                    "type": "string",
+                    "example": "Admin"
                   }
                 }
               }
@@ -236,26 +183,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -315,43 +242,13 @@
                           "type": "string",
                           "example": "admin@fathoor.cloud"
                         },
-                        "role": {
+                        "role_name": {
                           "type": "string",
                           "example": "Admin"
                         }
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -398,13 +295,13 @@
                   },
                   "password": {
                     "type": "string",
-                    "minLength": 8,
+                    "minLength": 6,
                     "maxLength": 20,
                     "example": "password"
                   },
-                  "role": {
-                    "type": "integer",
-                    "example": "1"
+                  "role_name": {
+                    "type": "string",
+                    "example": "Admin"
                   }
                 }
               }
@@ -438,33 +335,13 @@
                           "type": "string",
                           "example": "admin@fathoor.cloud"
                         },
-                        "role": {
-                          "type": "integer",
-                          "example": 1
+                        "role_name": {
+                          "type": "string",
+                          "example": "Admin"
                         }
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -505,23 +382,154 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
+          }
+        }
+      }
+    },
+    "/akun/pegawai/detail/{nip}" : {
+      "get": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Get akun pegawai by NIP",
+        "description": "Get akun pegawai by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "query",
+            "description": "NIP of akun",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@fathoor.cloud"
+                        },
+                        "role_name": {
+                          "type": "string",
+                          "example": "Admin"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized",
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Akun"
+        ],
+        "summary": "Update akun pegawai by NIP",
+        "description": "Update akun pegawai by NIP",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "nip",
+            "in": "query",
+            "description": "NIP of akun",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 5,
+              "example": "admin"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "admin@fathoor.cloud"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 20,
+                    "example": "password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nip": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@fathoor.cloud"
+                        },
+                        "role_name": {
+                          "type": "string",
+                          "example": "Admin"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -566,7 +574,7 @@
                             "type": "integer",
                             "example": 1
                           },
-                          "role": {
+                          "name": {
                             "type": "string",
                             "maxLength": 20,
                             "example": "Admin"
@@ -575,26 +583,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -618,7 +606,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "role": {
+                  "name": {
                     "type": "string",
                     "maxLength": 20,
                     "example": "Admin"
@@ -635,26 +623,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -709,7 +677,7 @@
                           "type": "integer",
                           "example": 1
                         },
-                        "role": {
+                        "name": {
                           "type": "string",
                           "maxLength": 20,
                           "example": "Admin"
@@ -717,36 +685,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -782,7 +720,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "role": {
+                  "name": {
                     "type": "string",
                     "maxLength": 20,
                     "example": "Admin"
@@ -815,7 +753,7 @@
                           "type": "integer",
                           "example": 1
                         },
-                        "role": {
+                        "name": {
                           "type": "string",
                           "maxLength": 20,
                           "example": "Admin"
@@ -823,26 +761,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -882,43 +800,33 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       }
     },
-    "/file/view/{filename}": {
+    "/file/{filetype}/{filename}": {
       "get": {
         "tags": [
           "File"
         ],
-        "summary": "Get file preview",
-        "description": "Get file preview",
+        "summary": "View file",
+        "description": "View file",
         "security": [
           {
             "Authorization": []
           }
         ],
         "parameters": [
+          {
+            "name": "filetype",
+            "in": "path",
+            "description": "Filetype of file",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "image"
+            }
+          },
           {
             "name": "filename",
             "in": "path",
@@ -945,7 +853,56 @@
         }
       }
     },
-    "/file/upload": {
+    "/file/{filetype}/{filename}/download": {
+      "get": {
+        "tags": [
+          "File"
+        ],
+        "summary": "Download file",
+        "description": "Download file",
+        "security": [
+          {
+            "Authorization": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "filetype",
+            "in": "path",
+            "description": "Filetype of file",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "image"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "path",
+            "description": "Filename of file",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "default"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file": {
       "post": {
         "tags": [
           "File"
@@ -963,6 +920,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "image"
+                  },
                   "file": {
                     "type": "string",
                     "format": "binary"
@@ -989,8 +950,17 @@
                       "example": "OK"
                     },
                     "data": {
-                      "type": "string",
-                      "example": "/resource/default.png"
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "example": "image/default.png"
+                        },
+                        "url": {
+                          "type": "string",
+                          "example": "resource/image/default.png"
+                        }
+                      }
                     }
                   }
                 }
@@ -1122,26 +1092,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -1256,26 +1206,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -1412,36 +1342,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -1672,36 +1572,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       },
@@ -1736,36 +1606,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NoContentSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -1844,26 +1684,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -1919,26 +1739,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -2024,36 +1824,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -2211,36 +1981,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       }
@@ -2303,26 +2043,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -2365,36 +2085,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -2467,36 +2157,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -2628,36 +2288,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       }
@@ -2777,26 +2407,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -2864,26 +2474,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -3003,36 +2593,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -3164,36 +2724,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       },
@@ -3215,36 +2745,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NoContentSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -3344,26 +2844,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -3418,26 +2898,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -3534,36 +2994,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -3669,36 +3099,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       },
@@ -3720,36 +3120,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NoContentSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -3818,26 +3188,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -3883,26 +3233,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -3965,36 +3295,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -4082,36 +3382,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       },
@@ -4133,36 +3403,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NoContentSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -4235,26 +3475,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
           }
         }
       },
@@ -4304,26 +3524,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatedSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
                 }
               }
             }
@@ -4393,36 +3593,6 @@
                       }
                     }
                   }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
@@ -4518,36 +3688,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
-                }
-              }
-            }
           }
         }
       },
@@ -4569,36 +3709,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NoContentSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BadRequestError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotFoundError"
                 }
               }
             }
