@@ -3,7 +3,7 @@
   "info": {
     "title": "SIMKES RESTful API",
     "description": "API Specification for SIMKES RESTful API",
-    "version": "0.5.5"
+    "version": "0.5.6"
   },
   "servers": [
     {
@@ -401,7 +401,7 @@
         "parameters": [
           {
             "name": "nip",
-            "in": "query",
+            "in": "path",
             "description": "NIP of akun",
             "required": true,
             "schema": {
@@ -465,7 +465,7 @@
         "parameters": [
           {
             "name": "nip",
-            "in": "query",
+            "in": "path",
             "description": "NIP of akun",
             "required": true,
             "schema": {
