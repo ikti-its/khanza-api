@@ -8,9 +8,8 @@ import (
 func ProvideFiber(cfg Config) *fiber.Config {
 	return &fiber.Config{
 		AppName:       cfg.Get("APP_NAME"),
-		Prefork:       cfg.GetBool("FIBER_PREFORK"),
-		CaseSensitive: cfg.GetBool("FIBER_CASE_SENSITIVE"),
-		StrictRouting: cfg.GetBool("FIBER_STRICT_ROUTING"),
+		CaseSensitive: true,
+		StrictRouting: false,
 		ErrorHandler:  exception.Handler,
 	}
 }

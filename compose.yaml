@@ -1,37 +1,18 @@
 services:
   simkes:
-    container_name: simkes_app
+    container_name: simkes-api
     build: .
     ports:
       - ${APP_PORT}:${APP_PORT}
     volumes:
       - simkes:/usr/src/app
-    depends_on:
-      - simkes-postgres
     networks:
-      - simkes
-    restart: on-failure
-
-  simkes-postgres:
-    container_name: simkes_postgres
-    image: postgres:alpine
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
-    ports:
-      - ${DB_PORT}:${DB_PORT}
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    networks:
-        - simkes
-    restart: on-failure
+      pg:
+    restart: always
 
 volumes:
-    simkes:
-    postgres:
+  simkes:
 
 networks:
-    simkes:
-      driver: bridge
+  pg:
+    external: true

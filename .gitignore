@@ -2,7 +2,8 @@
 .env
 
 # Storage files
-resource/*
+storage/doc/*
+storage/image/*
 
 # Seeder
 core/database/seed/*

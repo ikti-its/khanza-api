@@ -19,7 +19,7 @@ func (service *fileServiceImpl) Upload(request *model.FileRequest) model.FileRes
 		})
 	}
 
-	fileURL := path.Join("./resource", filePath)
+	fileURL := path.Join("./storage", filePath)
 
 	return model.FileResponse{
 		Path: filePath,

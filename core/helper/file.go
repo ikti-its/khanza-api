@@ -16,8 +16,8 @@ func RemoveFile(filepath string) error {
 }
 
 func GetFile(filetype string, filename string) (string, error) {
-	resource := "./resource/"
-	filePath := path.Join(resource, filetype, filename)
+	storage := "./storage/"
+	filePath := path.Join(storage, filetype, filename)
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return "", exception.NotFoundError{
