@@ -3,8 +3,7 @@ SET TIMEZONE='Asia/Jakarta';
 
 -- Create Role Table
 CREATE TABLE role (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(20) UNIQUE NOT NULL,
+    role VARCHAR(20) PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -14,16 +13,15 @@ CREATE TABLE akun (
     nip VARCHAR(5) PRIMARY KEY,
     email VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role_name VARCHAR(20) NOT NULL,
+    role VARCHAR(20) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_name) REFERENCES role(name)
+    FOREIGN KEY (role) REFERENCES role(role)
 );
 
 -- Create Jabatan Table
 CREATE TABLE jabatan (
-    id VARCHAR(10) PRIMARY KEY,
-    nama VARCHAR(25) UNIQUE NOT NULL,
+    jabatan VARCHAR(25) PRIMARY KEY,
     jenjang VARCHAR(25) NOT NULL,
     gaji_pokok NUMERIC NOT NULL DEFAULT 0,
     tunjangan NUMERIC NOT NULL DEFAULT 0,
@@ -33,22 +31,26 @@ CREATE TABLE jabatan (
 
 -- Create Departemen Table
 CREATE TABLE departemen (
-    id VARCHAR(10) PRIMARY KEY,
-    nama VARCHAR(25) UNIQUE NOT NULL,
+    departemen VARCHAR(25) PRIMARY KEY,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create Pegawai Table
+CREATE TYPE jenis_kelamin AS ENUM ('L', 'P');
+CREATE TYPE status_kerja AS ENUM ('Tetap', 'Kontrak');
+CREATE TYPE pendidikan AS ENUM ('SD', 'SMP', 'SMA', 'D3', 'S1', 'S2', 'S3');
+
 CREATE TABLE pegawai (
-    nip VARCHAR(5) PRIMARY KEY,
-    nik VARCHAR(20) UNIQUE NOT NULL,
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    nip VARCHAR(5) UNIQUE NOT NULL,
+    nik VARCHAR(16) UNIQUE NOT NULL,
     nama VARCHAR(50) NOT NULL,
-    jenis_kelamin VARCHAR(1) NOT NULL,
-    jabatan_id VARCHAR(10) NOT NULL,
-    departemen_id VARCHAR(10) NOT NULL,
-    status_kerja VARCHAR(20) NOT NULL,
-    pendidikan VARCHAR(25) NOT NULL,
+    jenis_kelamin jenis_kelamin NOT NULL,
+    jabatan VARCHAR(25) NOT NULL,
+    departemen VARCHAR(25) NOT NULL,
+    status_kerja status_kerja NOT NULL,
+    pendidikan pendidikan NOT NULL,
     tempat_lahir VARCHAR(20) NOT NULL,
     tanggal_lahir DATE NOT NULL,
     alamat VARCHAR(255) NOT NULL,
@@ -56,16 +58,17 @@ CREATE TABLE pegawai (
     alamat_lon FLOAT NOT NULL DEFAULT 112.7521,
     telepon VARCHAR(15) NOT NULL,
     tanggal_masuk DATE NOT NULL,
-    foto VARCHAR(255) NOT NULL DEFAULT '/resource/image/default.png',
+    foto VARCHAR(255) NOT NULL DEFAULT '/storage/image/default.png',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (jabatan_id) REFERENCES jabatan(id),
-    FOREIGN KEY (departemen_id) REFERENCES departemen(id)
+    FOREIGN KEY (nip) REFERENCES akun(nip),
+    FOREIGN KEY (jabatan) REFERENCES jabatan(jabatan),
+    FOREIGN KEY (departemen) REFERENCES departemen(departemen)
 );
 
 -- Create Shift Table
 CREATE TABLE shift (
-    id VARCHAR(10) PRIMARY KEY,
+    shift VARCHAR(10) PRIMARY KEY,
     jam_masuk TIME WITH TIME ZONE NOT NULL,
     jam_keluar TIME WITH TIME ZONE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -78,29 +81,27 @@ CREATE TABLE jadwal_pegawai (
     tahun SMALLINT NOT NULL,
     bulan SMALLINT NOT NULL,
     hari SMALLINT NOT NULL,
-    shift_id VARCHAR(10) NOT NULL,
+    shift VARCHAR(10) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (nip, tahun, bulan),
+    PRIMARY KEY (nip, tahun, bulan, hari),
     FOREIGN KEY (nip) REFERENCES pegawai(nip),
-    FOREIGN KEY (shift_id) REFERENCES shift(id)
+    FOREIGN KEY (shift) REFERENCES shift(shift)
 );
 
 -- Create Kehadiran Table
 CREATE TABLE kehadiran (
     nip VARCHAR(5) NOT NULL,
     tanggal DATE NOT NULL DEFAULT CURRENT_DATE,
-    tahun SMALLINT NOT NULL,
-    bulan SMALLINT NOT NULL,
-    shift_id VARCHAR(10) NOT NULL,
-    jam_masuk TIME WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIME,
+    shift VARCHAR(10) NOT NULL,
+    jam_masuk TIME WITH TIME ZONE NOT NULL,
     jam_keluar TIME WITH TIME ZONE NOT NULL,
     keterangan VARCHAR(25) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (nip, tanggal),
     FOREIGN KEY (nip) REFERENCES pegawai(nip),
-    FOREIGN KEY (shift_id) REFERENCES shift(id)
+    FOREIGN KEY (shift) REFERENCES shift(shift)
 );
 
 -- Create Cuti Table
