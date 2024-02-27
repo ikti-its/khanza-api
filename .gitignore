@@ -1,15 +1,14 @@
-# Environment variables
-.env
-
-# Storage files
-storage/doc/*
-storage/image/*
-
-# Seeder
-core/database/seed/*
-
-# Keep empty directories
-!.gitkeep
-
 # GoLand
 .idea/
+
+# Environment variables
+.env
+.env.test
+
+# Storage files
+assets/doc/*
+assets/image/*
+test/assets/
+
+# Seeder
+database/seed/*

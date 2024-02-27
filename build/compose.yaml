@@ -1,0 +1,13 @@
+services:
+  simkes:
+    container_name: simkes-api
+    image: mfathoor/simkes-api:latest
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    networks:
+      pg:
+    restart: always
+
+networks:
+  pg:
+    external: true
