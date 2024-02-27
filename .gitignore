@@ -12,3 +12,6 @@ test/assets/
 
 # Seeder
 database/seed/*
+
+# Keep folder
+!.keep
