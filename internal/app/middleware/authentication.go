@@ -22,7 +22,7 @@ func Authenticate(role string) func(*fiber.Ctx) error {
 			claims := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)
 			user := claims["role"].(string)
 
-			if user == "ADMIN" || user == role || role == "PUBLIC" {
+			if user == "Admin" || role == "Public" || user == role {
 				return c.Next()
 			} else {
 				panic(exception.ForbiddenError{

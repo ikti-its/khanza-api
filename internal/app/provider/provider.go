@@ -7,8 +7,14 @@ import (
 	"github.com/fathoor/simkes-api/internal/app/route"
 	authController "github.com/fathoor/simkes-api/internal/auth/controller"
 	authService "github.com/fathoor/simkes-api/internal/auth/service"
+	departemenController "github.com/fathoor/simkes-api/internal/departemen/controller"
+	departemenRepository "github.com/fathoor/simkes-api/internal/departemen/repository"
+	departemenService "github.com/fathoor/simkes-api/internal/departemen/service"
 	fileController "github.com/fathoor/simkes-api/internal/file/controller"
 	fileService "github.com/fathoor/simkes-api/internal/file/service"
+	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
+	jabatanRepository "github.com/fathoor/simkes-api/internal/jabatan/repository"
+	jabatanService "github.com/fathoor/simkes-api/internal/jabatan/service"
 	roleController "github.com/fathoor/simkes-api/internal/role/controller"
 	roleRepository "github.com/fathoor/simkes-api/internal/role/repository"
 	roleService "github.com/fathoor/simkes-api/internal/role/service"
@@ -29,19 +35,29 @@ func (p *Provider) Provide() {
 	serviceAuth := authService.NewAuthServiceProvider(&repositoryAkun)
 	controllerAuth := authController.NewAuthControllerProvider(&serviceAuth)
 
+	repositoryDepartemen := departemenRepository.NewDepartemenRepositoryProvider(p.DB)
+	serviceDepartemen := departemenService.NewDepartemenServiceProvider(&repositoryDepartemen)
+	controllerDepartemen := departemenController.NewDepartemenControllerProvider(&serviceDepartemen)
+
 	serviceFile := fileService.NewFileServiceProvider()
 	controllerFile := fileController.NewFileControllerProvider(&serviceFile)
+
+	repositoryJabatan := jabatanRepository.NewJabatanRepositoryProvider(p.DB)
+	serviceJabatan := jabatanService.NewJabatanServiceProvider(&repositoryJabatan)
+	controllerJabatan := jabatanController.NewJabatanControllerProvider(&serviceJabatan)
 
 	repositoryRole := roleRepository.NewRoleRepositoryProvider(p.DB)
 	serviceRole := roleService.NewRoleServiceProvider(&repositoryRole)
 	controllerRole := roleController.NewRoleControllerProvider(&serviceRole)
 
 	router := route.Route{
-		App:            p.App,
-		AkunController: controllerAkun,
-		AuthController: controllerAuth,
-		FileController: controllerFile,
-		RoleController: controllerRole,
+		App:                  p.App,
+		AkunController:       controllerAkun,
+		AuthController:       controllerAuth,
+		DepartemenController: controllerDepartemen,
+		FileController:       controllerFile,
+		JabatanController:    controllerJabatan,
+		RoleController:       controllerRole,
 	}
 
 	router.Setup()
