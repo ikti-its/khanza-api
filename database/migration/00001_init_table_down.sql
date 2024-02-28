@@ -13,12 +13,12 @@ DROP TABLE IF EXISTS shift;
 -- Drop Pegawai Table
 DROP TABLE IF EXISTS pegawai;
 
+-- Drop Akun Table
+DROP TABLE IF EXISTS akun;
+
 DROP TYPE IF EXISTS jenis_kelamin;
 DROP TYPE IF EXISTS status_kerja;
 DROP TYPE IF EXISTS pendidikan;
-
--- Drop Akun Table
-DROP TABLE IF EXISTS akun;
 
 -- Drop Role Table
 DROP TABLE IF EXISTS role;

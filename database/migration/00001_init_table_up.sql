@@ -8,17 +8,6 @@ CREATE TABLE role (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create Akun Table
-CREATE TABLE akun (
-    nip VARCHAR(5) PRIMARY KEY,
-    email VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role_nama VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_nama) REFERENCES role(nama)
-);
-
 -- Create Jabatan Table
 CREATE TABLE jabatan (
     nama VARCHAR(25) PRIMARY KEY,
@@ -42,28 +31,38 @@ CREATE TYPE status_kerja AS ENUM ('Tetap', 'Kontrak');
 CREATE TYPE pendidikan AS ENUM ('SD', 'SMP', 'SMA', 'D3', 'S1', 'S2', 'S3');
 
 CREATE TABLE pegawai (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    nip VARCHAR(5) UNIQUE NOT NULL,
+    nip VARCHAR(5) PRIMARY KEY,
     nik VARCHAR(16) UNIQUE NOT NULL,
     nama VARCHAR(50) NOT NULL,
     jenis_kelamin jenis_kelamin NOT NULL,
-    jabatan VARCHAR(25) NOT NULL,
-    departemen VARCHAR(25) NOT NULL,
+    jabatan_nama VARCHAR(25) NOT NULL,
+    departemen_nama VARCHAR(25) NOT NULL,
     status_kerja status_kerja NOT NULL,
     pendidikan pendidikan NOT NULL,
     tempat_lahir VARCHAR(20) NOT NULL,
     tanggal_lahir DATE NOT NULL,
     alamat VARCHAR(255) NOT NULL,
-    alamat_lat FLOAT NOT NULL DEFAULT 7.2575,
-    alamat_lon FLOAT NOT NULL DEFAULT 112.7521,
+    alamat_lat NUMERIC NOT NULL DEFAULT 7.2575,
+    alamat_lon NUMERIC NOT NULL DEFAULT 112.7521,
     telepon VARCHAR(15) NOT NULL,
     tanggal_masuk DATE NOT NULL,
-    foto VARCHAR(255) NOT NULL DEFAULT '/storage/image/default.png',
+    foto VARCHAR(255) NOT NULL DEFAULT '/assets/image/default.png',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (nip) REFERENCES akun(nip),
-    FOREIGN KEY (jabatan) REFERENCES jabatan(nama),
-    FOREIGN KEY (departemen) REFERENCES departemen(nama)
+    FOREIGN KEY (jabatan_nama) REFERENCES jabatan(nama),
+    FOREIGN KEY (departemen_nama) REFERENCES departemen(nama)
+);
+
+-- Create Akun Table
+CREATE TABLE akun (
+    nip VARCHAR(5) PRIMARY KEY,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role_nama VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (nip) REFERENCES pegawai(nip),
+    FOREIGN KEY (role_nama) REFERENCES role(nama)
 );
 
 -- Create Shift Table

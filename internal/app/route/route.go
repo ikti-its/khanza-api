@@ -7,6 +7,7 @@ import (
 	departemenController "github.com/fathoor/simkes-api/internal/departemen/controller"
 	fileController "github.com/fathoor/simkes-api/internal/file/controller"
 	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
+	pegawaiController "github.com/fathoor/simkes-api/internal/pegawai/controller"
 	roleController "github.com/fathoor/simkes-api/internal/role/controller"
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,6 +19,7 @@ type Route struct {
 	DepartemenController departemenController.DepartemenController
 	FileController       fileController.FileController
 	JabatanController    jabatanController.JabatanController
+	PegawaiController    pegawaiController.PegawaiController
 	RoleController       roleController.RoleController
 }
 
@@ -27,6 +29,7 @@ func (r *Route) Setup() {
 	departemen := r.App.Group("/v1/departemen", middleware.Authenticate("Admin"))
 	file := r.App.Group("/v1/file", middleware.Authenticate("Public"))
 	jabatan := r.App.Group("/v1/jabatan", middleware.Authenticate("Admin"))
+	pegawai := r.App.Group("/v1/pegawai", middleware.Authenticate("Pegawai"))
 	role := r.App.Group("/v1/role", middleware.Authenticate("Admin"))
 
 	akun.Post("/", r.AkunController.Create, middleware.Authenticate("Admin"))
@@ -53,6 +56,12 @@ func (r *Route) Setup() {
 	jabatan.Get("/:jabatan", r.JabatanController.Get)
 	jabatan.Put("/:jabatan", r.JabatanController.Update)
 	jabatan.Delete("/:jabatan", r.JabatanController.Delete)
+
+	pegawai.Post("/", r.PegawaiController.Create)
+	pegawai.Get("/", r.PegawaiController.Get)
+	pegawai.Get("/:nip", r.PegawaiController.GetByNIP)
+	pegawai.Put("/:nip", r.PegawaiController.Update, middleware.AuthorizeNIP())
+	pegawai.Delete("/:nip", r.PegawaiController.Delete, middleware.Authenticate("Admin"))
 
 	role.Post("/", r.RoleController.Create)
 	role.Get("/", r.RoleController.GetAll)

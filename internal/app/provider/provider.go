@@ -15,6 +15,9 @@ import (
 	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
 	jabatanRepository "github.com/fathoor/simkes-api/internal/jabatan/repository"
 	jabatanService "github.com/fathoor/simkes-api/internal/jabatan/service"
+	pegawaiController "github.com/fathoor/simkes-api/internal/pegawai/controller"
+	pegawaiRepository "github.com/fathoor/simkes-api/internal/pegawai/repository"
+	pegawaiService "github.com/fathoor/simkes-api/internal/pegawai/service"
 	roleController "github.com/fathoor/simkes-api/internal/role/controller"
 	roleRepository "github.com/fathoor/simkes-api/internal/role/repository"
 	roleService "github.com/fathoor/simkes-api/internal/role/service"
@@ -46,6 +49,10 @@ func (p *Provider) Provide() {
 	serviceJabatan := jabatanService.NewJabatanServiceProvider(&repositoryJabatan)
 	controllerJabatan := jabatanController.NewJabatanControllerProvider(&serviceJabatan)
 
+	repositoryPegawai := pegawaiRepository.NewPegawaiRepositoryProvider(p.DB)
+	servicePegawai := pegawaiService.NewPegawaiServiceProvider(&repositoryPegawai)
+	controllerPegawai := pegawaiController.NewPegawaiControllerProvider(&servicePegawai)
+
 	repositoryRole := roleRepository.NewRoleRepositoryProvider(p.DB)
 	serviceRole := roleService.NewRoleServiceProvider(&repositoryRole)
 	controllerRole := roleController.NewRoleControllerProvider(&serviceRole)
@@ -57,6 +64,7 @@ func (p *Provider) Provide() {
 		DepartemenController: controllerDepartemen,
 		FileController:       controllerFile,
 		JabatanController:    controllerJabatan,
+		PegawaiController:    controllerPegawai,
 		RoleController:       controllerRole,
 	}
 
