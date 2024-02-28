@@ -66,12 +66,6 @@ func (service *departemenServiceImpl) Update(d string, request *model.Departemen
 		})
 	}
 
-	if _, err := service.DepartemenRepository.FindByDepartemen(request.Nama); err == nil {
-		panic(exception.BadRequestError{
-			Message: "Departemen already exists",
-		})
-	}
-
 	departemen, err := service.DepartemenRepository.FindByDepartemen(d)
 	if err != nil {
 		panic(exception.NotFoundError{

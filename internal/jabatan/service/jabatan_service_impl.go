@@ -82,12 +82,6 @@ func (service *jabatanServiceImpl) Update(j string, request *model.JabatanReques
 		})
 	}
 
-	if _, err := service.JabatanRepository.FindByJabatan(request.Nama); err == nil {
-		panic(exception.BadRequestError{
-			Message: "Jabatan already exists",
-		})
-	}
-
 	jabatan, err := service.JabatanRepository.FindByJabatan(j)
 	if err != nil {
 		panic(exception.NotFoundError{

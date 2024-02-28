@@ -76,12 +76,6 @@ func (service *roleServiceImpl) Update(r string, request *model.RoleRequest) mod
 		})
 	}
 
-	if _, err := service.RoleRepository.FindByRole(request.Nama); err == nil {
-		panic(exception.BadRequestError{
-			Message: "Role already exists",
-		})
-	}
-
 	role, err := service.RoleRepository.FindByRole(r)
 	if err != nil {
 		panic(exception.NotFoundError{
@@ -91,8 +85,9 @@ func (service *roleServiceImpl) Update(r string, request *model.RoleRequest) mod
 
 	role.Nama = request.Nama
 
-	err = service.RoleRepository.Update(&role)
-	exception.PanicIfError(err)
+	if err := service.RoleRepository.Update(&role); err != nil {
+		exception.PanicIfError(err)
+	}
 
 	response := model.RoleResponse{
 		Nama: role.Nama,

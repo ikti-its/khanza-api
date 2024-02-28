@@ -155,15 +155,8 @@ func (service *akunServiceImpl) UpdateAdmin(nip string, request *model.AkunReque
 
 		akun.Password = string(encrypted)
 	}
-
-	if _, err := service.AkunRepository.FindByNIP(request.NIP); err == nil {
-		panic(exception.BadRequestError{
-			Message: "NIP already exists",
-		})
-	} else {
-		akun.NIP = request.NIP
-	}
-
+	
+	akun.NIP = request.NIP
 	akun.Email = request.Email
 	akun.RoleNama = request.RoleNama
 
