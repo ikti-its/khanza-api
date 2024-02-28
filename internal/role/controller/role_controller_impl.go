@@ -30,7 +30,7 @@ func (controller *roleControllerImpl) Create(c *fiber.Ctx) error {
 	})
 }
 
-func (controller *roleControllerImpl) GetAll(c *fiber.Ctx) error {
+func (controller *roleControllerImpl) Get(c *fiber.Ctx) error {
 	response := controller.RoleService.GetAll()
 
 	return c.Status(fiber.StatusOK).JSON(web.Response{
@@ -40,7 +40,7 @@ func (controller *roleControllerImpl) GetAll(c *fiber.Ctx) error {
 	})
 }
 
-func (controller *roleControllerImpl) Get(c *fiber.Ctx) error {
+func (controller *roleControllerImpl) GetByNama(c *fiber.Ctx) error {
 	role := c.Params("role")
 
 	response := controller.RoleService.GetByRole(role)

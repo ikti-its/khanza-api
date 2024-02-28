@@ -30,7 +30,7 @@ func (controller *departemenControllerImpl) Create(c *fiber.Ctx) error {
 	})
 }
 
-func (controller *departemenControllerImpl) GetAll(c *fiber.Ctx) error {
+func (controller *departemenControllerImpl) Get(c *fiber.Ctx) error {
 	response := controller.DepartemenService.GetAll()
 
 	return c.Status(fiber.StatusOK).JSON(web.Response{
@@ -40,7 +40,7 @@ func (controller *departemenControllerImpl) GetAll(c *fiber.Ctx) error {
 	})
 }
 
-func (controller *departemenControllerImpl) Get(c *fiber.Ctx) error {
+func (controller *departemenControllerImpl) GetByNama(c *fiber.Ctx) error {
 	departemen := c.Params("departemen")
 
 	response := controller.DepartemenService.GetByDepartemen(departemen)

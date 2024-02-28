@@ -2,7 +2,7 @@ package controller
 
 import "github.com/gofiber/fiber/v2"
 
-type JabatanController interface {
+type ShiftController interface {
 	Create(c *fiber.Ctx) error
 	Get(c *fiber.Ctx) error
 	GetByNama(c *fiber.Ctx) error

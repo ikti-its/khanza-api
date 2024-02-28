@@ -30,7 +30,7 @@ func (controller *jabatanControllerImpl) Create(c *fiber.Ctx) error {
 	})
 }
 
-func (controller *jabatanControllerImpl) GetAll(c *fiber.Ctx) error {
+func (controller *jabatanControllerImpl) Get(c *fiber.Ctx) error {
 	response := controller.JabatanService.GetAll()
 
 	return c.Status(fiber.StatusOK).JSON(web.Response{
@@ -40,7 +40,7 @@ func (controller *jabatanControllerImpl) GetAll(c *fiber.Ctx) error {
 	})
 }
 
-func (controller *jabatanControllerImpl) Get(c *fiber.Ctx) error {
+func (controller *jabatanControllerImpl) GetByNama(c *fiber.Ctx) error {
 	jabatan := c.Params("jabatan")
 
 	response := controller.JabatanService.GetByJabatan(jabatan)

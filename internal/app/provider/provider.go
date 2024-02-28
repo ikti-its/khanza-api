@@ -21,6 +21,9 @@ import (
 	roleController "github.com/fathoor/simkes-api/internal/role/controller"
 	roleRepository "github.com/fathoor/simkes-api/internal/role/repository"
 	roleService "github.com/fathoor/simkes-api/internal/role/service"
+	shiftController "github.com/fathoor/simkes-api/internal/shift/controller"
+	shiftRepository "github.com/fathoor/simkes-api/internal/shift/repository"
+	shiftService "github.com/fathoor/simkes-api/internal/shift/service"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -57,6 +60,10 @@ func (p *Provider) Provide() {
 	serviceRole := roleService.NewRoleServiceProvider(&repositoryRole)
 	controllerRole := roleController.NewRoleControllerProvider(&serviceRole)
 
+	repositoryShift := shiftRepository.NewShiftRepositoryProvider(p.DB)
+	serviceShift := shiftService.NewShiftServiceProvider(&repositoryShift)
+	controllerShift := shiftController.NewShiftControllerProvider(&serviceShift)
+
 	router := route.Route{
 		App:                  p.App,
 		AkunController:       controllerAkun,
@@ -66,6 +73,7 @@ func (p *Provider) Provide() {
 		JabatanController:    controllerJabatan,
 		PegawaiController:    controllerPegawai,
 		RoleController:       controllerRole,
+		ShiftController:      controllerShift,
 	}
 
 	router.Setup()
