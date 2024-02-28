@@ -10,11 +10,11 @@ DROP TABLE IF EXISTS cuti;
 -- Drop Shift Table
 DROP TABLE IF EXISTS shift;
 
--- Drop Pegawai Table
-DROP TABLE IF EXISTS pegawai;
-
 -- Drop Akun Table
 DROP TABLE IF EXISTS akun;
+
+-- Drop Pegawai Table
+DROP TABLE IF EXISTS pegawai;
 
 DROP TYPE IF EXISTS jenis_kelamin;
 DROP TYPE IF EXISTS status_kerja;

@@ -15,6 +15,9 @@ import (
 	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
 	jabatanRepository "github.com/fathoor/simkes-api/internal/jabatan/repository"
 	jabatanService "github.com/fathoor/simkes-api/internal/jabatan/service"
+	jadwalPegawaiController "github.com/fathoor/simkes-api/internal/jadwal-pegawai/controller"
+	jadwalPegawaiRepository "github.com/fathoor/simkes-api/internal/jadwal-pegawai/repository"
+	jadwalPegawaiService "github.com/fathoor/simkes-api/internal/jadwal-pegawai/service"
 	pegawaiController "github.com/fathoor/simkes-api/internal/pegawai/controller"
 	pegawaiRepository "github.com/fathoor/simkes-api/internal/pegawai/repository"
 	pegawaiService "github.com/fathoor/simkes-api/internal/pegawai/service"
@@ -52,6 +55,10 @@ func (p *Provider) Provide() {
 	serviceJabatan := jabatanService.NewJabatanServiceProvider(&repositoryJabatan)
 	controllerJabatan := jabatanController.NewJabatanControllerProvider(&serviceJabatan)
 
+	repositoryJadwalPegawai := jadwalPegawaiRepository.NewJadwalPegawaiRepositoryProvider(p.DB)
+	serviceJadwalPegawai := jadwalPegawaiService.NewJadwalPegawaiServiceProvider(&repositoryJadwalPegawai)
+	controllerJadwalPegawai := jadwalPegawaiController.NewJadwalPegawaiControllerProvider(&serviceJadwalPegawai)
+
 	repositoryPegawai := pegawaiRepository.NewPegawaiRepositoryProvider(p.DB)
 	servicePegawai := pegawaiService.NewPegawaiServiceProvider(&repositoryPegawai)
 	controllerPegawai := pegawaiController.NewPegawaiControllerProvider(&servicePegawai)
@@ -65,15 +72,16 @@ func (p *Provider) Provide() {
 	controllerShift := shiftController.NewShiftControllerProvider(&serviceShift)
 
 	router := route.Route{
-		App:                  p.App,
-		AkunController:       controllerAkun,
-		AuthController:       controllerAuth,
-		DepartemenController: controllerDepartemen,
-		FileController:       controllerFile,
-		JabatanController:    controllerJabatan,
-		PegawaiController:    controllerPegawai,
-		RoleController:       controllerRole,
-		ShiftController:      controllerShift,
+		App:                     p.App,
+		AkunController:          controllerAkun,
+		AuthController:          controllerAuth,
+		DepartemenController:    controllerDepartemen,
+		FileController:          controllerFile,
+		JabatanController:       controllerJabatan,
+		JadwalPegawaiController: controllerJadwalPegawai,
+		PegawaiController:       controllerPegawai,
+		RoleController:          controllerRole,
+		ShiftController:         controllerShift,
 	}
 
 	router.Setup()

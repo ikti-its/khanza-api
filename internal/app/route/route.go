@@ -7,6 +7,7 @@ import (
 	departemenController "github.com/fathoor/simkes-api/internal/departemen/controller"
 	fileController "github.com/fathoor/simkes-api/internal/file/controller"
 	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
+	jadwalPegawaiController "github.com/fathoor/simkes-api/internal/jadwal-pegawai/controller"
 	pegawaiController "github.com/fathoor/simkes-api/internal/pegawai/controller"
 	roleController "github.com/fathoor/simkes-api/internal/role/controller"
 	shiftController "github.com/fathoor/simkes-api/internal/shift/controller"
@@ -14,15 +15,16 @@ import (
 )
 
 type Route struct {
-	App                  *fiber.App
-	AkunController       akunController.AkunController
-	AuthController       authController.AuthController
-	DepartemenController departemenController.DepartemenController
-	FileController       fileController.FileController
-	JabatanController    jabatanController.JabatanController
-	PegawaiController    pegawaiController.PegawaiController
-	RoleController       roleController.RoleController
-	ShiftController      shiftController.ShiftController
+	App                     *fiber.App
+	AkunController          akunController.AkunController
+	AuthController          authController.AuthController
+	DepartemenController    departemenController.DepartemenController
+	FileController          fileController.FileController
+	JabatanController       jabatanController.JabatanController
+	JadwalPegawaiController jadwalPegawaiController.JadwalPegawaiController
+	PegawaiController       pegawaiController.PegawaiController
+	RoleController          roleController.RoleController
+	ShiftController         shiftController.ShiftController
 }
 
 func (r *Route) Setup() {
@@ -31,6 +33,7 @@ func (r *Route) Setup() {
 	departemen := r.App.Group("/v1/departemen", middleware.Authenticate("Admin"))
 	file := r.App.Group("/v1/file", middleware.Authenticate("Public"))
 	jabatan := r.App.Group("/v1/jabatan", middleware.Authenticate("Admin"))
+	jadwalPegawai := r.App.Group("/v1/jadwal-pegawai", middleware.Authenticate("Admin"))
 	pegawai := r.App.Group("/v1/pegawai", middleware.Authenticate("Pegawai"))
 	role := r.App.Group("/v1/role", middleware.Authenticate("Admin"))
 	shift := r.App.Group("/v1/shift", middleware.Authenticate("Admin"))
@@ -59,6 +62,12 @@ func (r *Route) Setup() {
 	jabatan.Get("/:jabatan", r.JabatanController.GetByNama)
 	jabatan.Put("/:jabatan", r.JabatanController.Update)
 	jabatan.Delete("/:jabatan", r.JabatanController.Delete)
+
+	jadwalPegawai.Post("/", r.JadwalPegawaiController.Create)
+	jadwalPegawai.Get("/", r.JadwalPegawaiController.Get)
+	jadwalPegawai.Get("/:tahun/:bulan/:hari/:nip", r.JadwalPegawaiController.GetByPK)
+	jadwalPegawai.Put("/:tahun/:bulan/:hari/:nip", r.JadwalPegawaiController.Update)
+	jadwalPegawai.Delete("/:tahun/:bulan/:hari/:nip", r.JadwalPegawaiController.Delete)
 
 	pegawai.Post("/", r.PegawaiController.Create)
 	pegawai.Get("/", r.PegawaiController.Get)

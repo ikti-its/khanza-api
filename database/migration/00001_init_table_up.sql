@@ -80,27 +80,27 @@ CREATE TABLE jadwal_pegawai (
     tahun SMALLINT NOT NULL,
     bulan SMALLINT NOT NULL,
     hari SMALLINT NOT NULL,
-    shift VARCHAR(10) NOT NULL,
+    shift_nama VARCHAR(10) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (nip, tahun, bulan, hari),
     FOREIGN KEY (nip) REFERENCES pegawai(nip),
-    FOREIGN KEY (shift) REFERENCES shift(nama)
+    FOREIGN KEY (shift_nama) REFERENCES shift(nama)
 );
 
 -- Create Kehadiran Table
 CREATE TABLE kehadiran (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nip VARCHAR(5) NOT NULL,
     tanggal DATE NOT NULL DEFAULT CURRENT_DATE,
-    shift VARCHAR(10) NOT NULL,
-    jam_masuk TIME WITH TIME ZONE NOT NULL,
-    jam_keluar TIME WITH TIME ZONE NOT NULL,
+    shift_nama VARCHAR(10) NOT NULL,
+    jam_masuk TIME WITH TIME ZONE,
+    jam_keluar TIME WITH TIME ZONE,
     keterangan VARCHAR(25) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (nip, tanggal),
     FOREIGN KEY (nip) REFERENCES pegawai(nip),
-    FOREIGN KEY (shift) REFERENCES shift(nama)
+    FOREIGN KEY (shift_nama) REFERENCES shift(nama)
 );
 
 -- Create Cuti Table
