@@ -4,7 +4,7 @@ LABEL maintainer="mfathoor.23@gmail.com" \
       github="https://github.com/fathoor/simkes-api" \
       dockerhub="https://hub.docker.com/r/mfathoor/simkes-api"
 
-RUN apk update && apk add --no-cache git
+RUN apk update && apk add --no-cache git && apk add --no-cache tzdata
 
 WORKDIR /app
 

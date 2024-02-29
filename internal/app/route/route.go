@@ -8,6 +8,7 @@ import (
 	fileController "github.com/fathoor/simkes-api/internal/file/controller"
 	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
 	jadwalPegawaiController "github.com/fathoor/simkes-api/internal/jadwal-pegawai/controller"
+	kehadiranController "github.com/fathoor/simkes-api/internal/kehadiran/controller"
 	pegawaiController "github.com/fathoor/simkes-api/internal/pegawai/controller"
 	roleController "github.com/fathoor/simkes-api/internal/role/controller"
 	shiftController "github.com/fathoor/simkes-api/internal/shift/controller"
@@ -22,6 +23,7 @@ type Route struct {
 	FileController          fileController.FileController
 	JabatanController       jabatanController.JabatanController
 	JadwalPegawaiController jadwalPegawaiController.JadwalPegawaiController
+	KehadiranController     kehadiranController.KehadiranController
 	PegawaiController       pegawaiController.PegawaiController
 	RoleController          roleController.RoleController
 	ShiftController         shiftController.ShiftController
@@ -34,6 +36,7 @@ func (r *Route) Setup() {
 	file := r.App.Group("/v1/file", middleware.Authenticate("Public"))
 	jabatan := r.App.Group("/v1/jabatan", middleware.Authenticate("Admin"))
 	jadwalPegawai := r.App.Group("/v1/jadwal-pegawai", middleware.Authenticate("Admin"))
+	kehadiran := r.App.Group("/v1/kehadiran", middleware.Authenticate("Admin"))
 	pegawai := r.App.Group("/v1/pegawai", middleware.Authenticate("Pegawai"))
 	role := r.App.Group("/v1/role", middleware.Authenticate("Admin"))
 	shift := r.App.Group("/v1/shift", middleware.Authenticate("Admin"))
@@ -44,7 +47,7 @@ func (r *Route) Setup() {
 	akun.Put("/:nip", r.AkunController.Update, middleware.Authenticate("Pegawai"), middleware.AuthorizeNIP())
 	akun.Delete("/:nip", r.AkunController.Delete, middleware.Authenticate("Admin"))
 
-	auth.Post("/", r.AuthController.Login)
+	auth.Post("/login", r.AuthController.Login)
 
 	departemen.Post("/", r.DepartemenController.Create)
 	departemen.Get("/", r.DepartemenController.Get)
@@ -68,6 +71,13 @@ func (r *Route) Setup() {
 	jadwalPegawai.Get("/:tahun/:bulan/:hari/:nip", r.JadwalPegawaiController.GetByPK)
 	jadwalPegawai.Put("/:tahun/:bulan/:hari/:nip", r.JadwalPegawaiController.Update)
 	jadwalPegawai.Delete("/:tahun/:bulan/:hari/:nip", r.JadwalPegawaiController.Delete)
+
+	kehadiran.Post("/checkin", r.KehadiranController.CheckIn)
+	kehadiran.Post("/checkout", r.KehadiranController.CheckOut)
+	kehadiran.Get("/", r.KehadiranController.Get)
+	kehadiran.Get("/:id", r.KehadiranController.GetByID)
+	kehadiran.Put("/:id", r.KehadiranController.Update)
+	kehadiran.Delete("/:id", r.KehadiranController.Delete)
 
 	pegawai.Post("/", r.PegawaiController.Create)
 	pegawai.Get("/", r.PegawaiController.Get)

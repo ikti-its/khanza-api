@@ -18,6 +18,9 @@ import (
 	jadwalPegawaiController "github.com/fathoor/simkes-api/internal/jadwal-pegawai/controller"
 	jadwalPegawaiRepository "github.com/fathoor/simkes-api/internal/jadwal-pegawai/repository"
 	jadwalPegawaiService "github.com/fathoor/simkes-api/internal/jadwal-pegawai/service"
+	kehadiranController "github.com/fathoor/simkes-api/internal/kehadiran/controller"
+	kehadiranRepository "github.com/fathoor/simkes-api/internal/kehadiran/repository"
+	kehadiranService "github.com/fathoor/simkes-api/internal/kehadiran/service"
 	pegawaiController "github.com/fathoor/simkes-api/internal/pegawai/controller"
 	pegawaiRepository "github.com/fathoor/simkes-api/internal/pegawai/repository"
 	pegawaiService "github.com/fathoor/simkes-api/internal/pegawai/service"
@@ -59,6 +62,14 @@ func (p *Provider) Provide() {
 	serviceJadwalPegawai := jadwalPegawaiService.NewJadwalPegawaiServiceProvider(&repositoryJadwalPegawai)
 	controllerJadwalPegawai := jadwalPegawaiController.NewJadwalPegawaiControllerProvider(&serviceJadwalPegawai)
 
+	repositoryShift := shiftRepository.NewShiftRepositoryProvider(p.DB)
+	serviceShift := shiftService.NewShiftServiceProvider(&repositoryShift)
+	controllerShift := shiftController.NewShiftControllerProvider(&serviceShift)
+
+	repositoryKehadiran := kehadiranRepository.NewKehadiranRepositoryProvider(p.DB)
+	serviceKehadiran := kehadiranService.NewKehadiranServiceProvider(&repositoryKehadiran, &repositoryShift)
+	controllerKehadiran := kehadiranController.NewKehadiranControllerProvider(&serviceKehadiran)
+
 	repositoryPegawai := pegawaiRepository.NewPegawaiRepositoryProvider(p.DB)
 	servicePegawai := pegawaiService.NewPegawaiServiceProvider(&repositoryPegawai)
 	controllerPegawai := pegawaiController.NewPegawaiControllerProvider(&servicePegawai)
@@ -66,10 +77,6 @@ func (p *Provider) Provide() {
 	repositoryRole := roleRepository.NewRoleRepositoryProvider(p.DB)
 	serviceRole := roleService.NewRoleServiceProvider(&repositoryRole)
 	controllerRole := roleController.NewRoleControllerProvider(&serviceRole)
-
-	repositoryShift := shiftRepository.NewShiftRepositoryProvider(p.DB)
-	serviceShift := shiftService.NewShiftServiceProvider(&repositoryShift)
-	controllerShift := shiftController.NewShiftControllerProvider(&serviceShift)
 
 	router := route.Route{
 		App:                     p.App,
@@ -79,6 +86,7 @@ func (p *Provider) Provide() {
 		FileController:          controllerFile,
 		JabatanController:       controllerJabatan,
 		JadwalPegawaiController: controllerJadwalPegawai,
+		KehadiranController:     controllerKehadiran,
 		PegawaiController:       controllerPegawai,
 		RoleController:          controllerRole,
 		ShiftController:         controllerShift,

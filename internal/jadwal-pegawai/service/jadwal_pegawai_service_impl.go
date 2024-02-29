@@ -46,7 +46,7 @@ func (service *jadwalPegawaiServiceImpl) GetAll() []model.JadwalPegawaiResponse 
 	jadwalPegawai, err := service.JadwalPegawaiRepository.FindAll()
 	exception.PanicIfError(err)
 
-	var response []model.JadwalPegawaiResponse
+	response := make([]model.JadwalPegawaiResponse, len(jadwalPegawai))
 	for i, jadwalPegawai := range jadwalPegawai {
 		response[i] = model.JadwalPegawaiResponse{
 			NIP:       jadwalPegawai.NIP,
@@ -64,7 +64,7 @@ func (service *jadwalPegawaiServiceImpl) GetByNIP(nip string) []model.JadwalPega
 	jadwalPegawai, err := service.JadwalPegawaiRepository.FindByNIP(nip)
 	exception.PanicIfError(err)
 
-	var response []model.JadwalPegawaiResponse
+	response := make([]model.JadwalPegawaiResponse, len(jadwalPegawai))
 	for i, jadwalPegawai := range jadwalPegawai {
 		response[i] = model.JadwalPegawaiResponse{
 			NIP:       jadwalPegawai.NIP,
@@ -82,7 +82,7 @@ func (service *jadwalPegawaiServiceImpl) GetByTahunBulan(tahun, bulan int16) []m
 	jadwalPegawai, err := service.JadwalPegawaiRepository.FindByTahunBulan(tahun, bulan)
 	exception.PanicIfError(err)
 
-	var response []model.JadwalPegawaiResponse
+	response := make([]model.JadwalPegawaiResponse, len(jadwalPegawai))
 	for i, jadwalPegawai := range jadwalPegawai {
 		response[i] = model.JadwalPegawaiResponse{
 			NIP:       jadwalPegawai.NIP,

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/fathoor/simkes-api/internal/shift/entity"
 	"github.com/fathoor/simkes-api/internal/shift/model"
@@ -20,10 +21,10 @@ func (service *shiftServiceImpl) Create(request *model.ShiftRequest) model.Shift
 		})
 	}
 
-	jamMasuk, err := time.Parse("15:04:05", request.JamMasuk)
+	jamMasuk, err := time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("1970-01-01 %s", request.JamMasuk), time.FixedZone("WIB", 7*60*60))
 	exception.PanicIfError(err)
 
-	jamKeluar, err := time.Parse("15:04:05", request.JamKeluar)
+	jamKeluar, err := time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("1970-01-01 %s", request.JamKeluar), time.FixedZone("WIB", 7*60*60))
 	exception.PanicIfError(err)
 
 	shift := entity.Shift{
@@ -38,8 +39,8 @@ func (service *shiftServiceImpl) Create(request *model.ShiftRequest) model.Shift
 
 	response := model.ShiftResponse{
 		Nama:      shift.Nama,
-		JamMasuk:  shift.JamMasuk.Format("15:04:05"),
-		JamKeluar: shift.JamKeluar.Format("15:04:05"),
+		JamMasuk:  shift.JamMasuk.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
+		JamKeluar: shift.JamKeluar.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
 	}
 
 	return response
@@ -49,12 +50,12 @@ func (service *shiftServiceImpl) GetAll() []model.ShiftResponse {
 	shift, err := service.ShiftRepository.FindAll()
 	exception.PanicIfError(err)
 
-	var response []model.ShiftResponse
+	response := make([]model.ShiftResponse, len(shift))
 	for i, shift := range shift {
 		response[i] = model.ShiftResponse{
 			Nama:      shift.Nama,
-			JamMasuk:  shift.JamMasuk.Format("15:04:05"),
-			JamKeluar: shift.JamKeluar.Format("15:04:05"),
+			JamMasuk:  shift.JamMasuk.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
+			JamKeluar: shift.JamKeluar.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
 		}
 	}
 
@@ -71,8 +72,8 @@ func (service *shiftServiceImpl) GetByNama(nama string) model.ShiftResponse {
 
 	response := model.ShiftResponse{
 		Nama:      shift.Nama,
-		JamMasuk:  shift.JamMasuk.Format("15:04:05"),
-		JamKeluar: shift.JamKeluar.Format("15:04:05"),
+		JamMasuk:  shift.JamMasuk.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
+		JamKeluar: shift.JamKeluar.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
 	}
 
 	return response
@@ -92,10 +93,10 @@ func (service *shiftServiceImpl) Update(nama string, request *model.ShiftRequest
 		})
 	}
 
-	jamMasuk, err := time.Parse("15:04:05", request.JamMasuk)
+	jamMasuk, err := time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("1970-01-01 %s", request.JamMasuk), time.FixedZone("WIB", 7*60*60))
 	exception.PanicIfError(err)
 
-	jamKeluar, err := time.Parse("15:04:05", request.JamKeluar)
+	jamKeluar, err := time.ParseInLocation("2006-01-02 15:04:05", fmt.Sprintf("1970-01-01 %s", request.JamKeluar), time.FixedZone("WIB", 7*60*60))
 	exception.PanicIfError(err)
 
 	shift.Nama = request.Nama
@@ -108,8 +109,8 @@ func (service *shiftServiceImpl) Update(nama string, request *model.ShiftRequest
 
 	response := model.ShiftResponse{
 		Nama:      shift.Nama,
-		JamMasuk:  shift.JamMasuk.Format("15:04:05"),
-		JamKeluar: shift.JamKeluar.Format("15:04:05"),
+		JamMasuk:  shift.JamMasuk.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
+		JamKeluar: shift.JamKeluar.In(time.FixedZone("WIB", 7*60*60)).Format("15:04:05"),
 	}
 
 	return response
