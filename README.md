@@ -5,7 +5,7 @@
 [![Image Size](https://img.shields.io/docker/image-size/mfathoor/simkes-api?logo=docker&logoColor=white&color=white)](https://hub.docker.com/r/mfathoor/simkes-api)
 [![Docker Hub](https://img.shields.io/badge/Docker%20Hub-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/mfathoor/simkes-api)
 
-Dockerized RESTful API for Health Information System, built using Go with Clean Architecture.
+Dockerized RESTful API for Health Information System, built using Go with Clean Architecture and automated CI/CD pipeline.
 
 ***
 
@@ -13,12 +13,10 @@ Dockerized RESTful API for Health Information System, built using Go with Clean 
 [![Go](https://img.shields.io/badge/Go-grey.svg?style=for-the-badge&logo=go&logoColor=white)](https://golang.org/)
 [![Fiber](https://img.shields.io/badge/Fiber-grey.svg?style=for-the-badge&logo=go&logoColor=white)](https://gofiber.io/)
 [![GORM](https://img.shields.io/badge/GORM-grey.svg?style=for-the-badge&logo=go&logoColor=white)](https://gorm.io/)
-[![JWT](https://img.shields.io/badge/JWT-grey.svg?style=for-the-badge&logo=json-web-tokens&logoColor=white)](https://jwt.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-grey.svg?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-grey.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Nginx](https://img.shields.io/badge/Nginx-grey.svg?style=for-the-badge&logo=nginx&logoColor=white)](https://www.nginx.com/)
 [![Jenkins](https://img.shields.io/badge/Jenkins-grey.svg?style=for-the-badge&logo=jenkins&logoColor=white)](https://www.jenkins.io/)
-[![Postman](https://img.shields.io/badge/Postman-grey.svg?style=for-the-badge&logo=postman&logoColor=white)](https://www.postman.com/)
 
 ***
 
