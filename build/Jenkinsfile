@@ -1,0 +1,72 @@
+pipeline {
+    agent any
+    stages {
+        stage('Environment') {
+            steps {
+                sh "cd .."
+                sh """
+                echo "APP_NAME=${env.APP_NAME}" > .env
+                echo "APP_PORT=${env.APP_PORT}" >> .env
+                echo "APP_STORAGE=${env.APP_STORAGE}" >> .env
+                echo "APP_ASSETS=${env.APP_ASSETS}" >> .env
+                echo "TZ=${env.TZ}" >> .env
+                echo "PG_HOST=${env.PG_HOST}" >> .env
+                echo "PG_PORT=${env.PG_PORT}" >> .env
+                echo "PG_USER=${env.PG_USER}" >> .env
+                echo "PG_PASSWORD=${env.PG_PASSWORD}" >> .env
+                echo "PG_NAME=${env.PG_NAME}" >> .env
+                echo "PG_CONN_OPEN=${env.PG_CONN_OPEN}" >> .env
+                echo "PG_CONN_IDLE=${env.PG_CONN_IDLE}" >> .env
+                echo "PG_CONN_LIFETIME=${env.PG_CONN_LIFETIME}" >> .env
+                echo "JWT_SECRET=${env.JWT_SECRET}" >> .env
+                echo "JWT_EXPIRE=${env.JWT_EXPIRE}" >> .env
+                """
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -f build/Dockerfile --platform=linux/amd64 -t mfathoor/simkes-api:latest .'
+            }
+        }
+        stage('Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'fathoor-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
+                }
+                sh 'docker push mfathoor/simkes-api:latest'
+            }
+        }
+        stage('Deploy'){
+            stages {
+                stage('Down') {
+                    steps {
+                        sh 'docker compose -f build/compose.yaml down'
+                    }
+                }
+                stage('Clean') {
+                    steps {
+                        sh 'docker image rm mfathoor/simkes-api:latest'
+                    }
+                }
+                stage('Up') {
+                    steps {
+                        sh 'docker compose -f build/compose.yaml up -d'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'App is deployed successfully.'
+        }
+        failure {
+            echo 'App deployment failed.'
+        }
+        cleanup {
+            echo 'Cleaning up..'
+            deleteDir()
+            echo 'Cleaned up.'
+        }
+    }
+}
