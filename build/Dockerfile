@@ -22,7 +22,7 @@ WORKDIR /cmd
 
 COPY --from=builder /app/simkes-api /app/.env ./
 
-COPY --from=builder /app/api/swagger.json ./api/
+COPY --from=builder /app/api/swagger.yaml ./api/
 
 COPY --from=builder /app/assets ./assets
 
