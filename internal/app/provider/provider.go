@@ -7,6 +7,9 @@ import (
 	"github.com/fathoor/simkes-api/internal/app/route"
 	authController "github.com/fathoor/simkes-api/internal/auth/controller"
 	authService "github.com/fathoor/simkes-api/internal/auth/service"
+	cutiController "github.com/fathoor/simkes-api/internal/cuti/controller"
+	cutiRepository "github.com/fathoor/simkes-api/internal/cuti/repository"
+	cutiService "github.com/fathoor/simkes-api/internal/cuti/service"
 	departemenController "github.com/fathoor/simkes-api/internal/departemen/controller"
 	departemenRepository "github.com/fathoor/simkes-api/internal/departemen/repository"
 	departemenService "github.com/fathoor/simkes-api/internal/departemen/service"
@@ -47,6 +50,10 @@ func (p *Provider) Provide() {
 	serviceAuth := authService.NewAuthServiceProvider(&repositoryAkun)
 	controllerAuth := authController.NewAuthControllerProvider(&serviceAuth)
 
+	repositoryCuti := cutiRepository.NewCutiRepositoryProvider(p.DB)
+	serviceCuti := cutiService.NewCutiServiceProvider(&repositoryCuti)
+	controllerCuti := cutiController.NewCutiControllerProvider(&serviceCuti)
+
 	repositoryDepartemen := departemenRepository.NewDepartemenRepositoryProvider(p.DB)
 	serviceDepartemen := departemenService.NewDepartemenServiceProvider(&repositoryDepartemen)
 	controllerDepartemen := departemenController.NewDepartemenControllerProvider(&serviceDepartemen)
@@ -82,6 +89,7 @@ func (p *Provider) Provide() {
 		App:                     p.App,
 		AkunController:          controllerAkun,
 		AuthController:          controllerAuth,
+		CutiController:          controllerCuti,
 		DepartemenController:    controllerDepartemen,
 		FileController:          controllerFile,
 		JabatanController:       controllerJabatan,

@@ -105,6 +105,7 @@ CREATE TABLE kehadiran (
 
 -- Create Cuti Table
 CREATE TABLE cuti (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nip VARCHAR(5) NOT NULL,
     tanggal_mulai DATE NOT NULL,
     tanggal_selesai DATE NOT NULL,
@@ -112,6 +113,5 @@ CREATE TABLE cuti (
     status BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (nip, tanggal_mulai, tanggal_selesai),
     FOREIGN KEY (nip) REFERENCES pegawai(nip)
 );

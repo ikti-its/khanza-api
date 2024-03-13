@@ -4,6 +4,7 @@ import (
 	akunController "github.com/fathoor/simkes-api/internal/akun/controller"
 	"github.com/fathoor/simkes-api/internal/app/middleware"
 	authController "github.com/fathoor/simkes-api/internal/auth/controller"
+	cutiController "github.com/fathoor/simkes-api/internal/cuti/controller"
 	departemenController "github.com/fathoor/simkes-api/internal/departemen/controller"
 	fileController "github.com/fathoor/simkes-api/internal/file/controller"
 	jabatanController "github.com/fathoor/simkes-api/internal/jabatan/controller"
@@ -19,6 +20,7 @@ type Route struct {
 	App                     *fiber.App
 	AkunController          akunController.AkunController
 	AuthController          authController.AuthController
+	CutiController          cutiController.CutiController
 	DepartemenController    departemenController.DepartemenController
 	FileController          fileController.FileController
 	JabatanController       jabatanController.JabatanController
@@ -32,6 +34,7 @@ type Route struct {
 func (r *Route) Setup() {
 	akun := r.App.Group("/v1/akun", middleware.Authenticate("Public"))
 	auth := r.App.Group("/v1/auth")
+	cuti := r.App.Group("/v1/cuti", middleware.Authenticate("Pegawai"))
 	departemen := r.App.Group("/v1/departemen", middleware.Authenticate("Admin"))
 	file := r.App.Group("/v1/file", middleware.Authenticate("Public"))
 	jabatan := r.App.Group("/v1/jabatan", middleware.Authenticate("Admin"))
@@ -48,6 +51,12 @@ func (r *Route) Setup() {
 	akun.Delete("/:nip", r.AkunController.Delete, middleware.Authenticate("Admin"))
 
 	auth.Post("/login", r.AuthController.Login)
+
+	cuti.Post("/", r.CutiController.Create)
+	cuti.Get("/", r.CutiController.Get)
+	cuti.Get("/:id", r.CutiController.GetByID)
+	cuti.Put("/:id", r.CutiController.Update)
+	cuti.Delete("/:id", r.CutiController.Delete)
 
 	departemen.Post("/", r.DepartemenController.Create)
 	departemen.Get("/", r.DepartemenController.Get)
