@@ -3,10 +3,18 @@ services:
     container_name: simkes
     image: mfathoor/simkes-api:alpine
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - 13379:8080
     networks:
       simkes:
+    volumes:
+      - ../assets:/cmd/assets
+      - ../.env:/cmd/.env
     restart: always
+    healthcheck:
+      test: ["CMD", "wget", "http://localhost:8080/healthz", "-q", "-O", "-"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
 
 networks:
   simkes:

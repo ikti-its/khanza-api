@@ -24,5 +24,19 @@ func NewFiber() *fiber.App {
 	}
 	app.Use(logger.New(log)) // Log requests [Only for development, remove in production]
 
+	// Default Route
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+			"message": "Endpoint `/` is not set. Please refer to the API documentation: https://documenter.getpostman.com/view/23649536/2sA2rDy1iF",
+		})
+	})
+
+	// Health Check
+	app.Get("/healthz", func(ctx *fiber.Ctx) error {
+		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+			"status": "healthy",
+		})
+	})
+
 	return app
 }

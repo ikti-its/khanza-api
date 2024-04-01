@@ -8,11 +8,8 @@ pipeline {
                 echo "APP_NAME=${env.APP_NAME}" > .env
                 echo "APP_PORT=${env.APP_PORT}" >> .env
                 echo "APP_STORAGE=${env.APP_STORAGE}" >> .env
-                echo "PG_HOST=${env.PG_HOST}" >> .env
-                echo "PG_PORT=${env.PG_PORT}" >> .env
-                echo "PG_USER=${env.PG_USER}" >> .env
-                echo "PG_PASSWORD=${env.PG_PASSWORD}" >> .env
-                echo "PG_NAME=${env.PG_NAME}" >> .env
+                echo "APP_STORAGE=${env.APP_URL}" >> .env
+                echo "PG_HOST=${env.PG_DSN}" >> .env
                 echo "PG_CONN_OPEN=${env.PG_CONN_OPEN}" >> .env
                 echo "PG_CONN_IDLE=${env.PG_CONN_IDLE}" >> .env
                 echo "PG_CONN_LIFETIME=${env.PG_CONN_LIFETIME}" >> .env
@@ -38,12 +35,7 @@ pipeline {
             stages {
                 stage('Down') {
                     steps {
-                        sh 'docker compose -f build/compose.yaml down'
-                    }
-                }
-                stage('Clean') {
-                    steps {
-                        sh 'docker image rm mfathoor/simkes-api:alpine'
+                        sh 'docker compose -f build/compose.yaml down && docker image rm mfathoor/simkes-api:alpine'
                     }
                 }
                 stage('Up') {
