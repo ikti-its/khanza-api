@@ -1,58 +1,47 @@
 package exception
 
-type BadRequestError struct {
-	Message string
-}
+import "log"
 
-type UnauthorizedError struct {
-	Message string
-}
+type (
+	BadRequestError     struct{ Message string }
+	UnauthorizedError   struct{ Message string }
+	ForbiddenError      struct{ Message string }
+	NotFoundError       struct{ Message string }
+	InternalServerError struct{ Message string }
+	ValidationError     struct {
+		FailedField string
+		Tag         string
+		Value       any
+	}
+)
 
-type ForbiddenError struct {
-	Message string
+func (e *BadRequestError) Error() string {
+	return e.Message
 }
-
-type NotFoundError struct {
-	Message string
+func (e *UnauthorizedError) Error() string {
+	return e.Message
 }
-
-type InternalServerError struct {
-	Message string
+func (e *ForbiddenError) Error() string {
+	return e.Message
 }
-
-func (e BadRequestError) Error() string {
+func (e *NotFoundError) Error() string {
+	return e.Message
+}
+func (e *InternalServerError) Error() string {
 	return e.Message
 }
 
-func (e UnauthorizedError) Error() string {
-	return e.Message
-}
-
-func (e ForbiddenError) Error() string {
-	return e.Message
-}
-
-func (e NotFoundError) Error() string {
-	return e.Message
-}
-
-func (e InternalServerError) Error() string {
-	return e.Message
-}
-
-func PanicIfError(e error) {
-	if e != nil {
-		switch e.Error() {
-		case "duplicated key not allowed":
-			panic(BadRequestError{
-				Message: "Data already exists",
-			})
-		case "record not found":
-			panic(NotFoundError{
+func PanicIfError(err error, ctx ...string) {
+	if err != nil {
+		if err.Error() == "record not found" {
+			panic(&NotFoundError{
 				Message: "Data not found",
 			})
-		default:
-			panic(e)
+		} else {
+			log.Printf("Error: `%v` %v", ctx, err)
+			panic(&InternalServerError{
+				Message: "Internal Server Error",
+			})
 		}
 	}
 }

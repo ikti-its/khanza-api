@@ -7,11 +7,11 @@
 
 # Storage files
 assets/doc/*
-assets/image/*
+assets/img/*
 test/assets/
 
 # Seeder
-database/seed/*
+db/
 
-# Keep folder
-!.keep
+# Keep
+!.gitkeep

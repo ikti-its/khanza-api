@@ -8,8 +8,6 @@ pipeline {
                 echo "APP_NAME=${env.APP_NAME}" > .env
                 echo "APP_PORT=${env.APP_PORT}" >> .env
                 echo "APP_STORAGE=${env.APP_STORAGE}" >> .env
-                echo "APP_ASSETS=${env.APP_ASSETS}" >> .env
-                echo "TZ=${env.TZ}" >> .env
                 echo "PG_HOST=${env.PG_HOST}" >> .env
                 echo "PG_PORT=${env.PG_PORT}" >> .env
                 echo "PG_USER=${env.PG_USER}" >> .env
@@ -25,7 +23,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'docker build -f build/Dockerfile --platform=linux/amd64 -t mfathoor/simkes-api:latest .'
+                sh 'docker build -f build/Dockerfile --platform=linux/amd64 -t mfathoor/simkes-api:alpine .'
             }
         }
         stage('Push') {
@@ -33,7 +31,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'fathoor-docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh 'docker login -u $USERNAME -p $PASSWORD'
                 }
-                sh 'docker push mfathoor/simkes-api:latest'
+                sh 'docker push mfathoor/simkes-api:alpine'
             }
         }
         stage('Deploy'){
@@ -45,7 +43,7 @@ pipeline {
                 }
                 stage('Clean') {
                     steps {
-                        sh 'docker image rm mfathoor/simkes-api:latest'
+                        sh 'docker image rm mfathoor/simkes-api:alpine'
                     }
                 }
                 stage('Up') {

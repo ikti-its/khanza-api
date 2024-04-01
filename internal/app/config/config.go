@@ -1,30 +1,28 @@
 package config
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
+	"log"
 	"os"
 	"strconv"
 )
 
-type Config interface {
-	Get(key string) string
-	GetInt(key string) int
+type Config struct {
 }
 
-type configImpl struct {
-}
-
-func (c *configImpl) Get(key string) string {
+func (c *Config) Get(key string) string {
 	return os.Getenv(key)
 }
 
-func (c *configImpl) GetInt(key string) int {
+func (c *Config) GetInt(key string, def int) int {
 	value, err := strconv.Atoi(os.Getenv(key))
-	exception.PanicIfError(err)
+	if err != nil {
+		log.Printf("Failed to parse %s to int: %v", key, err)
+		return def
+	}
 
 	return value
 }
 
-func ProvideConfig() Config {
-	return &configImpl{}
+func NewConfig() *Config {
+	return &Config{}
 }

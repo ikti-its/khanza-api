@@ -1,31 +1,19 @@
 FROM golang:alpine as builder
-LABEL maintainer="mfathoor.23@gmail.com" \
-      name="mfathoor/simkes-api" \
-      github="https://github.com/fathoor/simkes-api" \
-      dockerhub="https://hub.docker.com/r/mfathoor/simkes-api"
+LABEL maintainer="mfathoor"
 
-RUN apk update && apk add --no-cache git && apk add --no-cache tzdata
+RUN apk update && apk add --no-cache git
 
 WORKDIR /app
-
-COPY go.mod go.sum ./
-
-RUN go mod tidy
-
+COPY go.mod .
+RUN go mod download
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o simkes-api ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o simkes ./cmd/web/main.go
 
-FROM alpine:latest
+FROM alpine:latest as release
 
 WORKDIR /cmd
-
-COPY --from=builder /app/simkes-api /app/.env ./
-
-COPY --from=builder /app/api/swagger.yaml ./api/
-
+COPY --from=builder /app/simkes /app/.env ./
 COPY --from=builder /app/assets ./assets
 
-EXPOSE ${APP_PORT}
-
-ENTRYPOINT ["/cmd/simkes-api"]
+ENTRYPOINT ["/cmd/simkes"]

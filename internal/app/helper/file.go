@@ -1,31 +1,32 @@
 package helper
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/config"
+	"fmt"
 	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/google/uuid"
 	"os"
 	"path"
+	"strings"
 )
 
 func GenerateFile(fileType string, fileExt string) string {
-	return path.Join(fileType, uuid.New().String()+fileExt)
+	fileName := strings.ReplaceAll(uuid.New().String(), "-", "") + fileExt // e.g. e497c0487fde48e5aa7a53f5c2355c67.png
+	return path.Join(fileType, fileName)
 }
 
-func RemoveFile(filepath string) error {
-	return os.Remove(filepath)
+func RemoveFile(filePath string) error {
+	return os.Remove(filePath)
 }
 
-func GetFile(filetype string, filename string) (string, error) {
-	cfg := config.ProvideConfig()
-	storage := cfg.Get("APP_STORAGE")
-	filePath := path.Join(storage, filetype, filename)
+func GetFile(fileType string, fileName string) string {
+	storage := os.Getenv("APP_STORAGE") // e.g. "/var/www/simkes-api/storage"
+	filePath := path.Join(storage, fileType, fileName)
 
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return "", exception.NotFoundError{
-			Message: "File not found",
-		}
+	if _, err := os.Stat(filePath); os.IsNotExist(err) { // Check if file exists
+		panic(&exception.NotFoundError{
+			Message: fmt.Sprintf("File %s not found", fileName),
+		})
 	}
 
-	return filePath, nil
+	return filePath
 }

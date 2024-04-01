@@ -2,7 +2,7 @@ package test
 
 import (
 	"encoding/json"
-	"github.com/fathoor/simkes-api/internal/auth/model"
+	"github.com/fathoor/simkes-api/internal/modules/auth/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"net/http"
