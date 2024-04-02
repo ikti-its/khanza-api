@@ -3,11 +3,3 @@
 
 # Environment variables
 .env
-
-# Storage files
-assets/doc/*
-assets/img/*
-!assets/img/default.png
-
-# Keep
-!.gitkeep
