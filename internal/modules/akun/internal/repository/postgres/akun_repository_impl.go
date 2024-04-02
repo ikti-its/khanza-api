@@ -39,7 +39,7 @@ func (r *akunRepositoryImpl) FindPage(page, size int) ([]entity.Akun, int, error
 	totalPage := int(math.Ceil(float64(total) / float64(size)))
 	offset := (page - 1) * size
 
-	err := r.DB.Table("akun").Select("id, email, foto, role").Find(&akun).Limit(size).Offset(offset).Error
+	err := r.DB.Table("akun").Select("id, email, foto, role").Limit(size).Offset(offset).Find(&akun).Error
 
 	return akun, totalPage, err
 }

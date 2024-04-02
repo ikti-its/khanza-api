@@ -43,7 +43,7 @@ func (r *pegawaiRepositoryImpl) FindPage(page, size int) ([]entity.Pegawai, int,
 
 	err := r.DB.Table("pegawai").
 		Select("id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk").
-		Find(&pegawai).Limit(size).Offset(offset).Error
+		Limit(size).Offset(offset).Find(&pegawai).Error
 
 	return pegawai, totalPage, err
 }
