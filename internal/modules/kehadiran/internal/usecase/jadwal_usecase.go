@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
-	"github.com/fathoor/simkes-api/internal/app/helper"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/model"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/helper"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
 )
 
 type JadwalUseCase struct {

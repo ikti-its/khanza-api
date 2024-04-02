@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/fathoor/simkes-api/internal/app/config"
-	"github.com/fathoor/simkes-api/internal/app/provider"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/app/provider"
 	_ "github.com/joho/godotenv/autoload"
 	"log"
 )

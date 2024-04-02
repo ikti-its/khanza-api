@@ -1,13 +1,13 @@
 package provider
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/config"
-	"github.com/fathoor/simkes-api/internal/modules/akun"
-	"github.com/fathoor/simkes-api/internal/modules/auth"
-	"github.com/fathoor/simkes-api/internal/modules/file"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran"
-	"github.com/fathoor/simkes-api/internal/modules/pegawai"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/modules/akun"
+	"github.com/ikti-its/khanza-api/internal/modules/auth"
+	"github.com/ikti-its/khanza-api/internal/modules/file"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran"
+	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"gorm.io/gorm"
 )
 

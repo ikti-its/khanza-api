@@ -1,12 +1,12 @@
 package akun
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/config"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/controller"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/repository/postgres"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/router"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/usecase"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository/postgres"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/router"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/usecase"
 	"gorm.io/gorm"
 )
 

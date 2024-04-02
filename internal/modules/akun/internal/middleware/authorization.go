@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 )
 
 func AuthorizeUserAkun(id string) func(ctx *fiber.Ctx) error {

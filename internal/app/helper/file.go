@@ -2,8 +2,8 @@ package helper
 
 import (
 	"fmt"
-	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"os"
 	"path"
 	"strings"

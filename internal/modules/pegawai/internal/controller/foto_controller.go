@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/config"
-	"github.com/fathoor/simkes-api/internal/app/exception"
-	web "github.com/fathoor/simkes-api/internal/app/model"
-	"github.com/fathoor/simkes-api/internal/modules/pegawai/internal/middleware"
-	"github.com/fathoor/simkes-api/internal/modules/pegawai/internal/model"
-	"github.com/fathoor/simkes-api/internal/modules/pegawai/internal/usecase"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	web "github.com/ikti-its/khanza-api/internal/app/model"
+	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/middleware"
+	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/usecase"
 )
 
 type FotoController struct {

@@ -1,9 +1,9 @@
 package router
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/middleware"
-	"github.com/fathoor/simkes-api/internal/modules/pegawai/internal/controller"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/middleware"
+	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/controller"
 )
 
 func Route(

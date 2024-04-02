@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"github.com/fathoor/simkes-api/internal/modules/auth/internal/entity"
-	"github.com/fathoor/simkes-api/internal/modules/auth/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/auth/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/auth/internal/repository"
 	"gorm.io/gorm"
 )
 

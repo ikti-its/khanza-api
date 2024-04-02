@@ -1,12 +1,12 @@
 package kehadiran
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/config"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/controller"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/repository/postgres"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/router"
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/usecase"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository/postgres"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/router"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/usecase"
 	"gorm.io/gorm"
 )
 

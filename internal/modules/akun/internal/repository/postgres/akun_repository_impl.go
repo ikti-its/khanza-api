@@ -1,9 +1,9 @@
 package postgres
 
 import (
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/entity"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/repository"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository"
 	"gorm.io/gorm"
 	"math"
 )
