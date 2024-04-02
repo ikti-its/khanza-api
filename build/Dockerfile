@@ -2,6 +2,7 @@ FROM golang:alpine as builder
 LABEL maintainer="mfathoor"
 
 RUN apk update && apk add --no-cache git
+RUN git config --global url."https://${GITHUB_USER}:${GITHUB_TOKEN}@${GITHUB_REPO}".insteadOf "https://${GITHUB_REPO}"
 
 WORKDIR /app
 COPY go.mod .
