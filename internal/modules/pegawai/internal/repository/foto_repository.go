@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/fathoor/simkes-api/internal/modules/pegawai/internal/entity"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 )
 
 type FotoRepository interface {

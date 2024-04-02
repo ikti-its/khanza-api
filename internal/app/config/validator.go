@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/go-playground/validator/v10"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"strings"
 )
 

@@ -3,15 +3,11 @@
 
 # Environment variables
 .env
-.env.test
 
 # Storage files
 assets/doc/*
 assets/img/*
-test/assets/
-
-# Seeder
-db/
+!assets/img/default.png
 
 # Keep
 !.gitkeep

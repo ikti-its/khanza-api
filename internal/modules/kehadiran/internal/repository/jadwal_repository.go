@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/fathoor/simkes-api/internal/modules/kehadiran/internal/entity"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/entity"
 )
 
 type JadwalRepository interface {

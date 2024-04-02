@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"time"
 )
 

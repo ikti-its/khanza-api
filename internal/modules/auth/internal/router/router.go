@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/fathoor/simkes-api/internal/modules/auth/internal/controller"
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/modules/auth/internal/controller"
 )
 
 func Route(app *fiber.App, controller *controller.AuthController) {

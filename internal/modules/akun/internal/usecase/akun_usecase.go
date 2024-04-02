@@ -2,12 +2,12 @@ package usecase
 
 import (
 	"fmt"
-	"github.com/fathoor/simkes-api/internal/app/config"
-	"github.com/fathoor/simkes-api/internal/app/exception"
-	"github.com/fathoor/simkes-api/internal/app/helper"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/entity"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/model"
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/helper"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository"
 )
 
 type AkunUseCase struct {

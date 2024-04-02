@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"os"
 )
 

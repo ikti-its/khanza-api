@@ -1,12 +1,12 @@
 package config
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 )
 
 func NewFiber() *fiber.App {

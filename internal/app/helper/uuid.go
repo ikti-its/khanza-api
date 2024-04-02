@@ -1,8 +1,8 @@
 package helper
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/exception"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 )
 
 func MustParse(s string) uuid.UUID {

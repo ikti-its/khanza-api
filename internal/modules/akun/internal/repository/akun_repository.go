@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/fathoor/simkes-api/internal/modules/akun/internal/entity"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/entity"
 )
 
 type AkunRepository interface {

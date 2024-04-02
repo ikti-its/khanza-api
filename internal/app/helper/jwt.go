@@ -1,9 +1,9 @@
 package helper
 
 import (
-	"github.com/fathoor/simkes-api/internal/app/config"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	"github.com/ikti-its/khanza-api/internal/app/config"
 	"time"
 )
 
