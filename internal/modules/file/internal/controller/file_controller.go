@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/config"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/middleware"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
 	"github.com/ikti-its/khanza-api/internal/modules/file/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/file/internal/usecase"
@@ -51,6 +52,10 @@ func (c *FileController) View(ctx *fiber.Ctx) error {
 	fileType := ctx.Params("type")
 	fileName := ctx.Params("name")
 
+	if fileType != "img" {
+		middleware.Authenticate([]int{0})
+	}
+
 	filePath := c.UseCase.Get(fileType, fileName)
 
 	return ctx.SendFile(filePath)
@@ -59,6 +64,10 @@ func (c *FileController) View(ctx *fiber.Ctx) error {
 func (c *FileController) Download(ctx *fiber.Ctx) error {
 	fileType := ctx.Params("type")
 	fileName := ctx.Params("name")
+
+	if fileType != "img" {
+		middleware.Authenticate([]int{0})
+	}
 
 	filePath := c.UseCase.Get(fileType, fileName)
 
