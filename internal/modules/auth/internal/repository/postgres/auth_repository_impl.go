@@ -3,21 +3,22 @@ package postgres
 import (
 	"github.com/ikti-its/khanza-api/internal/modules/auth/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/auth/internal/repository"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
 type authRepositoryImpl struct {
-	DB *gorm.DB
+	DB *sqlx.DB
 }
 
-func NewAuthRepository(db *gorm.DB) repository.AuthRepository {
+func NewAuthRepository(db *sqlx.DB) repository.AuthRepository {
 	return &authRepositoryImpl{db}
 }
 
 func (r *authRepositoryImpl) FindByEmail(email string) (entity.Auth, error) {
-	var auth entity.Auth
+	query := "SELECT id, email, password, role FROM akun WHERE email = $1 AND deleted_at IS NULL"
 
-	err := r.DB.Table("akun").Select("id, email, password, role").Where("email = ?", email).First(&auth).Error
+	var record entity.Auth
+	err := r.DB.Get(&record, query, email)
 
-	return auth, err
+	return record, err
 }
