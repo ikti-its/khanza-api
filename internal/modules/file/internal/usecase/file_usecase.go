@@ -60,8 +60,8 @@ func (u *FileUseCase) generateFileName(request *model.FileRequest, fileType stri
 
 func (u *FileUseCase) Upload(request *model.FileRequest, fileType string) (string, model.FileResponse) {
 	var (
-		baseURL  = u.Config.Get("APP_URL")
-		storage  = u.Config.Get("APP_STORAGE")
+		baseURL  = u.Config.Get("APP_URL", "http://localhost:8080/v1")
+		storage  = u.Config.Get("APP_STORAGE", "storage")
 		fileName = u.generateFileName(request, fileType)
 
 		filePath = path.Join(storage, fileName)

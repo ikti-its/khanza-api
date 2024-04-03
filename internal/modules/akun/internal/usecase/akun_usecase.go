@@ -33,7 +33,7 @@ func (u *AkunUseCase) Create(request *model.CreateAkunRequest, updater string) m
 	exception.PanicIfError(err, "Failed to encrypt password")
 
 	if request.Foto == "" {
-		request.Foto = fmt.Sprintf("%s/file/img/default.png", u.Config.Get("APP_URL"))
+		request.Foto = fmt.Sprintf("%s/file/img/default.png", u.Config.Get("APP_URL", "http://localhost:8080/v1"))
 	}
 
 	akun := entity.Akun{
