@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ikti-its/khanza-api/internal/app/config"
 	"github.com/ikti-its/khanza-api/internal/app/provider"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
 	"log"
 )
@@ -14,8 +15,15 @@ func main() {
 		fiber     = config.NewFiber()
 		postgres  = config.NewPostgres(cfg)
 		validator = config.NewValidator()
-		bootstrap = provider.Provider{App: fiber, Config: cfg, DB: postgres, Validator: validator}
+		bootstrap = provider.Provider{App: fiber, Config: cfg, PG: postgres, Validator: validator}
 	)
+
+	defer func(postgres *sqlx.DB) {
+		err := postgres.Close()
+		if err != nil {
+			log.Fatalf("Failed to close database connection: %v", err)
+		}
+	}(postgres)
 
 	bootstrap.Provide()
 
