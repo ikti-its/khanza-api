@@ -4,65 +4,75 @@ import (
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 	"math"
+	"time"
 )
 
 type pegawaiRepositoryImpl struct {
-	DB *gorm.DB
+	DB *sqlx.DB
 }
 
-func NewPegawaiRepository(db *gorm.DB) repository.PegawaiRepository {
+func NewPegawaiRepository(db *sqlx.DB) repository.PegawaiRepository {
 	return &pegawaiRepositoryImpl{db}
 }
 
 func (r *pegawaiRepositoryImpl) Insert(pegawai *entity.Pegawai) error {
-	return r.DB.Table("pegawai").Create(&pegawai).Error
+	query := "INSERT INTO pegawai (id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
+
+	_, err := r.DB.Exec(query, pegawai.IdAkun, pegawai.NIP, pegawai.Nama, pegawai.JenisKelamin, pegawai.Jabatan, pegawai.Departemen, pegawai.StatusAktif, pegawai.JenisPegawai, pegawai.Telepon, pegawai.TanggalMasuk)
+
+	return err
 }
 
 func (r *pegawaiRepositoryImpl) Find() ([]entity.Pegawai, error) {
-	var pegawai []entity.Pegawai
+	query := "SELECT id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk FROM pegawai WHERE deleted_at IS NULL"
 
-	err := r.DB.Table("pegawai").
-		Select("id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk").
-		Find(&pegawai).Error
+	var records []entity.Pegawai
+	err := r.DB.Select(&records, query)
 
-	return pegawai, err
+	return records, err
 }
 
 func (r *pegawaiRepositoryImpl) FindPage(page, size int) ([]entity.Pegawai, int, error) {
-	var pegawai []entity.Pegawai
-	var total int64
+	query := "SELECT id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk FROM pegawai WHERE deleted_at IS NULL LIMIT $1 OFFSET $2"
+	totalQuery := "SELECT COUNT(*) FROM pegawai WHERE deleted_at IS NULL"
 
-	if err := r.DB.Table("pegawai").Count(&total).Error; err != nil {
-		return pegawai, 0, err
+	var total int64
+	if err := r.DB.Get(&total, totalQuery); err != nil {
+		return nil, 0, err
 	}
 
 	totalPage := int(math.Ceil(float64(total) / float64(size)))
 	offset := (page - 1) * size
 
-	err := r.DB.Table("pegawai").
-		Select("id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk").
-		Limit(size).Offset(offset).Find(&pegawai).Error
+	var records []entity.Pegawai
+	err := r.DB.Select(&records, query, size, offset)
 
-	return pegawai, totalPage, err
+	return records, totalPage, err
 }
 
 func (r *pegawaiRepositoryImpl) FindById(id uuid.UUID) (entity.Pegawai, error) {
-	var pegawai entity.Pegawai
+	query := "SELECT id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk FROM pegawai WHERE id = $1 AND deleted_at IS NULL"
 
-	err := r.DB.Table("pegawai").
-		Select("id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk").
-		Where("id = ?", id).
-		First(&pegawai).Error
+	var record entity.Pegawai
+	err := r.DB.Get(&record, query, id)
 
-	return pegawai, err
+	return record, err
 }
 
 func (r *pegawaiRepositoryImpl) Update(pegawai *entity.Pegawai) error {
-	return r.DB.Table("pegawai").Save(&pegawai).Error
+	query := "UPDATE pegawai SET id_akun = $1, nip = $2, nama = $3, jenis_kelamin = $4, id_jabatan = $5, id_departemen = $6, id_status_aktif = $7, jenis_pegawai = $8, telepon = $9, tanggal_masuk = $10, updated_at = $11, updater = $12 WHERE id = $13 AND deleted_at IS NULL"
+
+	_, err := r.DB.Exec(query, pegawai.IdAkun, pegawai.NIP, pegawai.Nama, pegawai.JenisKelamin, pegawai.Jabatan, pegawai.Departemen, pegawai.StatusAktif, pegawai.JenisPegawai, pegawai.Telepon, pegawai.TanggalMasuk, time.Now(), pegawai.Updater, pegawai.Id)
+
+	return err
 }
 
 func (r *pegawaiRepositoryImpl) Delete(pegawai *entity.Pegawai) error {
-	return r.DB.Table("pegawai").Delete(&pegawai).Error
+	query := "UPDATE pegawai SET deleted_at = $1 WHERE id = $2"
+
+	_, err := r.DB.Exec(query, time.Now(), pegawai.Id)
+
+	return err
 }

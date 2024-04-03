@@ -4,49 +4,58 @@ import (
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 type fotoRepositoryImpl struct {
-	DB *gorm.DB
+	DB *sqlx.DB
 }
 
-func NewFotoRepository(db *gorm.DB) repository.FotoRepository {
+func NewFotoRepository(db *sqlx.DB) repository.FotoRepository {
 	return &fotoRepositoryImpl{db}
 }
 
 func (r *fotoRepositoryImpl) Insert(foto *entity.Foto) error {
-	return r.DB.Table("foto_pegawai").Create(&foto).Error
+	query := "INSERT INTO foto_pegawai (id_pegawai, foto) VALUES ($1, $2)"
+
+	_, err := r.DB.Exec(query, foto.IdPegawai, foto.Foto)
+
+	return err
 }
 
 func (r *fotoRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {
-	var record struct {
-		Id uuid.UUID `gorm:"column:id_akun"`
-	}
+	query := "SELECT id_akun FROM pegawai WHERE id = $1 AND deleted_at IS NULL"
 
-	err := r.DB.Table("pegawai").
-		Select("id_akun").
-		Where("id = ?", id).
-		First(&record).Error
+	var record struct {
+		Id uuid.UUID `db:"id_akun"`
+	}
+	err := r.DB.Get(&record, query, id)
 
 	return record.Id, err
 }
 
 func (r *fotoRepositoryImpl) FindById(id uuid.UUID) (entity.Foto, error) {
-	var foto entity.Foto
+	query := "SELECT id_pegawai, foto FROM foto_pegawai WHERE id_pegawai = $1 AND deleted_at IS NULL"
 
-	err := r.DB.Table("foto_pegawai").
-		Select("id_pegawai, foto").
-		Where("id_pegawai = ?", id).
-		First(&foto).Error
+	var record entity.Foto
+	err := r.DB.Get(&record, query, id)
 
-	return foto, err
+	return record, err
 }
 
 func (r *fotoRepositoryImpl) Update(foto *entity.Foto) error {
-	return r.DB.Table("foto_pegawai").Where("id_pegawai = ?", foto.IdPegawai).Save(&foto).Error
+	query := "UPDATE foto_pegawai SET id_pegawai = $1, foto = $2, updated_at = $3, updater = $4 WHERE id_pegawai = $5 AND deleted_at IS NULL"
+
+	_, err := r.DB.Exec(query, foto.IdPegawai, foto.Foto, time.Now(), foto.Updater, foto.IdPegawai)
+
+	return err
 }
 
 func (r *fotoRepositoryImpl) Delete(foto *entity.Foto) error {
-	return r.DB.Table("foto_pegawai").Where("id_pegawai = ?", foto.IdPegawai).Delete(&foto).Error
+	query := "UPDATE foto_pegawai SET deleted_at = $1 WHERE id_pegawai = $2"
+
+	_, err := r.DB.Exec(query, time.Now(), foto.IdPegawai)
+
+	return err
 }

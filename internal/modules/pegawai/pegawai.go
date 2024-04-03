@@ -7,10 +7,10 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository/postgres"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/router"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/usecase"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
-func ProvidePegawai(app *fiber.App, db *gorm.DB, validator *config.Validator) {
+func ProvidePegawai(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
 	pegawaiRepository := postgres.NewPegawaiRepository(db)
 	pegawaiUseCase := usecase.NewPegawaiUseCase(&pegawaiRepository)
 	pegawaiController := controller.NewPegawaiController(pegawaiUseCase, validator)
