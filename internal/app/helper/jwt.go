@@ -10,7 +10,7 @@ import (
 func GenerateJWT(userId uuid.UUID, role int, cfg *config.Config) (string, error) {
 	var (
 		expire = cfg.GetInt("JWT_EXPIRE", 24)
-		secret = cfg.Get("JWT_SECRET")
+		secret = cfg.Get("JWT_SECRET", "secret")
 		iat    = time.Now().Unix()
 		exp    = time.Now().Add(time.Hour * time.Duration(expire)).Unix()
 	)
