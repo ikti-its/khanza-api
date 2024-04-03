@@ -4,68 +4,58 @@ import (
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 type jadwalRepositoryImpl struct {
-	DB *gorm.DB
+	DB *sqlx.DB
 }
 
-func NewJadwalRepository(db *gorm.DB) repository.JadwalRepository {
+func NewJadwalRepository(db *sqlx.DB) repository.JadwalRepository {
 	return &jadwalRepositoryImpl{DB: db}
 }
 
 func (r *jadwalRepositoryImpl) Find() ([]entity.Jadwal, error) {
-	var jadwal []entity.Jadwal
+	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE deleted_at IS NULL ORDER BY jp.id_hari"
 
-	err := r.DB.Table("jadwal_pegawai jp").
-		Select("jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang").
-		Joins("JOIN ref.shift s ON jp.id_shift = s.id").
-		Order("jp.id_hari").
-		Find(&jadwal).Error
+	var records []entity.Jadwal
+	err := r.DB.Select(&records, query)
 
-	return jadwal, err
+	return records, err
 }
 
 func (r *jadwalRepositoryImpl) FindByHariId(id int) ([]entity.Jadwal, error) {
-	var jadwal []entity.Jadwal
+	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE jp.id_hari = $1 AND deleted_at IS NULL ORDER BY jp.id_pegawai"
 
-	err := r.DB.Table("jadwal_pegawai jp").
-		Select("jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang").
-		Joins("JOIN ref.shift s ON jp.id_shift = s.id").
-		Where("jp.id_hari = ?", id).
-		Order("jp.id_pegawai").
-		Find(&jadwal).Error
+	var records []entity.Jadwal
+	err := r.DB.Select(&records, query, id)
 
-	return jadwal, err
+	return records, err
 }
 
 func (r *jadwalRepositoryImpl) FindByPegawaiId(id uuid.UUID) ([]entity.Jadwal, error) {
-	var jadwal []entity.Jadwal
+	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE jp.id_pegawai = $1 AND deleted_at IS NULL ORDER BY jp.id_hari"
 
-	err := r.DB.Table("jadwal_pegawai jp").
-		Select("jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang").
-		Joins("JOIN ref.shift s ON jp.id_shift = s.id").
-		Where("jp.id_pegawai = ?", id).
-		Order("jp.id_hari").
-		Find(&jadwal).Error
+	var records []entity.Jadwal
+	err := r.DB.Select(&records, query, id)
 
-	return jadwal, err
+	return records, err
 }
 
 func (r *jadwalRepositoryImpl) FindById(id uuid.UUID) (entity.Jadwal, error) {
-	var jadwal entity.Jadwal
+	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE jp.id = $1 AND deleted_at IS NULL"
 
-	err := r.DB.Table("jadwal_pegawai jp").
-		Select("jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang").
-		Joins("JOIN ref.shift s ON jp.id_shift = s.id").
-		Where("jp.id = ?", id).
-		Order("jp.id_hari").
-		First(&jadwal).Error
+	var record entity.Jadwal
+	err := r.DB.Select(&record, query, id)
 
-	return jadwal, err
+	return record, err
 }
 
 func (r *jadwalRepositoryImpl) Update(jadwal *entity.Jadwal) error {
-	return r.DB.Table("jadwal_pegawai").Omit("jam_masuk", "jam_pulang").Save(&jadwal).Error
+	query := "UPDATE jadwal_pegawai SET id_pegawai = $1, id_hari = $2, id_shift = $3, updated_at = $4, updater = $5 WHERE id = $6 AND deleted_at IS NULL"
+
+	_, err := r.DB.Exec(query, jadwal.IdPegawai, jadwal.IdHari, jadwal.IdShift, time.Now(), jadwal.Updater, jadwal.Id)
+
+	return err
 }
