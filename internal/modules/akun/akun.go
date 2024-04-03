@@ -7,10 +7,10 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository/postgres"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/router"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/usecase"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
-func ProvideAkun(app *fiber.App, cfg *config.Config, db *gorm.DB, validator *config.Validator) {
+func ProvideAkun(app *fiber.App, cfg *config.Config, db *sqlx.DB, validator *config.Validator) {
 	akunRepository := postgres.NewAkunRepository(db)
 	akunUseCase := usecase.NewAkunUseCase(&akunRepository, cfg)
 	akunController := controller.NewAkunController(akunUseCase, validator)
