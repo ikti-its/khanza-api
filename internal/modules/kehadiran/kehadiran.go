@@ -7,10 +7,10 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository/postgres"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/router"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/usecase"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
-func ProvideKehadiran(app *fiber.App, db *gorm.DB, validator *config.Validator) {
+func ProvideKehadiran(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
 	kehadiranRepository := postgres.NewKehadiranRepository(db)
 	kehadiranUseCase := usecase.NewKehadiranUseCase(&kehadiranRepository)
 	kehadiranController := controller.NewKehadiranController(kehadiranUseCase, validator)
