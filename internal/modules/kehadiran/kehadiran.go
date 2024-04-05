@@ -19,9 +19,14 @@ func ProvideKehadiran(app *fiber.App, db *sqlx.DB, validator *config.Validator) 
 	jadwalUseCase := usecase.NewJadwalUseCase(&jadwalRepository)
 	jadwalController := controller.NewJadwalController(jadwalUseCase, validator)
 
+	cutiRepository := postgres.NewCutiRepository(db)
+	cutiUseCase := usecase.NewCutiUseCase(&cutiRepository)
+	cutiController := controller.NewCutiController(cutiUseCase, validator)
+
 	router.Route(
 		app,
 		kehadiranController,
 		jadwalController,
+		cutiController,
 	)
 }
