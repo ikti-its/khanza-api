@@ -10,15 +10,18 @@ func Route(
 	app *fiber.App,
 	kehadiranController *controller.KehadiranController,
 	jadwalController *controller.JadwalController,
+	cutiController *controller.CutiController,
 ) {
 	kehadiran := app.Group("/v1/kehadiran")
+
+	presensi := kehadiran.Group("/presensi")
 	{
-		kehadiran.Post("/attend", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.Attend)
-		kehadiran.Post("/leave", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.Leave)
-		kehadiran.Get("/", middleware.Authenticate([]int{1337, 1}), kehadiranController.Get)
-		kehadiran.Get("/pegawai/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetByPegawaiId)
-		kehadiran.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetById)
-		kehadiran.Put("/:id", middleware.Authenticate([]int{1337, 1}), kehadiranController.Update)
+		presensi.Post("/attend", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.Attend)
+		presensi.Post("/leave", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.Leave)
+		presensi.Get("/", middleware.Authenticate([]int{1337, 1}), kehadiranController.Get)
+		presensi.Get("/pegawai/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetByPegawaiId)
+		presensi.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetById)
+		presensi.Put("/:id", middleware.Authenticate([]int{1337, 1}), kehadiranController.Update)
 	}
 
 	jadwal := kehadiran.Group("/jadwal")
@@ -28,5 +31,15 @@ func Route(
 		jadwal.Get("/pegawai/:id", middleware.Authenticate([]int{1337, 1, 2}), jadwalController.GetByPegawaiId)
 		jadwal.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), jadwalController.GetById)
 		jadwal.Put("/:id", middleware.Authenticate([]int{1337, 1}), jadwalController.Update)
+	}
+
+	cuti := kehadiran.Group("/cuti")
+	{
+		cuti.Post("/", middleware.Authenticate([]int{1337, 1, 2}), cutiController.Create)
+		cuti.Get("/", middleware.Authenticate([]int{1337, 1}), cutiController.Get)
+		cuti.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), cutiController.GetById)
+		cuti.Get("/pegawai/:id", middleware.Authenticate([]int{1337, 1, 2}), cutiController.GetByPegawaiId)
+		cuti.Put("/:id", middleware.Authenticate([]int{1337, 1}), cutiController.Update)
+		cuti.Delete("/:id", middleware.Authenticate([]int{1337, 1}), cutiController.Delete)
 	}
 }
