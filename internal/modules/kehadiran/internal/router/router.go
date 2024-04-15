@@ -21,7 +21,6 @@ func Route(
 		presensi.Get("/", middleware.Authenticate([]int{1337, 1}), kehadiranController.Get)
 		presensi.Get("/pegawai/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetByPegawaiId)
 		presensi.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetById)
-		presensi.Put("/:id", middleware.Authenticate([]int{1337, 1}), kehadiranController.Update)
 	}
 
 	jadwal := kehadiran.Group("/jadwal")

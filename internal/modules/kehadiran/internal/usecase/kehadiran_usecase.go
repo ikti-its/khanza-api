@@ -18,13 +18,14 @@ func NewKehadiranUseCase(repository *repository.KehadiranRepository) *KehadiranU
 	}
 }
 
-func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest) model.KehadiranResponse {
+func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater string) model.KehadiranResponse {
 	kehadiran := entity.Kehadiran{
 		Id:              helper.MustNew(),
 		IdPegawai:       helper.MustParse(request.IdPegawai),
 		IdJadwalPegawai: helper.MustParse(request.IdJadwalPegawai),
 		Tanggal:         helper.ParseTime(request.Tanggal, "2006-01-02"),
 		JamMasuk:        helper.ParseNow(),
+		Updater:         helper.MustParse(updater),
 	}
 
 	err := u.Repository.Insert(&kehadiran)
@@ -42,7 +43,7 @@ func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest) model.K
 	return response
 }
 
-func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, user string) model.KehadiranResponse {
+func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, updater string) model.KehadiranResponse {
 	kehadiran, err := u.Repository.FindById(helper.MustParse(request.Id))
 	if err != nil {
 		panic(&exception.NotFoundError{
@@ -50,8 +51,9 @@ func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, user stri
 		})
 	}
 
-	kehadiran.JamPulang = helper.ParseNow()
-	kehadiran.Updater = helper.MustParse(user)
+	kehadiran.JamPulang.Time = helper.ParseNow()
+	kehadiran.JamPulang.Valid = true
+	kehadiran.Updater = helper.MustParse(updater)
 
 	err = u.Repository.Update(&kehadiran)
 	if err != nil {
@@ -63,7 +65,7 @@ func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, user stri
 		IdPegawai:  kehadiran.IdPegawai.String(),
 		Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
 		JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
-		JamPulang:  helper.FormatTime(kehadiran.JamPulang, "15:04:05 +07:00"),
+		JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 		Keterangan: kehadiran.Keterangan,
 	}
 
@@ -78,13 +80,22 @@ func (u *KehadiranUseCase) Get() []model.KehadiranResponse {
 
 	response := make([]model.KehadiranResponse, len(kehadiran))
 	for i, kehadiran := range kehadiran {
-		response[i] = model.KehadiranResponse{
-			Id:         kehadiran.Id.String(),
-			IdPegawai:  kehadiran.IdPegawai.String(),
-			Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
-			JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
-			JamPulang:  helper.FormatTime(kehadiran.JamPulang, "15:04:05 +07:00"),
-			Keterangan: kehadiran.Keterangan,
+		if kehadiran.JamPulang.Valid {
+			response[i] = model.KehadiranResponse{
+				Id:         kehadiran.Id.String(),
+				IdPegawai:  kehadiran.IdPegawai.String(),
+				Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
+				Keterangan: kehadiran.Keterangan,
+			}
+		} else {
+			response[i] = model.KehadiranResponse{
+				Id:        kehadiran.Id.String(),
+				IdPegawai: kehadiran.IdPegawai.String(),
+				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+			}
 		}
 	}
 
@@ -99,16 +110,27 @@ func (u *KehadiranUseCase) GetById(id string) model.KehadiranResponse {
 		})
 	}
 
-	response := model.KehadiranResponse{
-		Id:         kehadiran.Id.String(),
-		IdPegawai:  kehadiran.IdPegawai.String(),
-		Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
-		JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
-		JamPulang:  helper.FormatTime(kehadiran.JamPulang, "15:04:05 +07:00"),
-		Keterangan: kehadiran.Keterangan,
-	}
+	if kehadiran.JamPulang.Valid {
+		response := model.KehadiranResponse{
+			Id:         kehadiran.Id.String(),
+			IdPegawai:  kehadiran.IdPegawai.String(),
+			Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
+			JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+			JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
+			Keterangan: kehadiran.Keterangan,
+		}
 
-	return response
+		return response
+	} else {
+		response := model.KehadiranResponse{
+			Id:        kehadiran.Id.String(),
+			IdPegawai: kehadiran.IdPegawai.String(),
+			Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
+			JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+		}
+
+		return response
+	}
 }
 
 func (u *KehadiranUseCase) GetByPegawaiId(id string) []model.KehadiranResponse {
@@ -121,13 +143,22 @@ func (u *KehadiranUseCase) GetByPegawaiId(id string) []model.KehadiranResponse {
 
 	response := make([]model.KehadiranResponse, len(kehadiran))
 	for i, kehadiran := range kehadiran {
-		response[i] = model.KehadiranResponse{
-			Id:         kehadiran.Id.String(),
-			IdPegawai:  kehadiran.IdPegawai.String(),
-			Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
-			JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
-			JamPulang:  helper.FormatTime(kehadiran.JamPulang, "15:04:05 +07:00"),
-			Keterangan: kehadiran.Keterangan,
+		if kehadiran.JamPulang.Valid {
+			response[i] = model.KehadiranResponse{
+				Id:         kehadiran.Id.String(),
+				IdPegawai:  kehadiran.IdPegawai.String(),
+				Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
+				Keterangan: kehadiran.Keterangan,
+			}
+		} else {
+			response[i] = model.KehadiranResponse{
+				Id:        kehadiran.Id.String(),
+				IdPegawai: kehadiran.IdPegawai.String(),
+				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+			}
 		}
 	}
 
@@ -144,47 +175,23 @@ func (u *KehadiranUseCase) GetByTanggal(tanggal string) []model.KehadiranRespons
 
 	response := make([]model.KehadiranResponse, len(kehadiran))
 	for i, kehadiran := range kehadiran {
-		response[i] = model.KehadiranResponse{
-			Id:         kehadiran.Id.String(),
-			IdPegawai:  kehadiran.IdPegawai.String(),
-			Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
-			JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
-			JamPulang:  helper.FormatTime(kehadiran.JamPulang, "15:04:05 +07:00"),
-			Keterangan: kehadiran.Keterangan,
+		if kehadiran.JamPulang.Valid {
+			response[i] = model.KehadiranResponse{
+				Id:         kehadiran.Id.String(),
+				IdPegawai:  kehadiran.IdPegawai.String(),
+				Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
+				Keterangan: kehadiran.Keterangan,
+			}
+		} else {
+			response[i] = model.KehadiranResponse{
+				Id:        kehadiran.Id.String(),
+				IdPegawai: kehadiran.IdPegawai.String(),
+				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+			}
 		}
-	}
-
-	return response
-}
-
-func (u *KehadiranUseCase) Update(request *model.UpdateKehadiranRequest, id, user string) model.KehadiranResponse {
-	kehadiran, err := u.Repository.FindById(helper.MustParse(id))
-	if err != nil {
-		panic(&exception.NotFoundError{
-			Message: "Kehadiran not found",
-		})
-	}
-
-	kehadiran.Id = helper.MustParse(id)
-	kehadiran.IdPegawai = helper.MustParse(request.IdPegawai)
-	kehadiran.IdJadwalPegawai = helper.MustParse(request.IdJadwalPegawai)
-	kehadiran.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
-	kehadiran.JamMasuk = helper.ParseTime(request.JamMasuk, "15:04:05")
-	kehadiran.JamPulang = helper.ParseTime(request.JamPulang, "15:04:05")
-	kehadiran.Keterangan = request.Keterangan
-	kehadiran.Updater = helper.MustParse(user)
-
-	if err := u.Repository.Update(&kehadiran); err != nil {
-		exception.PanicIfError(err, "Failed to update kehadiran")
-	}
-
-	response := model.KehadiranResponse{
-		Id:         kehadiran.Id.String(),
-		IdPegawai:  kehadiran.IdPegawai.String(),
-		Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
-		JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
-		JamPulang:  helper.FormatTime(kehadiran.JamPulang, "15:04:05 +07:00"),
-		Keterangan: kehadiran.Keterangan,
 	}
 
 	return response
