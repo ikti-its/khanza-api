@@ -150,13 +150,15 @@ func (u *AkunUseCase) Update(request *model.UpdateAkunRequest, updater, id strin
 	return response
 }
 
-func (u *AkunUseCase) Delete(id string) {
+func (u *AkunUseCase) Delete(id, updater string) {
 	akun, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Akun not found",
 		})
 	}
+
+	akun.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Delete(&akun); err != nil {
 		exception.PanicIfError(err, "Failed to delete akun")

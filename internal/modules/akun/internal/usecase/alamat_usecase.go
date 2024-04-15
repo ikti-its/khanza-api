@@ -98,13 +98,15 @@ func (u *AlamatUseCase) Update(request *model.AlamatRequest, id, user string) mo
 	return response
 }
 
-func (u *AlamatUseCase) Delete(id string) {
+func (u *AlamatUseCase) Delete(id, updater string) {
 	alamat, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Alamat not found",
 		})
 	}
+
+	alamat.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Delete(&alamat); err != nil {
 		exception.PanicIfError(err, "Failed to delete alamat")

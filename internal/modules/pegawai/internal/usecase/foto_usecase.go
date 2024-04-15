@@ -89,13 +89,15 @@ func (u *FotoUseCase) Update(request *model.FotoRequest, id, user string) model.
 	return response
 }
 
-func (u *FotoUseCase) Delete(id string) {
+func (u *FotoUseCase) Delete(id, updater string) {
 	foto, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Foto not found",
 		})
 	}
+
+	foto.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Delete(&foto); err != nil {
 		exception.PanicIfError(err, "Failed to delete foto")

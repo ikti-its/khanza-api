@@ -24,7 +24,7 @@ func (u *CutiUseCase) Create(request *model.CutiRequest, updater string) model.C
 		TanggalMulai:   helper.ParseTime(request.TanggalMulai, "2006-01-02"),
 		TanggalSelesai: helper.ParseTime(request.TanggalSelesai, "2006-01-02"),
 		IdAlasan:       request.IdAlasan,
-		Updater:        updater,
+		Updater:        helper.MustParse(updater),
 	}
 
 	if err := u.Repository.Insert(&cuti); err != nil {
@@ -146,7 +146,7 @@ func (u *CutiUseCase) Update(id string, request *model.CutiRequest, updater stri
 	cuti.TanggalMulai = helper.ParseTime(request.TanggalMulai, "2006-01-02")
 	cuti.TanggalSelesai = helper.ParseTime(request.TanggalSelesai, "2006-01-02")
 	cuti.IdAlasan = request.IdAlasan
-	cuti.Updater = updater
+	cuti.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Update(&cuti); err != nil {
 		exception.PanicIfError(err, "Failed to update cuti")
@@ -164,13 +164,15 @@ func (u *CutiUseCase) Update(id string, request *model.CutiRequest, updater stri
 	return response
 }
 
-func (u *CutiUseCase) Delete(id string) {
+func (u *CutiUseCase) Delete(id, updater string) {
 	cuti, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Cuti not found",
 		})
 	}
+
+	cuti.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Delete(&cuti); err != nil {
 		exception.PanicIfError(err, "Failed to delete cuti")
