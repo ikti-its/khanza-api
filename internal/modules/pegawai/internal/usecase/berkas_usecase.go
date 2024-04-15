@@ -165,13 +165,15 @@ func (u *BerkasUseCase) Update(request *model.BerkasRequest, id, user string) mo
 	return response
 }
 
-func (u *BerkasUseCase) Delete(id string) {
+func (u *BerkasUseCase) Delete(id, updater string) {
 	berkas, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Berkas not found",
 		})
 	}
+
+	berkas.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Delete(&berkas); err != nil {
 		exception.PanicIfError(err, "Failed to delete berkas")

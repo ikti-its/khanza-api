@@ -17,7 +17,13 @@ func NewJadwalRepository(db *sqlx.DB) repository.JadwalRepository {
 }
 
 func (r *jadwalRepositoryImpl) Find() ([]entity.Jadwal, error) {
-	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE deleted_at IS NULL ORDER BY jp.id_hari"
+	query := `
+		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang
+		FROM jadwal_pegawai jp
+		JOIN ref.shift s ON jp.id_shift = s.id
+		WHERE deleted_at IS NULL
+		ORDER BY jp.id_hari
+	`
 
 	var records []entity.Jadwal
 	err := r.DB.Select(&records, query)
@@ -26,7 +32,13 @@ func (r *jadwalRepositoryImpl) Find() ([]entity.Jadwal, error) {
 }
 
 func (r *jadwalRepositoryImpl) FindByHariId(id int) ([]entity.Jadwal, error) {
-	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE jp.id_hari = $1 AND deleted_at IS NULL ORDER BY jp.id_pegawai"
+	query := `
+		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang
+		FROM jadwal_pegawai jp
+		JOIN ref.shift s ON jp.id_shift = s.id
+		WHERE jp.id_hari = $1 AND deleted_at IS NULL
+		ORDER BY jp.id_pegawai
+	`
 
 	var records []entity.Jadwal
 	err := r.DB.Select(&records, query, id)
@@ -35,7 +47,13 @@ func (r *jadwalRepositoryImpl) FindByHariId(id int) ([]entity.Jadwal, error) {
 }
 
 func (r *jadwalRepositoryImpl) FindByPegawaiId(id uuid.UUID) ([]entity.Jadwal, error) {
-	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE jp.id_pegawai = $1 AND deleted_at IS NULL ORDER BY jp.id_hari"
+	query := `
+		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang
+		FROM jadwal_pegawai jp
+		JOIN ref.shift s ON jp.id_shift = s.id
+		WHERE jp.id_pegawai = $1 AND deleted_at IS NULL
+		ORDER BY jp.id_hari
+	`
 
 	var records []entity.Jadwal
 	err := r.DB.Select(&records, query, id)
@@ -44,7 +62,12 @@ func (r *jadwalRepositoryImpl) FindByPegawaiId(id uuid.UUID) ([]entity.Jadwal, e
 }
 
 func (r *jadwalRepositoryImpl) FindById(id uuid.UUID) (entity.Jadwal, error) {
-	query := "SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang FROM jadwal_pegawai jp JOIN ref.shift s ON jp.id_shift = s.id WHERE jp.id = $1 AND deleted_at IS NULL"
+	query := `
+		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang
+		FROM jadwal_pegawai jp
+		JOIN ref.shift s ON jp.id_shift = s.id
+		WHERE jp.id = $1 AND deleted_at IS NULL
+	`
 
 	var record entity.Jadwal
 	err := r.DB.Select(&record, query, id)
@@ -53,7 +76,11 @@ func (r *jadwalRepositoryImpl) FindById(id uuid.UUID) (entity.Jadwal, error) {
 }
 
 func (r *jadwalRepositoryImpl) Update(jadwal *entity.Jadwal) error {
-	query := "UPDATE jadwal_pegawai SET id_pegawai = $1, id_hari = $2, id_shift = $3, updated_at = $4, updater = $5 WHERE id = $6 AND deleted_at IS NULL"
+	query := `
+		UPDATE jadwal_pegawai
+		SET id_pegawai = $1, id_hari = $2, id_shift = $3, updated_at = $4, updater = $5
+		WHERE id = $6 AND deleted_at IS NULL
+	`
 
 	_, err := r.DB.Exec(query, jadwal.IdPegawai, jadwal.IdHari, jadwal.IdShift, time.Now(), jadwal.Updater, jadwal.Id)
 

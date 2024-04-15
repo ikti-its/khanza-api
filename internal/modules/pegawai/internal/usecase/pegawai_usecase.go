@@ -191,13 +191,15 @@ func (u *PegawaiUseCase) Update(request *model.PegawaiRequest, id, user string) 
 	return response
 }
 
-func (u *PegawaiUseCase) Delete(id string) {
+func (u *PegawaiUseCase) Delete(id, updater string) {
 	pegawai, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Pegawai not found",
 		})
 	}
+
+	pegawai.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Delete(&pegawai); err != nil {
 		exception.PanicIfError(err, "Failed to delete pegawai")

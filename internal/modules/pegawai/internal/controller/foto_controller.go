@@ -96,8 +96,9 @@ func (c *FotoController) Update(ctx *fiber.Ctx) error {
 
 func (c *FotoController) Delete(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
+	updater := ctx.Locals("user").(string)
 
-	c.UseCase.Delete(id)
+	c.UseCase.Delete(id, updater)
 
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
