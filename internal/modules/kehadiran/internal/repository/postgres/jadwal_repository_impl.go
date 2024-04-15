@@ -70,7 +70,7 @@ func (r *jadwalRepositoryImpl) FindById(id uuid.UUID) (entity.Jadwal, error) {
 	`
 
 	var record entity.Jadwal
-	err := r.DB.Select(&record, query, id)
+	err := r.DB.Get(&record, query, id)
 
 	return record, err
 }

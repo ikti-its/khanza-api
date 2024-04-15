@@ -2,6 +2,7 @@ package entity
 
 import (
 	"github.com/google/uuid"
+	"time"
 )
 
 type Jadwal struct {
@@ -9,7 +10,7 @@ type Jadwal struct {
 	IdPegawai uuid.UUID `db:"id_pegawai"`
 	IdHari    int       `db:"id_hari"`
 	IdShift   string    `db:"id_shift"`
-	JamMasuk  string    `db:"jam_masuk"`
-	JamPulang string    `db:"jam_pulang"`
+	JamMasuk  time.Time `db:"jam_masuk"`
+	JamPulang time.Time `db:"jam_pulang"`
 	Updater   uuid.UUID `db:"updater"`
 }
