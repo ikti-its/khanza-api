@@ -12,7 +12,7 @@ import (
 func main() {
 	var (
 		cfg       = config.NewConfig()
-		fiber     = config.NewFiber()
+		fiber     = config.NewFiber(cfg)
 		postgres  = config.NewPostgres(cfg)
 		validator = config.NewValidator()
 		bootstrap = provider.Provider{App: fiber, Config: cfg, PG: postgres, Validator: validator}
