@@ -20,6 +20,7 @@ func NewKehadiranUseCase(repository *repository.KehadiranRepository) *KehadiranU
 
 func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest) model.KehadiranResponse {
 	kehadiran := entity.Kehadiran{
+		Id:              helper.MustNew(),
 		IdPegawai:       helper.MustParse(request.IdPegawai),
 		IdJadwalPegawai: helper.MustParse(request.IdJadwalPegawai),
 		Tanggal:         helper.ParseTime(request.Tanggal, "2006-01-02"),
