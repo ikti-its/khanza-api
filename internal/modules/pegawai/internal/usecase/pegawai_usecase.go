@@ -29,6 +29,7 @@ func (u *PegawaiUseCase) Create(request *model.PegawaiRequest, user string) mode
 
 	updater := helper.MustParse(user)
 	pegawai := entity.Pegawai{
+		Id:           helper.MustNew(),
 		IdAkun:       helper.MustParse(request.IdAkun),
 		NIP:          request.NIP,
 		Nama:         request.Nama,

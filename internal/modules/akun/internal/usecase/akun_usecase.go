@@ -37,6 +37,7 @@ func (u *AkunUseCase) Create(request *model.CreateAkunRequest, updater string) m
 	}
 
 	akun := entity.Akun{
+		Id:       helper.MustNew(),
 		Email:    request.Email,
 		Password: string(encrypted),
 		Foto:     request.Foto,

@@ -20,6 +20,7 @@ func NewCutiUseCase(repository *repository.CutiRepository) *CutiUseCase {
 
 func (u *CutiUseCase) Create(request *model.CutiRequest, updater string) model.CutiResponse {
 	cuti := entity.Cuti{
+		Id:             helper.MustNew(),
 		IdPegawai:      helper.MustParse(request.IdPegawai),
 		TanggalMulai:   helper.ParseTime(request.TanggalMulai, "2006-01-02"),
 		TanggalSelesai: helper.ParseTime(request.TanggalSelesai, "2006-01-02"),
