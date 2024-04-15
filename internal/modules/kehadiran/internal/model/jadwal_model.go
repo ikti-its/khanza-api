@@ -12,6 +12,6 @@ type JadwalResponse struct {
 	IdPegawai string `json:"id_pegawai"`
 	IdHari    int    `json:"id_hari"`
 	IdShift   string `json:"id_shift"`
-	JamMasuk  string `json:"jam_masuk"`
-	JamPulang string `json:"jam_pulang"`
+	JamMasuk  string `json:"jam_masuk,omitempty"`
+	JamPulang string `json:"jam_pulang,omitempty"`
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/app/helper"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
+	"log"
 )
 
 type JadwalUseCase struct {
@@ -30,8 +31,8 @@ func (u *JadwalUseCase) Get() []model.JadwalResponse {
 			IdPegawai: jadwal.IdPegawai.String(),
 			IdHari:    jadwal.IdHari,
 			IdShift:   jadwal.IdShift,
-			JamMasuk:  jadwal.JamMasuk,
-			JamPulang: jadwal.JamPulang,
+			JamMasuk:  helper.FormatTime(jadwal.JamMasuk, "15:04:05"),
+			JamPulang: helper.FormatTime(jadwal.JamPulang, "15:04:05"),
 		}
 	}
 
@@ -53,8 +54,8 @@ func (u *JadwalUseCase) GetByHariId(id int) []model.JadwalResponse {
 			IdPegawai: jadwal.IdPegawai.String(),
 			IdHari:    jadwal.IdHari,
 			IdShift:   jadwal.IdShift,
-			JamMasuk:  jadwal.JamMasuk,
-			JamPulang: jadwal.JamPulang,
+			JamMasuk:  helper.FormatTime(jadwal.JamMasuk, "15:04:05"),
+			JamPulang: helper.FormatTime(jadwal.JamPulang, "15:04:05"),
 		}
 	}
 
@@ -76,8 +77,8 @@ func (u *JadwalUseCase) GetByPegawaiId(id string) []model.JadwalResponse {
 			IdPegawai: jadwal.IdPegawai.String(),
 			IdHari:    jadwal.IdHari,
 			IdShift:   jadwal.IdShift,
-			JamMasuk:  jadwal.JamMasuk,
-			JamPulang: jadwal.JamPulang,
+			JamMasuk:  helper.FormatTime(jadwal.JamMasuk, "15:04:05"),
+			JamPulang: helper.FormatTime(jadwal.JamPulang, "15:04:05"),
 		}
 	}
 
@@ -97,8 +98,8 @@ func (u *JadwalUseCase) GetById(id string) model.JadwalResponse {
 		IdPegawai: jadwal.IdPegawai.String(),
 		IdHari:    jadwal.IdHari,
 		IdShift:   jadwal.IdShift,
-		JamMasuk:  jadwal.JamMasuk,
-		JamPulang: jadwal.JamPulang,
+		JamMasuk:  helper.FormatTime(jadwal.JamMasuk, "15:04:05"),
+		JamPulang: helper.FormatTime(jadwal.JamPulang, "15:04:05"),
 	}
 
 	return response
@@ -107,6 +108,7 @@ func (u *JadwalUseCase) GetById(id string) model.JadwalResponse {
 func (u *JadwalUseCase) Update(request *model.UpdateJadwalRequest, id, user string) model.JadwalResponse {
 	jadwal, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
+		log.Printf("Failed to find jadwal: %v", err)
 		panic(&exception.NotFoundError{
 			Message: "Jadwal not found",
 		})
@@ -127,8 +129,6 @@ func (u *JadwalUseCase) Update(request *model.UpdateJadwalRequest, id, user stri
 		IdPegawai: jadwal.IdPegawai.String(),
 		IdHari:    jadwal.IdHari,
 		IdShift:   jadwal.IdShift,
-		JamMasuk:  jadwal.JamMasuk,
-		JamPulang: jadwal.JamPulang,
 	}
 
 	return response
