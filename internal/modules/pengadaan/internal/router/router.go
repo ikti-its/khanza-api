@@ -10,6 +10,7 @@ func Route(
 	app *fiber.App,
 	pengajuanController *controller.PengajuanController,
 	persetujuanController *controller.PersetujuanController,
+	pesananController *controller.PesananController,
 ) {
 	pengadaan := app.Group("/v1/pengadaan")
 
@@ -29,5 +30,14 @@ func Route(
 		persetujuan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), persetujuanController.GetById)
 		persetujuan.Put("/:id", middleware.Authenticate([]int{1337, 1}), persetujuanController.Update)
 		persetujuan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), persetujuanController.Delete)
+	}
+
+	pesanan := pengadaan.Group("/pesanan")
+	{
+		pesanan.Post("/", middleware.Authenticate([]int{1337, 1}), pesananController.Create)
+		pesanan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), pesananController.Get)
+		pesanan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pesananController.GetById)
+		pesanan.Put("/:id", middleware.Authenticate([]int{1337, 1}), pesananController.Update)
+		pesanan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), pesananController.Delete)
 	}
 }
