@@ -15,8 +15,13 @@ func ProvidePengadaan(app *fiber.App, db *sqlx.DB, validator *config.Validator) 
 	pengajuanUseCase := usecase.NewPengajuanUseCase(&pengajuanRepository)
 	pengajuanController := controller.NewPengajuanController(pengajuanUseCase, validator)
 
+	persetujuanRepository := postgres.NewPersetujuanRepository(db)
+	persetujuanUseCase := usecase.NewPersetujuanUseCase(&persetujuanRepository)
+	persetujuanController := controller.NewPersetujuanController(persetujuanUseCase, validator)
+
 	router.Route(
 		app,
 		pengajuanController,
+		persetujuanController,
 	)
 }
