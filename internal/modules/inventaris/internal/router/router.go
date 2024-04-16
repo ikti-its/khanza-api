@@ -11,6 +11,7 @@ func Route(
 	medisController *controller.MedisController,
 	obatController *controller.ObatController,
 	alkesController *controller.AlkesController,
+	bhpController *controller.BhpController,
 ) {
 	inventaris := app.Group("/v1/inventaris")
 
@@ -39,5 +40,14 @@ func Route(
 		alkes.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), alkesController.GetById)
 		alkes.Put("/:id", middleware.Authenticate([]int{1337, 1}), alkesController.Update)
 		alkes.Delete("/:id", middleware.Authenticate([]int{1337, 1}), alkesController.Delete)
+	}
+
+	bhp := inventaris.Group("/bhp")
+	{
+		bhp.Post("/", middleware.Authenticate([]int{1337, 1}), bhpController.Create)
+		bhp.Get("/", middleware.Authenticate([]int{1337, 1, 2}), bhpController.Get)
+		bhp.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), bhpController.GetById)
+		bhp.Put("/:id", middleware.Authenticate([]int{1337, 1}), bhpController.Update)
+		bhp.Delete("/:id", middleware.Authenticate([]int{1337, 1}), bhpController.Delete)
 	}
 }
