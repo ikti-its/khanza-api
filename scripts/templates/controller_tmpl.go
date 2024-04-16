@@ -3,8 +3,12 @@ package templates
 var ControllerTmpl = `package controller
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/config"
-	"github.com/ikti-its/khanza-api/internal/modules/{{.ModuleName}}/internal/usecase"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	web "github.com/ikti-its/khanza-api/internal/app/model"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/usecase"
 )
 
 type {{.Name}}Controller struct {
