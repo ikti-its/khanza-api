@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	// Check if module name is provided
+	// Ensure module name is provided
 	if len(os.Args) < 2 {
 		println("Usage: go run scripts/module.go <module name>")
 		return
@@ -30,7 +30,6 @@ func main() {
 		path.Join(modulePath, "internal/usecase"),
 		path.Join(modulePath, "internal/controller"),
 		path.Join(modulePath, "internal/router"),
-		path.Join(modulePath, "internal/middleware"),
 	}
 
 	for _, directory := range directories {
@@ -43,14 +42,8 @@ func main() {
 
 	// Initialize module files
 	files := map[string]string{
-		path.Join(modulePath, "internal/entity", fmt.Sprintf("%s.go", module)):                              templates.EntityTmpl,
-		path.Join(modulePath, "internal/model", fmt.Sprintf("%s_model.go", module)):                         templates.ModelTmpl,
-		path.Join(modulePath, "internal/repository", fmt.Sprintf("%s_repository.go", module)):               templates.RepositoryTmpl,
-		path.Join(modulePath, "internal/repository/postgres", fmt.Sprintf("%s_repository_impl.go", module)): templates.PostgresTmpl,
-		path.Join(modulePath, "internal/usecase", fmt.Sprintf("%s_usecase.go", module)):                     templates.UsecaseTmpl,
-		path.Join(modulePath, "internal/controller", fmt.Sprintf("%s_controller.go", module)):               templates.ControllerTmpl,
-		path.Join(modulePath, "internal/router", "router.go"):                                               templates.RouterTmpl,
-		path.Join(modulePath, fmt.Sprintf("%s.go", module)):                                                 templates.ProviderTmpl,
+		path.Join(modulePath, "internal/router", "router.go"): templates.RouterTmpl,
+		path.Join(modulePath, fmt.Sprintf("%s.go", module)):   templates.ProviderTmpl,
 	}
 
 	for file, content := range files {
