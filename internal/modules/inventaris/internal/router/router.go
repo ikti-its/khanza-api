@@ -9,6 +9,7 @@ import (
 func Route(
 	app *fiber.App,
 	medisController *controller.MedisController,
+	obatController *controller.ObatController,
 ) {
 	inventaris := app.Group("/v1/inventaris")
 
@@ -19,5 +20,14 @@ func Route(
 		medis.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), medisController.GetById)
 		medis.Put("/:id", middleware.Authenticate([]int{1337, 1}), medisController.Update)
 		medis.Delete("/:id", middleware.Authenticate([]int{1337, 1}), medisController.Delete)
+	}
+
+	obat := inventaris.Group("/obat")
+	{
+		obat.Post("/", middleware.Authenticate([]int{1337, 1}), obatController.Create)
+		obat.Get("/", middleware.Authenticate([]int{1337, 1, 2}), obatController.Get)
+		obat.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), obatController.GetById)
+		obat.Put("/:id", middleware.Authenticate([]int{1337, 1}), obatController.Update)
+		obat.Delete("/:id", middleware.Authenticate([]int{1337, 1}), obatController.Delete)
 	}
 }
