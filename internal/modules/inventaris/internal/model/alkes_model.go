@@ -12,8 +12,8 @@ type AlkesResponse struct {
 }
 
 type AlkesPageResponse struct {
-	Page  int
-	Size  int
-	Total int
-	Alkes []AlkesResponse
+	Page  int             `json:"page"`
+	Size  int             `json:"size"`
+	Total int             `json:"total"`
+	Alkes []AlkesResponse `json:"alat_kesehatan"`
 }
