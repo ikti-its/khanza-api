@@ -19,9 +19,14 @@ func ProvideInventaris(app *fiber.App, db *sqlx.DB, validator *config.Validator)
 	obatUseCase := usecase.NewObatUseCase(&obatRepository)
 	obatController := controller.NewObatController(obatUseCase, validator)
 
+	alkesRepository := postgres.NewAlkesRepository(db)
+	alkesUseCase := usecase.NewAlkesUseCase(&alkesRepository)
+	alkesController := controller.NewAlkesController(alkesUseCase, validator)
+
 	router.Route(
 		app,
 		medisController,
 		obatController,
+		alkesController,
 	)
 }
