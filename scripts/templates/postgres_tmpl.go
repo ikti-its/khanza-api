@@ -71,9 +71,9 @@ func (r *{{.ModuleName}}RepositoryImpl) Update({{.ModuleName}} *entity.{{.Name}}
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) Delete({{.ModuleName}} *entity.{{.Name}}) error {
-	query := "UPDATE ... SET deleted_at = $1, updater = $2 WHERE ... = $3"
+	query := "UPDATE ... SET deleted_at = $2, updater = $3 WHERE ... = $1"
 
-	_, err := r.DB.Exec(query, time.Now(), ...)
+	_, err := r.DB.Exec(query, {{.ModuleName}}.Id, time.Now(), {{.ModuleName}}.Updater)
 
 	return err
 }
@@ -150,9 +150,9 @@ func (r *{{.ModuleName}}RepositoryImpl) Update({{.ModuleName}} *entity.{{.Name}}
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) Delete({{.ModuleName}} *entity.{{.Name}}) error {
-	query := "UPDATE ... SET deleted_at = $1, updater = $2 WHERE ... = $3"
+	query := "UPDATE ... SET deleted_at = $2, updater = $3 WHERE ... = $1"
 
-	_, err := r.DB.Exec(query, time.Now(), ...)
+	_, err := r.DB.Exec(query, {{.ModuleName}}.Id, time.Now(), {{.ModuleName}}.Updater)
 
 	return err
 }
