@@ -19,11 +19,11 @@ func NewCutiRepository(db *sqlx.DB) repository.CutiRepository {
 
 func (r *cutiRepositoryImpl) Insert(cuti *entity.Cuti) error {
 	query := `
-		INSERT INTO cuti (id_pegawai, tanggal_mulai, tanggal_selesai, id_alasan_cuti, status)
-		VALUES ($1, $2, $3, $4, false)
+		INSERT INTO cuti (id, id_pegawai, tanggal_mulai, tanggal_selesai, id_alasan_cuti, status)
+		VALUES ($1, $2, $3, $4, $5, false)
 	`
 
-	_, err := r.DB.Exec(query, cuti.IdPegawai, cuti.TanggalMulai, cuti.TanggalSelesai, cuti.IdAlasan)
+	_, err := r.DB.Exec(query, cuti.Id, cuti.IdPegawai, cuti.TanggalMulai, cuti.TanggalSelesai, cuti.IdAlasan)
 
 	return err
 }
