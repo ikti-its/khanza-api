@@ -14,9 +14,12 @@ import (
 
 func Provide(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
 	{{.ModuleName}}Repository := postgres.New{{.Name}}Repository(db)
-	{{.ModuleName}}UseCase := usecase.New{{.Name}}UseCase(&{{.ModuleName}}Repository, cfg)
+	{{.ModuleName}}UseCase := usecase.New{{.Name}}UseCase(&{{.ModuleName}}Repository)
 	{{.ModuleName}}Controller := controller.New{{.Name}}Controller({{.ModuleName}}UseCase, validator)
 
-	router.Route(app, {{.ModuleName}}Controller)
+	router.Route(
+		app,
+		{{.ModuleName}}Controller,
+	)
 }
 `

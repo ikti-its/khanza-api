@@ -11,7 +11,13 @@ func Route(
 	app *fiber.App,
 	controller *controller.{{.Name}}Controller,
 ) {
-	_ = app.Group("/v1/{{.ModuleName}}")
-	{}
+	{{.ModuleName}} := app.Group("/v1/{{.ModuleName}}")
+	{
+		{{.ModuleName}}.Post("/", middleware.Authenticate([]int{1337, 1}), {{.ModuleName}}Controller.Create)
+		{{.ModuleName}}.Get("/", middleware.Authenticate([]int{1337, 1, 2}), {{.ModuleName}}Controller.Get)
+		{{.ModuleName}}.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), {{.ModuleName}}Controller.GetById)
+		{{.ModuleName}}.Put("/:id", middleware.Authenticate([]int{1337, 1}), {{.ModuleName}}Controller.Update)
+		{{.ModuleName}}.Delete("/:id", middleware.Authenticate([]int{1337, 1}), {{.ModuleName}}Controller.Delete)
+	}
 }
 `
