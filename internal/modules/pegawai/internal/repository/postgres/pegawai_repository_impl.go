@@ -19,11 +19,11 @@ func NewPegawaiRepository(db *sqlx.DB) repository.PegawaiRepository {
 
 func (r *pegawaiRepositoryImpl) Insert(pegawai *entity.Pegawai) error {
 	query := `
-		INSERT INTO pegawai (id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk) 
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+		INSERT INTO pegawai (id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`
 
-	_, err := r.DB.Exec(query, pegawai.IdAkun, pegawai.NIP, pegawai.Nama, pegawai.JenisKelamin, pegawai.Jabatan, pegawai.Departemen, pegawai.StatusAktif, pegawai.JenisPegawai, pegawai.Telepon, pegawai.TanggalMasuk)
+	_, err := r.DB.Exec(query, pegawai.Id, pegawai.IdAkun, pegawai.NIP, pegawai.Nama, pegawai.JenisKelamin, pegawai.Jabatan, pegawai.Departemen, pegawai.StatusAktif, pegawai.JenisPegawai, pegawai.Telepon, pegawai.TanggalMasuk)
 
 	return err
 }
