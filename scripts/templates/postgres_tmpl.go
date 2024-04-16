@@ -32,7 +32,7 @@ func (r *{{.ModuleName}}RepositoryImpl) Find() ([]entity.{{.Name}}, error) {
 	var records []entity.{{.Name}}
 	err := r.DB.Select(&records, query)
 
-	return {{.ModuleName}}, err
+	return records, err
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) FindPage(page, size int) ([]entity.{{.Name}}, int, error) {
@@ -63,7 +63,7 @@ func (r *{{.ModuleName}}RepositoryImpl) FindById(id uuid.UUID) (entity.{{.Name}}
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) Update({{.ModuleName}} *entity.{{.Name}}) error {
-	query := "UPDATE ..., updated_at = ..., updater = ... SET ... WHERE ... AND deleted_at IS NULL"
+	query := "UPDATE ..., SET ..., updated_at = ..., updater = ... WHERE ... AND deleted_at IS NULL"
 
 	_, err := r.DB.Exec(query, ...)
 
@@ -71,7 +71,7 @@ func (r *{{.ModuleName}}RepositoryImpl) Update({{.ModuleName}} *entity.{{.Name}}
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) Delete({{.ModuleName}} *entity.{{.Name}}) error {
-	query := "UPDATE ... SET deleted_at = $1 WHERE ... = $2"
+	query := "UPDATE ... SET deleted_at = $1, updater = $2 WHERE ... = $3"
 
 	_, err := r.DB.Exec(query, time.Now(), ...)
 
@@ -111,7 +111,7 @@ func (r *{{.ModuleName}}RepositoryImpl) Find() ([]entity.{{.Name}}, error) {
 	var records []entity.{{.Name}}
 	err := r.DB.Select(&records, query)
 
-	return {{.ModuleName}}, err
+	return records, err
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) FindPage(page, size int) ([]entity.{{.Name}}, int, error) {
@@ -142,7 +142,7 @@ func (r *{{.ModuleName}}RepositoryImpl) FindById(id uuid.UUID) (entity.{{.Name}}
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) Update({{.ModuleName}} *entity.{{.Name}}) error {
-	query := "UPDATE ..., updated_at = ..., updater = ... SET ... WHERE ... AND deleted_at IS NULL"
+	query := "UPDATE ..., SET ..., updated_at = ..., updater = ... WHERE ... AND deleted_at IS NULL"
 
 	_, err := r.DB.Exec(query, ...)
 
@@ -150,7 +150,7 @@ func (r *{{.ModuleName}}RepositoryImpl) Update({{.ModuleName}} *entity.{{.Name}}
 }
 
 func (r *{{.ModuleName}}RepositoryImpl) Delete({{.ModuleName}} *entity.{{.Name}}) error {
-	query := "UPDATE ... SET deleted_at = $1 WHERE ... = $2"
+	query := "UPDATE ... SET deleted_at = $1, updater = $2 WHERE ... = $3"
 
 	_, err := r.DB.Exec(query, time.Now(), ...)
 
