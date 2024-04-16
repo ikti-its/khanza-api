@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	// Check if module name is provided
+	// Ensure module and submodule name is provided
 	if len(os.Args) < 3 {
 		println("Usage: go run scripts/submodule.go <module name> <submodule name>")
 		return
@@ -25,10 +25,10 @@ func main() {
 	files := map[string]string{
 		path.Join(modulePath, "internal/entity", fmt.Sprintf("%s.go", submodule)):                              templates.EntityTmpl,
 		path.Join(modulePath, "internal/model", fmt.Sprintf("%s_model.go", submodule)):                         templates.ModelTmpl,
-		path.Join(modulePath, "internal/repository", fmt.Sprintf("%s_repository.go", submodule)):               templates.SubRepositoryTmpl,
-		path.Join(modulePath, "internal/repository/postgres", fmt.Sprintf("%s_repository_impl.go", submodule)): templates.SubPostgresTmpl,
-		path.Join(modulePath, "internal/usecase", fmt.Sprintf("%s_usecase.go", submodule)):                     templates.SubUsecaseTmpl,
-		path.Join(modulePath, "internal/controller", fmt.Sprintf("%s_controller.go", submodule)):               templates.SubControllerTmpl,
+		path.Join(modulePath, "internal/repository", fmt.Sprintf("%s_repository.go", submodule)):               templates.RepositoryTmpl,
+		path.Join(modulePath, "internal/repository/postgres", fmt.Sprintf("%s_repository_impl.go", submodule)): templates.PostgresTmpl,
+		path.Join(modulePath, "internal/usecase", fmt.Sprintf("%s_usecase.go", submodule)):                     templates.UsecaseTmpl,
+		path.Join(modulePath, "internal/controller", fmt.Sprintf("%s_controller.go", submodule)):               templates.ControllerTmpl,
 	}
 
 	for file, content := range files {
