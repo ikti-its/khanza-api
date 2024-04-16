@@ -134,7 +134,13 @@ func (u *{{.Name}}UseCase) Delete(id, user string) {
 
 var SubUsecaseTmpl = `package usecase
 
-import "github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/repository"
+import (
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/helper"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/repository"
+)
 
 type {{.Name}}UseCase struct {
 	Repository repository.{{.Name}}Repository

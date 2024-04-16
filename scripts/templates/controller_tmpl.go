@@ -128,7 +128,11 @@ func (c *{{.Name}}Controller) Delete(ctx *fiber.Ctx) error {
 var SubControllerTmpl = `package controller
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	web "github.com/ikti-its/khanza-api/internal/app/model"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/usecase"
 )
 
