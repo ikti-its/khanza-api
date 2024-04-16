@@ -2,7 +2,13 @@ package templates
 
 var UsecaseTmpl = `package usecase
 
-import "github.com/ikti-its/khanza-api/internal/modules/{{.ModuleName}}/internal/repository"
+import (
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/helper"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.Module}}/internal/repository"
+)
 
 type {{.Name}}UseCase struct {
 	Repository repository.{{.Name}}Repository
@@ -142,18 +148,18 @@ func New{{.Name}}UseCase(repository *repository.{{.Name}}Repository) *{{.Name}}U
 
 func (u *{{.Name}}UseCase) Create(request *model.{{.Name}}Request, user string) model.{{.Name}}Response {
 	updater := helper.MustParse(user)
-	{{.Module}} := entity.{{.Name}}{
+	{{.ModuleName}} := entity.{{.Name}}{
 		Id:      helper.MustNew(),
 		...
 		Updater: updater,
 	}
 
-	if err := u.Repository.Insert(&{{.Module}}); err != nil {
-		exception.PanicIfError(err, "Failed to insert {{.Module}}")
+	if err := u.Repository.Insert(&{{.ModuleName}}); err != nil {
+		exception.PanicIfError(err, "Failed to insert {{.ModuleName}}")
 	}
 
 	response := model.{{.Name}}Response{
-		Id:    {{.Module}}.Id.String(),
+		Id:    {{.ModuleName}}.Id.String(),
 		...
 	}
 
@@ -161,13 +167,13 @@ func (u *{{.Name}}UseCase) Create(request *model.{{.Name}}Request, user string) 
 }
 
 func (u *{{.Name}}UseCase) Get() []model.{{.Name}}Response {
-	{{.Module}}, err := u.Repository.Find()
-	exception.PanicIfError(err, "Failed to get all {{.Module}}")
+	{{.ModuleName}}, err := u.Repository.Find()
+	exception.PanicIfError(err, "Failed to get all {{.ModuleName}}")
 
-	response := make([]model.{{.Name}}Response, len({{.Module}}))
-	for i, {{.Module}} := range {{.Module}} {
+	response := make([]model.{{.Name}}Response, len({{.ModuleName}}))
+	for i, {{.ModuleName}} := range {{.ModuleName}} {
 		response[i] = model.{{.Name}}Response{
-			Id:    {{.Module}}.Id.String(),
+			Id:    {{.ModuleName}}.Id.String(),
 			...
 		}
 	}
@@ -176,13 +182,13 @@ func (u *{{.Name}}UseCase) Get() []model.{{.Name}}Response {
 }
 
 func (u *{{.Name}}UseCase) GetPage(page, size int) model.{{.Name}}PageResponse {
-	{{.Module}}, total, err := u.Repository.FindPage(page, size)
-	exception.PanicIfError(err, "Failed to get paged {{.Module}}")
+	{{.ModuleName}}, total, err := u.Repository.FindPage(page, size)
+	exception.PanicIfError(err, "Failed to get paged {{.ModuleName}}")
 
-	response := make([]model.{{.Name}}Response, len({{.Module}}))
-	for i, {{.Module}} := range {{.Module}} {
+	response := make([]model.{{.Name}}Response, len({{.ModuleName}}))
+	for i, {{.ModuleName}} := range {{.ModuleName}} {
 		response[i] = model.{{.Name}}Response{
-			Id:    {{.Module}}.Id.String(),
+			Id:    {{.ModuleName}}.Id.String(),
 			...
 		}
 	}
@@ -198,7 +204,7 @@ func (u *{{.Name}}UseCase) GetPage(page, size int) model.{{.Name}}PageResponse {
 }
 
 func (u *{{.Name}}UseCase) GetById(id string) model.{{.Name}}Response {
-	{{.Module}}, err := u.Repository.FindById(helper.MustParse(id))
+	{{.ModuleName}}, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "{{.Name}} not found",
@@ -206,7 +212,7 @@ func (u *{{.Name}}UseCase) GetById(id string) model.{{.Name}}Response {
 	}
 
 	response := model.{{.Name}}Response{
-		Id:    {{.Module}}.Id.String(),
+		Id:    {{.ModuleName}}.Id.String(),
 		...
 	}
 
@@ -214,7 +220,7 @@ func (u *{{.Name}}UseCase) GetById(id string) model.{{.Name}}Response {
 }
 
 func (u *{{.Name}}UseCase) Update(request *model.{{.Name}}Request, id, user string) model.{{.Name}}Response {
-	{{.Module}}, err := u.Repository.FindById(helper.MustParse(id))
+	{{.ModuleName}}, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "{{.Name}} not found",
@@ -222,14 +228,14 @@ func (u *{{.Name}}UseCase) Update(request *model.{{.Name}}Request, id, user stri
 	}
 
 	...
-	{{.Module}}.Updater = helper.MustParse(user)
+	{{.ModuleName}}.Updater = helper.MustParse(user)
 
-	if err := u.Repository.Update(&{{.Module}}); err != nil {
-		exception.PanicIfError(err, "Failed to update {{.Module}}")
+	if err := u.Repository.Update(&{{.ModuleName}}); err != nil {
+		exception.PanicIfError(err, "Failed to update {{.ModuleName}}")
 	}
 
 	response := model.{{.Name}}Response{
-		Id:    {{.Module}}.Id.String(),
+		Id:    {{.ModuleName}}.Id.String(),
 		...
 	}
 
@@ -237,17 +243,17 @@ func (u *{{.Name}}UseCase) Update(request *model.{{.Name}}Request, id, user stri
 }
 
 func (u *{{.Name}}UseCase) Delete(id, user string) {
-	{{.Module}}, err := u.Repository.FindById(helper.MustParse(id))
+	{{.ModuleName}}, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "{{.Name}} not found",
 		})
 	}
 
-	{{.Module}}.Updater = helper.MustParse(user)
+	{{.ModuleName}}.Updater = helper.MustParse(user)
 
-	if err := u.Repository.Delete(&{{.Module}}); err != nil {
-		exception.PanicIfError(err, "Failed to delete {{.Module}}")
+	if err := u.Repository.Delete(&{{.ModuleName}}); err != nil {
+		exception.PanicIfError(err, "Failed to delete {{.ModuleName}}")
 	}
 }
 `
