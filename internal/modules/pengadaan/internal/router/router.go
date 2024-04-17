@@ -13,6 +13,7 @@ func Route(
 	pesananController *controller.PesananController,
 	pemesananController *controller.PemesananController,
 	penerimaanController *controller.PenerimaanController,
+	tagihanController *controller.TagihanController,
 ) {
 	pengadaan := app.Group("/v1/pengadaan")
 
@@ -59,5 +60,14 @@ func Route(
 		penerimaan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), penerimaanController.GetById)
 		penerimaan.Put("/:id", middleware.Authenticate([]int{1337, 1}), penerimaanController.Update)
 		penerimaan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), penerimaanController.Delete)
+	}
+
+	tagihan := pengadaan.Group("/tagihan")
+	{
+		tagihan.Post("/", middleware.Authenticate([]int{1337, 1}), tagihanController.Create)
+		tagihan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), tagihanController.Get)
+		tagihan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), tagihanController.GetById)
+		tagihan.Put("/:id", middleware.Authenticate([]int{1337, 1}), tagihanController.Update)
+		tagihan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), tagihanController.Delete)
 	}
 }
