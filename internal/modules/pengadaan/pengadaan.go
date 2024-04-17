@@ -31,6 +31,10 @@ func ProvidePengadaan(app *fiber.App, db *sqlx.DB, validator *config.Validator) 
 	penerimaanUseCase := usecase.NewPenerimaanUseCase(&penerimaanRepository)
 	penerimaanController := controller.NewPenerimaanController(penerimaanUseCase, validator)
 
+	tagihanRepository := postgres.NewTagihanRepository(db)
+	tagihanUseCase := usecase.NewTagihanUseCase(&tagihanRepository)
+	tagihanController := controller.NewTagihanController(tagihanUseCase, validator)
+
 	router.Route(
 		app,
 		pengajuanController,
@@ -38,5 +42,6 @@ func ProvidePengadaan(app *fiber.App, db *sqlx.DB, validator *config.Validator) 
 		pesananController,
 		pemesananController,
 		penerimaanController,
+		tagihanController,
 	)
 }
