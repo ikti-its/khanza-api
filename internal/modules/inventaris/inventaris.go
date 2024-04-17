@@ -31,6 +31,10 @@ func ProvideInventaris(app *fiber.App, db *sqlx.DB, validator *config.Validator)
 	darahUseCase := usecase.NewDarahUseCase(&darahRepository)
 	darahController := controller.NewDarahController(darahUseCase, validator)
 
+	stokRepository := postgres.NewStokRepository(db)
+	stokUseCase := usecase.NewStokUseCase(&stokRepository)
+	stokController := controller.NewStokController(stokUseCase, validator)
+
 	router.Route(
 		app,
 		medisController,
@@ -38,5 +42,6 @@ func ProvideInventaris(app *fiber.App, db *sqlx.DB, validator *config.Validator)
 		alkesController,
 		bhpController,
 		darahController,
+		stokController,
 	)
 }
