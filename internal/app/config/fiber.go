@@ -1,11 +1,9 @@
 package config
 
 import (
-	"fmt"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/favicon"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -27,11 +25,6 @@ func NewFiber(cfg *Config) *fiber.App {
 			"message": "Endpoint `/` is not set. Please refer to the API documentation at https://documenter.getpostman.com/view/23649536/2sA2rDy1iF",
 		})
 	})
-
-	app.Use(favicon.New(favicon.Config{ // Favicon
-		File: fmt.Sprintf("%s/img/favicon.ico", cfg.Get("APP_STORAGE", "storage")), // e.g. "storage/img/favicon.ico"
-		URL:  "/favicon.ico",
-	}))
 
 	app.Use(healthcheck.New(healthcheck.Config{ // Health Check
 		LivenessProbe: func(ctx *fiber.Ctx) bool {
