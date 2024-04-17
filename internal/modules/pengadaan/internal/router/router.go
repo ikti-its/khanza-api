@@ -12,6 +12,7 @@ func Route(
 	persetujuanController *controller.PersetujuanController,
 	pesananController *controller.PesananController,
 	pemesananController *controller.PemesananController,
+	penerimaanController *controller.PenerimaanController,
 ) {
 	pengadaan := app.Group("/v1/pengadaan")
 
@@ -49,5 +50,14 @@ func Route(
 		pemesanan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pemesananController.GetById)
 		pemesanan.Put("/:id", middleware.Authenticate([]int{1337, 1}), pemesananController.Update)
 		pemesanan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), pemesananController.Delete)
+	}
+
+	penerimaan := pengadaan.Group("/penerimaan")
+	{
+		penerimaan.Post("/", middleware.Authenticate([]int{1337, 1}), penerimaanController.Create)
+		penerimaan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), penerimaanController.Get)
+		penerimaan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), penerimaanController.GetById)
+		penerimaan.Put("/:id", middleware.Authenticate([]int{1337, 1}), penerimaanController.Update)
+		penerimaan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), penerimaanController.Delete)
 	}
 }
