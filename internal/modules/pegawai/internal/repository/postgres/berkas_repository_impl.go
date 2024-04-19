@@ -48,7 +48,7 @@ func (r *berkasRepositoryImpl) FindPage(page, size int) ([]entity.Berkas, int, e
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
 	`
-	totalQuery := "SELECT COUNT(*) FROM pegawai WHERE deleted_at IS NULL"
+	totalQuery := "SELECT COUNT(*) FROM berkas_pegawai WHERE deleted_at IS NULL"
 
 	var total int64
 	if err := r.DB.Get(&total, totalQuery); err != nil {

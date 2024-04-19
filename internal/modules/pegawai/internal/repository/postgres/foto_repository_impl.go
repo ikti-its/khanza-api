@@ -5,6 +5,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"math"
 	"time"
 )
 
@@ -25,6 +26,42 @@ func (r *fotoRepositoryImpl) Insert(foto *entity.Foto) error {
 	_, err := r.DB.Exec(query, foto.IdPegawai, foto.Foto)
 
 	return err
+}
+
+func (r *fotoRepositoryImpl) Find() ([]entity.Foto, error) {
+	query := `
+		SELECT id_pegawai, foto 
+		FROM foto_pegawai 
+		WHERE deleted_at IS NULL
+	`
+
+	var records []entity.Foto
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r *fotoRepositoryImpl) FindPage(page, size int) ([]entity.Foto, int, error) {
+	query := `
+		SELECT id_pegawai, foto 
+		FROM foto_pegawai 
+		WHERE deleted_at IS NULL
+		LIMIT $1 OFFSET $2
+	`
+	totalQuery := "SELECT COUNT(*) FROM foto_pegawai WHERE deleted_at IS NULL"
+
+	var total int64
+	if err := r.DB.Get(&total, totalQuery); err != nil {
+		return nil, 0, err
+	}
+
+	totalPage := int(math.Ceil(float64(total) / float64(size)))
+	offset := (page - 1) * size
+
+	var records []entity.Foto
+	err := r.DB.Select(&records, query, size, offset)
+
+	return records, totalPage, err
 }
 
 func (r *fotoRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {

@@ -51,6 +51,33 @@ func (c *FotoController) Create(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *FotoController) Get(ctx *fiber.Ctx) error {
+	page := ctx.QueryInt("page")
+	size := ctx.QueryInt("size")
+
+	if size < 10 {
+		size = 10
+	}
+
+	if page < 1 {
+		response := c.UseCase.Get()
+
+		return ctx.Status(fiber.StatusOK).JSON(web.Response{
+			Code:   fiber.StatusOK,
+			Status: "OK",
+			Data:   response,
+		})
+	} else {
+		response := c.UseCase.GetPage(page, size)
+
+		return ctx.Status(fiber.StatusOK).JSON(web.Response{
+			Code:   fiber.StatusOK,
+			Status: "OK",
+			Data:   response,
+		})
+	}
+}
+
 func (c *FotoController) GetById(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 
