@@ -96,6 +96,23 @@ func (u *AlkesUseCase) GetById(id string) model.AlkesResponse {
 	return response
 }
 
+func (u *AlkesUseCase) GetByIdMedis(id string) model.AlkesResponse {
+	alkes, err := u.Repository.FindByIdMedis(helper.MustParse(id))
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Alkes not found",
+		})
+	}
+
+	response := model.AlkesResponse{
+		Id:      alkes.Id.String(),
+		IdMedis: alkes.IdMedis.String(),
+		Merek:   alkes.Merek,
+	}
+
+	return response
+}
+
 func (u *AlkesUseCase) Update(request *model.AlkesRequest, id, user string) model.AlkesResponse {
 	alkes, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
