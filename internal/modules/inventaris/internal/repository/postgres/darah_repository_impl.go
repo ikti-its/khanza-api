@@ -77,6 +77,19 @@ func (r *darahRepositoryImpl) FindById(id uuid.UUID) (entity.Darah, error) {
 	return record, err
 }
 
+func (r *darahRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Darah, error) {
+	query := `
+		SELECT id, id_barang_medis, keterangan, kadaluwarsa
+		FROM darah
+		WHERE id_barang_medis = $1 AND deleted_at IS NULL
+	`
+
+	var record entity.Darah
+	err := r.DB.Get(&record, query, id)
+
+	return record, err
+}
+
 func (r *darahRepositoryImpl) Update(darah *entity.Darah) error {
 	query := `
 		UPDATE darah

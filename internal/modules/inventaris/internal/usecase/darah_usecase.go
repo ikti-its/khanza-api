@@ -101,6 +101,24 @@ func (u *DarahUseCase) GetById(id string) model.DarahResponse {
 	return response
 }
 
+func (u *DarahUseCase) GetByIdMedis(id string) model.DarahResponse {
+	darah, err := u.Repository.FindByIdMedis(helper.MustParse(id))
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Darah not found",
+		})
+	}
+
+	response := model.DarahResponse{
+		Id:          darah.Id.String(),
+		IdMedis:     darah.IdMedis.String(),
+		Keterangan:  darah.Keterangan,
+		Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
+	}
+
+	return response
+}
+
 func (u *DarahUseCase) Update(request *model.DarahRequest, id, user string) model.DarahResponse {
 	darah, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
