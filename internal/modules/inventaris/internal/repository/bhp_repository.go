@@ -10,6 +10,7 @@ type BhpRepository interface {
 	Find() ([]entity.Bhp, error)
 	FindPage(page, size int) ([]entity.Bhp, int, error)
 	FindById(id uuid.UUID) (entity.Bhp, error)
+	FindByIdMedis(id uuid.UUID) (entity.Bhp, error)
 	Update(bhp *entity.Bhp) error
 	Delete(bhp *entity.Bhp) error
 }

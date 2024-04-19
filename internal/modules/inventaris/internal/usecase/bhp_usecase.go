@@ -106,6 +106,25 @@ func (u *BhpUseCase) GetById(id string) model.BhpResponse {
 	return response
 }
 
+func (u *BhpUseCase) GetByIdMedis(id string) model.BhpResponse {
+	bhp, err := u.Repository.FindByIdMedis(helper.MustParse(id))
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Bhp not found",
+		})
+	}
+
+	response := model.BhpResponse{
+		Id:          bhp.Id.String(),
+		IdMedis:     bhp.IdMedis.String(),
+		Satuan:      bhp.Satuan,
+		Jumlah:      bhp.Jumlah,
+		Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
+	}
+
+	return response
+}
+
 func (u *BhpUseCase) Update(request *model.BhpRequest, id, user string) model.BhpResponse {
 	bhp, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {

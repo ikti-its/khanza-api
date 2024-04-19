@@ -86,6 +86,18 @@ func (c *BhpController) GetById(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *BhpController) GetByIdMedis(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	response := c.UseCase.GetByIdMedis(id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *BhpController) Update(ctx *fiber.Ctx) error {
 	var request model.BhpRequest
 	id := ctx.Params("id")
