@@ -77,6 +77,19 @@ func (r *obatRepositoryImpl) FindById(id uuid.UUID) (entity.Obat, error) {
 	return record, err
 }
 
+func (r *obatRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Obat, error) {
+	query := `
+		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_besar, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
+		FROM obat
+		WHERE id_barang_medis = $1 AND deleted_at IS NULL
+	`
+
+	var record entity.Obat
+	err := r.DB.Get(&record, query, id)
+
+	return record, err
+}
+
 func (r *obatRepositoryImpl) Update(obat *entity.Obat) error {
 	query := `
 		UPDATE obat 

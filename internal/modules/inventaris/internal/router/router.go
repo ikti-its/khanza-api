@@ -30,6 +30,7 @@ func Route(
 	{
 		obat.Post("/", middleware.Authenticate([]int{1337, 1}), obatController.Create)
 		obat.Get("/", middleware.Authenticate([]int{1337, 1, 2}), obatController.Get)
+		obat.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), obatController.GetByIdMedis)
 		obat.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), obatController.GetById)
 		obat.Put("/:id", middleware.Authenticate([]int{1337, 1}), obatController.Update)
 		obat.Delete("/:id", middleware.Authenticate([]int{1337, 1}), obatController.Delete)
@@ -39,6 +40,7 @@ func Route(
 	{
 		alkes.Post("/", middleware.Authenticate([]int{1337, 1}), alkesController.Create)
 		alkes.Get("/", middleware.Authenticate([]int{1337, 1, 2}), alkesController.Get)
+		alkes.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), alkesController.GetByIdMedis)
 		alkes.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), alkesController.GetById)
 		alkes.Put("/:id", middleware.Authenticate([]int{1337, 1}), alkesController.Update)
 		alkes.Delete("/:id", middleware.Authenticate([]int{1337, 1}), alkesController.Delete)
@@ -48,6 +50,7 @@ func Route(
 	{
 		bhp.Post("/", middleware.Authenticate([]int{1337, 1}), bhpController.Create)
 		bhp.Get("/", middleware.Authenticate([]int{1337, 1, 2}), bhpController.Get)
+		bhp.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), bhpController.GetByIdMedis)
 		bhp.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), bhpController.GetById)
 		bhp.Put("/:id", middleware.Authenticate([]int{1337, 1}), bhpController.Update)
 		bhp.Delete("/:id", middleware.Authenticate([]int{1337, 1}), bhpController.Delete)
@@ -57,6 +60,7 @@ func Route(
 	{
 		darah.Post("/", middleware.Authenticate([]int{1337, 1}), darahController.Create)
 		darah.Get("/", middleware.Authenticate([]int{1337, 1, 2}), darahController.Get)
+		darah.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), darahController.GetByIdMedis)
 		darah.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), darahController.GetById)
 		darah.Put("/:id", middleware.Authenticate([]int{1337, 1}), darahController.Update)
 		darah.Delete("/:id", middleware.Authenticate([]int{1337, 1}), darahController.Delete)
