@@ -77,6 +77,19 @@ func (r *bhpRepositoryImpl) FindById(id uuid.UUID) (entity.Bhp, error) {
 	return record, err
 }
 
+func (r *bhpRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Bhp, error) {
+	query := `
+		SELECT id, id_barang_medis, satuan, jumlah, kadaluwarsa
+		FROM bahan_habis_pakai
+		WHERE id_barang_medis = $1 AND deleted_at IS NULL
+	`
+
+	var record entity.Bhp
+	err := r.DB.Get(&record, query, id)
+
+	return record, err
+}
+
 func (r *bhpRepositoryImpl) Update(bhp *entity.Bhp) error {
 	query := `
 		UPDATE bahan_habis_pakai
