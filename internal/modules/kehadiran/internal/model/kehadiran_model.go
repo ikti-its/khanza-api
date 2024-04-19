@@ -19,3 +19,10 @@ type KehadiranResponse struct {
 	JamPulang  string `json:"jam_pulang,omitempty"`
 	Keterangan string `json:"keterangan,omitempty"`
 }
+
+type KehadiranPageResponse struct {
+	Page      int                 `json:"page"`
+	Size      int                 `json:"size"`
+	Total     int                 `json:"total"`
+	Kehadiran []KehadiranResponse `json:"presensi"`
+}
