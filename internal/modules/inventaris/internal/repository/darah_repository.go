@@ -10,6 +10,7 @@ type DarahRepository interface {
 	Find() ([]entity.Darah, error)
 	FindPage(page, size int) ([]entity.Darah, int, error)
 	FindById(id uuid.UUID) (entity.Darah, error)
+	FindByIdMedis(id uuid.UUID) (entity.Darah, error)
 	Update(darah *entity.Darah) error
 	Delete(darah *entity.Darah) error
 }

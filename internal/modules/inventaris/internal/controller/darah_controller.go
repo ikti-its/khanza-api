@@ -86,6 +86,18 @@ func (c *DarahController) GetById(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *DarahController) GetByIdMedis(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	response := c.UseCase.GetByIdMedis(id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *DarahController) Update(ctx *fiber.Ctx) error {
 	var request model.DarahRequest
 	id := ctx.Params("id")
