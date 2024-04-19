@@ -12,28 +12,31 @@ func Route(
 	berkasController *controller.BerkasController,
 	fotoController *controller.FotoController,
 ) {
-	pegawai := app.Group("/v1/pegawai")
+	base := app.Group("/v1/pegawai")
+
+	berkas := base.Group("/berkas")
+	{
+		berkas.Post("/", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Create)
+		berkas.Get("/", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Get)
+		berkas.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), berkasController.GetById)
+		berkas.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Update)
+		berkas.Delete("/:id", middleware.Authenticate([]int{1337, 1}), berkasController.Delete)
+	}
+
+	foto := base.Group("/foto")
+	{
+		foto.Post("/", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Create)
+		foto.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.GetById)
+		foto.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Update)
+		foto.Delete("/:id", middleware.Authenticate([]int{1337, 1}), fotoController.Delete)
+	}
+
+	pegawai := base.Group("/")
 	{
 		pegawai.Post("/", middleware.Authenticate([]int{1337, 1}), pegawaiController.Create)
 		pegawai.Get("/", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.Get)
 		pegawai.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.GetById)
 		pegawai.Put("/:id", middleware.Authenticate([]int{1337, 1}), pegawaiController.Update)
 		pegawai.Delete("/:id", middleware.Authenticate([]int{1337, 1}), pegawaiController.Delete)
-	}
-
-	berkas := pegawai.Group("/berkas")
-	{
-		berkas.Post("/", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Create)
-		berkas.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), berkasController.GetById)
-		berkas.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Update)
-		berkas.Delete("/:id", middleware.Authenticate([]int{1337, 1}), berkasController.Delete)
-	}
-
-	foto := pegawai.Group("/foto")
-	{
-		foto.Post("/", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Create)
-		foto.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.GetById)
-		foto.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Update)
-		foto.Delete("/:id", middleware.Authenticate([]int{1337, 1}), fotoController.Delete)
 	}
 }
