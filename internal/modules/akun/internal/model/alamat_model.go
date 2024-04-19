@@ -17,3 +17,10 @@ type AlamatResponse struct {
 	Kota      string  `json:"kota"`
 	KodePos   string  `json:"kode_pos"`
 }
+
+type AlamatPageResponse struct {
+	Page   int              `json:"page"`
+	Size   int              `json:"size"`
+	Total  int              `json:"total"`
+	Alamat []AlamatResponse `json:"alamat"`
+}
