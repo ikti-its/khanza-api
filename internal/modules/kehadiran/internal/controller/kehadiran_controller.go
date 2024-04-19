@@ -75,24 +75,39 @@ func (c *KehadiranController) Leave(ctx *fiber.Ctx) error {
 }
 
 func (c *KehadiranController) Get(ctx *fiber.Ctx) error {
+	page := ctx.QueryInt("page")
+	size := ctx.QueryInt("size")
 	tanggal := ctx.Query("tanggal")
 
-	if tanggal != "" && !helper.ParseTime(tanggal, "2006-01-02").IsZero() {
-		response := c.UseCase.GetByTanggal(tanggal)
+	if size < 5 {
+		size = 5
+	}
 
-		return ctx.Status(fiber.StatusOK).JSON(web.Response{
+	if page < 1 {
+		response := c.UseCase.Get()
+		return ctx.JSON(web.Response{
 			Code:   fiber.StatusOK,
 			Status: "OK",
 			Data:   response,
 		})
 	} else {
-		response := c.UseCase.Get()
+		if tanggal != "" && !helper.ParseTime(tanggal, "2006-01-02").IsZero() {
+			response := c.UseCase.GetByTanggal(tanggal)
 
-		return ctx.Status(fiber.StatusOK).JSON(web.Response{
-			Code:   fiber.StatusOK,
-			Status: "OK",
-			Data:   response,
-		})
+			return ctx.Status(fiber.StatusOK).JSON(web.Response{
+				Code:   fiber.StatusOK,
+				Status: "OK",
+				Data:   response,
+			})
+		} else {
+			response := c.UseCase.Get()
+
+			return ctx.Status(fiber.StatusOK).JSON(web.Response{
+				Code:   fiber.StatusOK,
+				Status: "OK",
+				Data:   response,
+			})
+		}
 	}
 }
 

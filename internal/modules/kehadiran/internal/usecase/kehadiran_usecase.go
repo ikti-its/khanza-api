@@ -102,6 +102,43 @@ func (u *KehadiranUseCase) Get() []model.KehadiranResponse {
 	return response
 }
 
+func (u *KehadiranUseCase) GetPage(page, size int) model.KehadiranPageResponse {
+	kehadiran, total, err := u.Repository.FindPage(page, size)
+	if err != nil {
+		exception.PanicIfError(err, "Failed to get paged kehadiran")
+	}
+
+	response := make([]model.KehadiranResponse, len(kehadiran))
+	for i, kehadiran := range kehadiran {
+		if kehadiran.JamPulang.Valid {
+			response[i] = model.KehadiranResponse{
+				Id:         kehadiran.Id.String(),
+				IdPegawai:  kehadiran.IdPegawai.String(),
+				Tanggal:    kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
+				Keterangan: kehadiran.Keterangan,
+			}
+		} else {
+			response[i] = model.KehadiranResponse{
+				Id:        kehadiran.Id.String(),
+				IdPegawai: kehadiran.IdPegawai.String(),
+				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
+				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+			}
+		}
+	}
+
+	pagedResponse := model.KehadiranPageResponse{
+		Page:      page,
+		Size:      size,
+		Total:     total,
+		Kehadiran: response,
+	}
+
+	return pagedResponse
+}
+
 func (u *KehadiranUseCase) GetById(id string) model.KehadiranResponse {
 	kehadiran, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {

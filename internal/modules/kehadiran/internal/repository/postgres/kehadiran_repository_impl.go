@@ -5,6 +5,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"math"
 	"time"
 )
 
@@ -39,6 +40,30 @@ func (r *kehadiranRepositoryImpl) Find() ([]entity.Kehadiran, error) {
 	err := r.DB.Select(&records, query)
 
 	return records, err
+}
+
+func (r *kehadiranRepositoryImpl) FindPage(page, size int) ([]entity.Kehadiran, int, error) {
+	query := `
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan
+		FROM presensi
+		WHERE deleted_at IS NULL
+		ORDER BY tanggal
+		LIMIT $1 OFFSET $2
+	`
+	totalQuery := "SELECT COUNT(*) FROM presensi WHERE deleted_at IS NULL"
+
+	var total int64
+	if err := r.DB.Get(&total, totalQuery); err != nil {
+		return nil, 0, err
+	}
+
+	totalPage := int(math.Ceil(float64(total) / float64(size)))
+	offset := (page - 1) * size
+
+	var records []entity.Kehadiran
+	err := r.DB.Select(&records, query, size, offset)
+
+	return records, totalPage, err
 }
 
 func (r *kehadiranRepositoryImpl) FindByPegawaiId(id uuid.UUID) ([]entity.Kehadiran, error) {

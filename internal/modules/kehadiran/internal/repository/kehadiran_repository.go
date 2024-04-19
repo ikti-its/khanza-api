@@ -8,6 +8,7 @@ import (
 type KehadiranRepository interface {
 	Insert(kehadiran *entity.Kehadiran) error
 	Find() ([]entity.Kehadiran, error)
+	FindPage(page, size int) ([]entity.Kehadiran, int, error)
 	FindByPegawaiId(id uuid.UUID) ([]entity.Kehadiran, error)
 	FindByTanggal(tanggal string) ([]entity.Kehadiran, error)
 	FindById(id uuid.UUID) (entity.Kehadiran, error)
