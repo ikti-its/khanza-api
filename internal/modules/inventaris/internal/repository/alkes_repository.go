@@ -10,6 +10,7 @@ type AlkesRepository interface {
 	Find() ([]entity.Alkes, error)
 	FindPage(page, size int) ([]entity.Alkes, int, error)
 	FindById(id uuid.UUID) (entity.Alkes, error)
+	FindByIdMedis(id uuid.UUID) (entity.Alkes, error)
 	Update(alkes *entity.Alkes) error
 	Delete(alkes *entity.Alkes) error
 }

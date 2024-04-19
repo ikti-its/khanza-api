@@ -77,6 +77,19 @@ func (r *alkesRepositoryImpl) FindById(id uuid.UUID) (entity.Alkes, error) {
 	return record, err
 }
 
+func (r *alkesRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Alkes, error) {
+	query := `
+		SELECT id, id_barang_medis, merek
+		FROM alat_kesehatan
+		WHERE id_barang_medis = $1 AND deleted_at IS NULL
+	`
+
+	var record entity.Alkes
+	err := r.DB.Get(&record, query, id)
+
+	return record, err
+}
+
 func (r *alkesRepositoryImpl) Update(alkes *entity.Alkes) error {
 	query := `
 		UPDATE alat_kesehatan
