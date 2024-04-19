@@ -71,6 +71,67 @@ func (u *BerkasUseCase) Create(request *model.BerkasRequest, user string) model.
 	return response
 }
 
+func (u *BerkasUseCase) Get() []model.BerkasResponse {
+	berkas, err := u.Repository.Find()
+	exception.PanicIfError(err, "Failed to get all berkas")
+
+	response := make([]model.BerkasResponse, len(berkas))
+	for i, berkas := range berkas {
+		response[i] = model.BerkasResponse{
+			IdPegawai:    berkas.IdPegawai.String(),
+			NIK:          berkas.NIK,
+			TempatLahir:  berkas.TempatLahir,
+			TanggalLahir: berkas.TanggalLahir.Format("2006-01-02"),
+			Agama:        berkas.Agama,
+			Pendidikan:   berkas.Pendidikan,
+			KTP:          berkas.KTP,
+			KK:           berkas.KK,
+			NPWP:         berkas.NPWP,
+			BPJS:         berkas.BPJS,
+			Ijazah:       berkas.Ijazah,
+			SKCK:         berkas.SKCK,
+			STR:          berkas.STR,
+			SerKom:       berkas.SerKom,
+		}
+	}
+
+	return response
+}
+
+func (u *BerkasUseCase) GetPage(page, size int) model.BerkasPageResponse {
+	berkas, total, err := u.Repository.FindPage(page, size)
+	exception.PanicIfError(err, "Failed to get paged berkas")
+
+	response := make([]model.BerkasResponse, len(berkas))
+	for i, berkas := range berkas {
+		response[i] = model.BerkasResponse{
+			IdPegawai:    berkas.IdPegawai.String(),
+			NIK:          berkas.NIK,
+			TempatLahir:  berkas.TempatLahir,
+			TanggalLahir: berkas.TanggalLahir.Format("2006-01-02"),
+			Agama:        berkas.Agama,
+			Pendidikan:   berkas.Pendidikan,
+			KTP:          berkas.KTP,
+			KK:           berkas.KK,
+			NPWP:         berkas.NPWP,
+			BPJS:         berkas.BPJS,
+			Ijazah:       berkas.Ijazah,
+			SKCK:         berkas.SKCK,
+			STR:          berkas.STR,
+			SerKom:       berkas.SerKom,
+		}
+	}
+
+	pagedResponse := model.BerkasPageResponse{
+		Page:   page,
+		Size:   size,
+		Total:  total,
+		Berkas: response,
+	}
+
+	return pagedResponse
+}
+
 func (u *BerkasUseCase) GetAkunId(id string) string {
 	akunId, err := u.Repository.FindAkunIdById(helper.MustParse(id))
 	if err != nil {

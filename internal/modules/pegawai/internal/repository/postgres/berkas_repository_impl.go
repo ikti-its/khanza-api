@@ -5,6 +5,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"math"
 	"time"
 )
 
@@ -25,6 +26,42 @@ func (r *berkasRepositoryImpl) Insert(berkas *entity.Berkas) error {
 	_, err := r.DB.Exec(query, berkas.IdPegawai, berkas.NIK, berkas.TempatLahir, berkas.TanggalLahir, berkas.Agama, berkas.Pendidikan, berkas.KTP, berkas.KK, berkas.NPWP, berkas.BPJS, berkas.Ijazah, berkas.SKCK, berkas.STR, berkas.SerKom)
 
 	return err
+}
+
+func (r *berkasRepositoryImpl) Find() ([]entity.Berkas, error) {
+	query := `
+		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom 
+		FROM berkas_pegawai 
+		WHERE deleted_at IS NULL
+	`
+
+	var records []entity.Berkas
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r *berkasRepositoryImpl) FindPage(page, size int) ([]entity.Berkas, int, error) {
+	query := `
+		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom 
+		FROM berkas_pegawai 
+		WHERE deleted_at IS NULL
+		LIMIT $1 OFFSET $2
+	`
+	totalQuery := "SELECT COUNT(*) FROM pegawai WHERE deleted_at IS NULL"
+
+	var total int64
+	if err := r.DB.Get(&total, totalQuery); err != nil {
+		return nil, 0, err
+	}
+
+	totalPage := int(math.Ceil(float64(total) / float64(size)))
+	offset := (page - 1) * size
+
+	var records []entity.Berkas
+	err := r.DB.Select(&records, query, size, offset)
+
+	return records, totalPage, err
 }
 
 func (r *berkasRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {

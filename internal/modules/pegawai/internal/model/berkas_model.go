@@ -33,3 +33,10 @@ type BerkasResponse struct {
 	STR          string `json:"str,omitempty"`
 	SerKom       string `json:"serkom,omitempty"`
 }
+
+type BerkasPageResponse struct {
+	Page   int              `json:"page"`
+	Size   int              `json:"size"`
+	Total  int              `json:"total"`
+	Berkas []BerkasResponse `json:"berkas_pegawai"`
+}
