@@ -10,6 +10,7 @@ type ObatRepository interface {
 	Find() ([]entity.Obat, error)
 	FindPage(page, size int) ([]entity.Obat, int, error)
 	FindById(id uuid.UUID) (entity.Obat, error)
+	FindByIdMedis(id uuid.UUID) (entity.Obat, error)
 	Update(obat *entity.Obat) error
 	Delete(obat *entity.Obat) error
 }

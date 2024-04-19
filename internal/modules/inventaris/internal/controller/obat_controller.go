@@ -86,6 +86,18 @@ func (c *ObatController) GetById(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *ObatController) GetByIdMedis(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	response := c.UseCase.GetByIdMedis(id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *ObatController) Update(ctx *fiber.Ctx) error {
 	var request model.ObatRequest
 	id := ctx.Params("id")

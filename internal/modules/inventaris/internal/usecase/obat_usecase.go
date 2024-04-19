@@ -141,6 +141,32 @@ func (u *ObatUseCase) GetById(id string) model.ObatResponse {
 	return response
 }
 
+func (u *ObatUseCase) GetByIdMedis(id string) model.ObatResponse {
+	obat, err := u.Repository.FindByIdMedis(helper.MustParse(id))
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Obat not found",
+		})
+	}
+
+	response := model.ObatResponse{
+		Id:          obat.Id.String(),
+		IdMedis:     obat.IdMedis.String(),
+		Industri:    obat.Industri,
+		Kandungan:   obat.Kandungan,
+		SatuanBesar: obat.SatuanBesar,
+		SatuanKecil: obat.SatuanKecil,
+		Isi:         obat.Isi,
+		Kapasitas:   obat.Kapasitas,
+		Jenis:       obat.Jenis,
+		Kategori:    obat.Kategori,
+		Golongan:    obat.Golongan,
+		Kadaluwarsa: helper.FormatTime(obat.Kadaluwarsa, "2006-01-02"),
+	}
+
+	return response
+}
+
 func (u *ObatUseCase) Update(request *model.ObatRequest, id, user string) model.ObatResponse {
 	obat, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
