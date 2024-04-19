@@ -22,13 +22,28 @@ func NewJadwalController(useCase *usecase.JadwalUseCase, validator *config.Valid
 }
 
 func (c *JadwalController) Get(ctx *fiber.Ctx) error {
-	jadwal := c.UseCase.Get()
+	page := ctx.QueryInt("page")
+	size := ctx.QueryInt("size")
 
-	return ctx.Status(fiber.StatusOK).JSON(web.Response{
-		Code:   fiber.StatusOK,
-		Status: "OK",
-		Data:   jadwal,
-	})
+	if size < 5 {
+		size = 5
+	}
+
+	if page < 1 {
+		response := c.UseCase.Get()
+		return ctx.JSON(web.Response{
+			Code:   fiber.StatusOK,
+			Status: "OK",
+			Data:   response,
+		})
+	} else {
+		response := c.UseCase.GetPage(page, size)
+		return ctx.JSON(web.Response{
+			Code:   fiber.StatusOK,
+			Status: "OK",
+			Data:   response,
+		})
+	}
 }
 
 func (c *JadwalController) GetByHariId(ctx *fiber.Ctx) error {

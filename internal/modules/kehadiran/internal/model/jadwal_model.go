@@ -15,3 +15,10 @@ type JadwalResponse struct {
 	JamMasuk  string `json:"jam_masuk,omitempty"`
 	JamPulang string `json:"jam_pulang,omitempty"`
 }
+
+type JadwalPageResponse struct {
+	Page   int              `json:"page"`
+	Size   int              `json:"size"`
+	Total  int              `json:"total"`
+	Jadwal []JadwalResponse `json:"jadwal_pegawai"`
+}

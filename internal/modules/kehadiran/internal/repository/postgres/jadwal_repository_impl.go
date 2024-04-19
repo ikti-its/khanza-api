@@ -5,6 +5,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"math"
 	"time"
 )
 
@@ -29,6 +30,31 @@ func (r *jadwalRepositoryImpl) Find() ([]entity.Jadwal, error) {
 	err := r.DB.Select(&records, query)
 
 	return records, err
+}
+
+func (r *jadwalRepositoryImpl) FindPage(page, size int) ([]entity.Jadwal, int, error) {
+	query := `
+		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang
+		FROM jadwal_pegawai jp
+		JOIN ref.shift s ON jp.id_shift = s.id
+		WHERE deleted_at IS NULL
+		ORDER BY jp.id_hari
+		LIMIT $1 OFFSET $2
+	`
+	totalQuery := "SELECT COUNT(*) FROM jadwal_pegawai WHERE deleted_at IS NULL"
+
+	var total int64
+	if err := r.DB.Get(&total, totalQuery); err != nil {
+		return nil, 0, err
+	}
+
+	totalPage := int(math.Ceil(float64(total) / float64(size)))
+	offset := (page - 1) * size
+
+	var records []entity.Jadwal
+	err := r.DB.Select(&records, query, size, offset)
+
+	return records, totalPage, err
 }
 
 func (r *jadwalRepositoryImpl) FindByHariId(id int) ([]entity.Jadwal, error) {
