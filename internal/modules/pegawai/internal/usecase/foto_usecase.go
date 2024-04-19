@@ -38,6 +38,43 @@ func (u *FotoUseCase) Create(request *model.FotoRequest, user string) model.Foto
 	return response
 }
 
+func (u *FotoUseCase) Get() []model.FotoResponse {
+	foto, err := u.Repository.Find()
+	exception.PanicIfError(err, "Failed to get all foto")
+
+	response := make([]model.FotoResponse, len(foto))
+	for i, foto := range foto {
+		response[i] = model.FotoResponse{
+			IdPegawai: foto.IdPegawai.String(),
+			Foto:      foto.Foto,
+		}
+	}
+
+	return response
+}
+
+func (u *FotoUseCase) GetPage(page, size int) model.FotoPageResponse {
+	foto, total, err := u.Repository.FindPage(page, size)
+	exception.PanicIfError(err, "Failed to get paged foto")
+
+	response := make([]model.FotoResponse, len(foto))
+	for i, foto := range foto {
+		response[i] = model.FotoResponse{
+			IdPegawai: foto.IdPegawai.String(),
+			Foto:      foto.Foto,
+		}
+	}
+
+	pagedResponse := model.FotoPageResponse{
+		Page:  page,
+		Size:  size,
+		Total: total,
+		Foto:  response,
+	}
+
+	return pagedResponse
+}
+
 func (u *FotoUseCase) GetAkunId(id string) string {
 	akunId, err := u.Repository.FindAkunIdById(helper.MustParse(id))
 	if err != nil {

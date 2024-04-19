@@ -26,6 +26,7 @@ func Route(
 	foto := base.Group("/foto")
 	{
 		foto.Post("/", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Create)
+		foto.Get("/", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Get)
 		foto.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.GetById)
 		foto.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Update)
 		foto.Delete("/:id", middleware.Authenticate([]int{1337, 1}), fotoController.Delete)
