@@ -5,6 +5,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"math"
 	"time"
 )
 
@@ -25,6 +26,42 @@ func (r *alamatRepositoryImpl) Insert(alamat *entity.Alamat) error {
 	_, err := r.DB.Exec(query, alamat.IdAkun, alamat.Alamat, alamat.AlamatLat, alamat.AlamatLon, alamat.Kota, alamat.KodePos)
 
 	return err
+}
+
+func (r *alamatRepositoryImpl) Find() ([]entity.Alamat, error) {
+	query := `
+		SELECT id_akun, alamat, alamat_lat, alamat_lon, kota, kode_pos
+		FROM alamat
+		WHERE deleted_at IS NULL
+	`
+
+	var records []entity.Alamat
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r *alamatRepositoryImpl) FindPage(page, size int) ([]entity.Alamat, int, error) {
+	query := `
+		SELECT id_akun, alamat, alamat_lat, alamat_lon, kota, kode_pos
+		FROM alamat
+		WHERE deleted_at IS NULL
+		LIMIT $1 OFFSET $2
+	`
+	totalQuery := "SELECT COUNT(*) FROM akun WHERE deleted_at IS NULL"
+
+	var total int64
+	if err := r.DB.Get(&total, totalQuery); err != nil {
+		return nil, 0, err
+	}
+
+	totalPage := int(math.Ceil(float64(total) / float64(size)))
+	offset := (page - 1) * size
+
+	var records []entity.Alamat
+	err := r.DB.Select(&records, query, size, offset)
+
+	return records, totalPage, err
 }
 
 func (r *alamatRepositoryImpl) FindById(id uuid.UUID) (entity.Alamat, error) {

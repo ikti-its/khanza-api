@@ -46,6 +46,51 @@ func (u *AlamatUseCase) Create(request *model.AlamatRequest, user string) model.
 	return response
 }
 
+func (u *AlamatUseCase) Get() []model.AlamatResponse {
+	alamat, err := u.Repository.Find()
+	exception.PanicIfError(err, "Failed to get all alamat")
+
+	response := make([]model.AlamatResponse, len(alamat))
+	for i, alamat := range alamat {
+		response[i] = model.AlamatResponse{
+			IdAkun:    alamat.IdAkun.String(),
+			Alamat:    alamat.Alamat,
+			AlamatLat: alamat.AlamatLat,
+			AlamatLon: alamat.AlamatLon,
+			Kota:      alamat.Kota,
+			KodePos:   alamat.KodePos,
+		}
+	}
+
+	return response
+}
+
+func (u *AlamatUseCase) GetPage(page, size int) model.AlamatPageResponse {
+	alamat, total, err := u.Repository.FindPage(page, size)
+	exception.PanicIfError(err, "Failed to get paged alamat")
+
+	response := make([]model.AlamatResponse, len(alamat))
+	for i, alamat := range alamat {
+		response[i] = model.AlamatResponse{
+			IdAkun:    alamat.IdAkun.String(),
+			Alamat:    alamat.Alamat,
+			AlamatLat: alamat.AlamatLat,
+			AlamatLon: alamat.AlamatLon,
+			Kota:      alamat.Kota,
+			KodePos:   alamat.KodePos,
+		}
+	}
+
+	pagedResponse := model.AlamatPageResponse{
+		Page:   page,
+		Size:   size,
+		Total:  total,
+		Alamat: response,
+	}
+
+	return pagedResponse
+}
+
 func (u *AlamatUseCase) GetById(id string) model.AlamatResponse {
 	alamat, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
