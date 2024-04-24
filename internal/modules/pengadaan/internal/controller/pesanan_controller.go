@@ -86,6 +86,18 @@ func (c *PesananController) GetById(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *PesananController) GetByIdPengajuan(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	response := c.UseCase.GetByIdPengajuan(id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *PesananController) Update(ctx *fiber.Ctx) error {
 	var request model.PesananRequest
 	id := ctx.Params("id")

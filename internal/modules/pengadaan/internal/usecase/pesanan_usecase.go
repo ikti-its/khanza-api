@@ -6,6 +6,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan/internal/repository"
+	"time"
 )
 
 type PesananUseCase struct {
@@ -20,6 +21,10 @@ func NewPesananUseCase(repository *repository.PesananRepository) *PesananUseCase
 
 func (u *PesananUseCase) Create(request *model.PesananRequest, user string) model.PesananResponse {
 	updater := helper.MustParse(user)
+	var kadaluwarsa time.Time
+	if request.Kadaluwarsa != "" {
+		kadaluwarsa = helper.ParseTime(request.Kadaluwarsa, "2006-01-02")
+	}
 	pesanan := entity.Pesanan{
 		Id:          helper.MustNew(),
 		IdPengajuan: helper.MustParse(request.IdPengajuan),
@@ -27,7 +32,7 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 		Harga:       request.Harga,
 		Pesanan:     request.Pesanan,
 		Diterima:    request.Diterima,
-		Kadaluwarsa: helper.ParseTime(request.Kadaluwarsa, "2006-01-02"),
+		Kadaluwarsa: kadaluwarsa,
 		Batch:       request.Batch,
 		Updater:     updater,
 	}
@@ -97,6 +102,27 @@ func (u *PesananUseCase) GetPage(page, size int) model.PesananPageResponse {
 	}
 
 	return pagedResponse
+}
+
+func (u *PesananUseCase) GetByIdPengajuan(id string) []model.PesananResponse {
+	pesanan, err := u.Repository.FindByIdPengajuan(helper.MustParse(id))
+	exception.PanicIfError(err, "Failed to get all pesanan")
+
+	response := make([]model.PesananResponse, len(pesanan))
+	for i, pesanan := range pesanan {
+		response[i] = model.PesananResponse{
+			Id:          pesanan.Id.String(),
+			IdPengajuan: pesanan.IdPengajuan.String(),
+			IdMedis:     pesanan.IdMedis.String(),
+			Harga:       pesanan.Harga,
+			Pesanan:     pesanan.Pesanan,
+			Diterima:    pesanan.Diterima,
+			Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+			Batch:       pesanan.Batch,
+		}
+	}
+
+	return response
 }
 
 func (u *PesananUseCase) GetById(id string) model.PesananResponse {

@@ -6,7 +6,7 @@ type PesananRequest struct {
 	Harga       float64 `json:"harga_satuan" validate:"required"`
 	Pesanan     int     `json:"jumlah_pesanan" validate:"required,numeric"`
 	Diterima    int     `json:"jumlah_diterima" validate:"numeric"`
-	Kadaluwarsa string  `json:"kadaluwarsa" validate:"required"`
+	Kadaluwarsa string  `json:"kadaluwarsa"`
 	Batch       string  `json:"no_batch"`
 }
 

@@ -39,6 +39,7 @@ func Route(
 	{
 		pesanan.Post("/", middleware.Authenticate([]int{1337, 1}), pesananController.Create)
 		pesanan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), pesananController.Get)
+		pesanan.Get("/pengajuan/:id", middleware.Authenticate([]int{1337, 1, 2}), pesananController.GetByIdPengajuan)
 		pesanan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pesananController.GetById)
 		pesanan.Put("/:id", middleware.Authenticate([]int{1337, 1}), pesananController.Update)
 		pesanan.Delete("/:id", middleware.Authenticate([]int{1337, 1}), pesananController.Delete)
