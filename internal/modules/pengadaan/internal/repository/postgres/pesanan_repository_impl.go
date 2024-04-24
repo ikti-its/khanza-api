@@ -64,6 +64,19 @@ func (r *pesananRepositoryImpl) FindPage(page, size int) ([]entity.Pesanan, int,
 	return records, totalPage, err
 }
 
+func (r *pesananRepositoryImpl) FindByIdPengajuan(id uuid.UUID) ([]entity.Pesanan, error) {
+	query := `
+		SELECT id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
+		FROM pesanan_barang_medis
+		WHERE id_pengajuan = $1 AND deleted_at IS NULL
+	`
+
+	var records []entity.Pesanan
+	err := r.DB.Select(&records, query, id)
+
+	return records, err
+}
+
 func (r *pesananRepositoryImpl) FindById(id uuid.UUID) (entity.Pesanan, error) {
 	query := `
 		SELECT id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
