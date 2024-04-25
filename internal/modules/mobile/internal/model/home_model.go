@@ -13,5 +13,5 @@ type HomeResponse struct {
 	Shift     string  `json:"shift"`
 	JamMasuk  string  `json:"jam_masuk"`
 	JamPulang string  `json:"jam_pulang"`
-	Status    string  `json:"status"`
+	Status    bool    `json:"status"`
 }
