@@ -34,9 +34,9 @@ func (u *HomeUseCase) GetHomePegawai(id string, hari int, tanggal string) model.
 		})
 	}
 
-	status := "Hadir"
+	status := true
 	if presensi, err := u.Repository.ObserveKehadiran(home.Pegawai, home.Jadwal, tanggal); presensi == uuid.Nil && err != nil {
-		status = "Belum Hadir"
+		status = false
 	}
 
 	response := model.HomeResponse{
