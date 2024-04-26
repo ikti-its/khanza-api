@@ -21,6 +21,31 @@ func NewAuthController(useCase *usecase.AuthUseCase, validator *config.Validator
 	}
 }
 
+func (c *AuthController) Refresh(ctx *fiber.Ctx) error {
+	id := ctx.Locals("user").(string)
+	role := ctx.Locals("role").(int)
+
+	response := c.UseCase.Refresh(id, role)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *AuthController) Get(ctx *fiber.Ctx) error {
+	id := ctx.Locals("user").(string)
+
+	response := c.UseCase.GetUser(id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *AuthController) Login(ctx *fiber.Ctx) error {
 	var request model.AuthRequest
 

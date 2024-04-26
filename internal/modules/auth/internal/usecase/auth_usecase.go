@@ -20,6 +20,35 @@ func NewAuthUseCase(repository *repository.AuthRepository, cfg *config.Config) *
 	}
 }
 
+func (u *AuthUseCase) Refresh(id string, role int) model.AuthResponse {
+	token, err := helper.GenerateJWT(helper.MustParse(id), role, u.Config)
+	exception.PanicIfError(err, "Failed to generate JWT")
+
+	response := model.AuthResponse{
+		Token: token,
+	}
+
+	return response
+}
+
+func (u *AuthUseCase) GetUser(id string) model.UserResponse {
+	user, err := u.Repository.FindById(helper.MustParse(id))
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "User not found",
+		})
+	}
+
+	response := model.UserResponse{
+		Id:    user.Id.String(),
+		Email: user.Email,
+		Foto:  user.Foto,
+		Role:  user.Role,
+	}
+
+	return response
+}
+
 func (u *AuthUseCase) Login(request *model.AuthRequest) model.AuthResponse {
 	akun, err := u.Repository.FindByEmail(request.Email)
 	if err != nil {
