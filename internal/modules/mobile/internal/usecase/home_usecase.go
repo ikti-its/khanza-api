@@ -19,14 +19,19 @@ func NewHomeUseCase(repository *repository.HomeRepository) *HomeUseCase {
 	}
 }
 
-func (u *HomeUseCase) GetHomePegawai(id string, hari int, tanggal string) model.HomeResponse {
-	if hari == 0 || tanggal == "" || helper.ParseTime(tanggal, "2006-01-02").IsZero() {
+func (u *HomeUseCase) GetHomePegawai(id string, tanggal string) model.HomeResponse {
+	if tanggal == "" || helper.ParseTime(tanggal, "2006-01-02").IsZero() {
 		panic(&exception.BadRequestError{
-			Message: "Invalid query format",
+			Message: "Invalid date format",
 		})
 	}
 
-	home, err := u.Repository.HomePegawai(helper.MustParse(id), hari)
+	hari := helper.ParseTime(tanggal, "2006-01-02").Weekday()
+	if hari == 0 {
+		hari = 7
+	}
+
+	home, err := u.Repository.HomePegawai(helper.MustParse(id), int(hari))
 	if err != nil {
 		log.Printf(err.Error())
 		panic(&exception.NotFoundError{
@@ -44,6 +49,8 @@ func (u *HomeUseCase) GetHomePegawai(id string, hari int, tanggal string) model.
 		Pegawai:   home.Pegawai.String(),
 		Nama:      home.Nama,
 		NIP:       home.NIP,
+		Email:     home.Email,
+		Telepon:   home.Telepon,
 		Profil:    home.Profil,
 		Alamat:    home.Alamat,
 		AlamatLat: home.AlamatLat,

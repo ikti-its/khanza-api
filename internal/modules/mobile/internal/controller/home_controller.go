@@ -18,10 +18,9 @@ func NewHomeController(useCase *usecase.HomeUseCase) *HomeController {
 
 func (c *HomeController) GetHomePegawai(ctx *fiber.Ctx) error {
 	id := ctx.Locals("user").(string)
-	hari := ctx.QueryInt("hari", 0)
 	tanggal := ctx.Query("tanggal")
 
-	response := c.UseCase.GetHomePegawai(id, hari, tanggal)
+	response := c.UseCase.GetHomePegawai(id, tanggal)
 
 	return ctx.Status(fiber.StatusOK).JSON(web.Response{
 		Code:   fiber.StatusOK,
