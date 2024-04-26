@@ -5,6 +5,8 @@ type HomeResponse struct {
 	Pegawai   string  `json:"pegawai"`
 	Nama      string  `json:"nama"`
 	NIP       string  `json:"nip"`
+	Email     string  `json:"email"`
+	Telepon   string  `json:"telepon"`
 	Profil    string  `json:"profil"`
 	Alamat    string  `json:"alamat"`
 	AlamatLat float64 `json:"alamat_lat"`

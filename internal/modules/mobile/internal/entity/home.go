@@ -10,6 +10,8 @@ type Home struct {
 	Pegawai   uuid.UUID `db:"pegawai"`
 	Nama      string    `db:"nama"`
 	NIP       string    `db:"nip"`
+	Email     string    `db:"email"`
+	Telepon   string    `db:"telepon"`
 	Profil    string    `db:"profil"`
 	Alamat    string    `db:"alamat"`
 	AlamatLat float64   `db:"alamat_lat"`
