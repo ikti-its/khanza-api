@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"net/http"
 )
 
 func NewFiber(cfg *Config) *fiber.App {
@@ -21,9 +22,7 @@ func NewFiber(cfg *Config) *fiber.App {
 	app.Use(recover.New()) // Recover panics outside fiber
 
 	app.Get("/", func(ctx *fiber.Ctx) error { // Home Route
-		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-			"message": "Endpoint `/` is not set. Please refer to the API documentation at https://documenter.getpostman.com/view/23649536/2sA2rDy1iF",
-		})
+		return ctx.Status(http.StatusOK).SendString("Endpoint `/` is not set. Please refer to the API documentation at https://documenter.getpostman.com/view/23649536/2sA2rDy1iF")
 	})
 
 	app.Use(healthcheck.New(healthcheck.Config{ // Health Check
@@ -40,12 +39,6 @@ func NewFiber(cfg *Config) *fiber.App {
 			TimeZone:   "Asia/Jakarta",
 		}
 		app.Use(logger.New(log))
-	}
-
-	if cfg.GetBool("APP_DDOS", false) { // Sinkhole if under-attack [Only for development, remove in production]
-		app.Get("/play.mp3", func(ctx *fiber.Ctx) error { // Sinkhole Route
-			return ctx.Redirect("https://www.youtube.com/watch?v=4hVhXKl-xyY", fiber.StatusMovedPermanently) // Rickroll :D
-		})
 	}
 
 	return app
