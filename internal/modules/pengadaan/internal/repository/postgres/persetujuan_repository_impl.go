@@ -19,11 +19,11 @@ func NewPersetujuanRepository(db *sqlx.DB) repository.PersetujuanRepository {
 
 func (r *persetujuanRepositoryImpl) Insert(persetujuan *entity.Persetujuan) error {
 	query := `
-		INSERT INTO persetujuan_pengajuan (id_pengajuan, status, status_apoteker, status_keuangan, id_apoteker, id_keuangan, updater)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO persetujuan_pengajuan (id_pengajuan, updater)
+		VALUES ($1, $2)
 	`
 
-	_, err := r.DB.Exec(query, persetujuan.IdPengajuan, persetujuan.Status, persetujuan.StatusApoteker, persetujuan.StatusKeuangan, persetujuan.Apoteker, persetujuan.Keuangan, persetujuan.Updater)
+	_, err := r.DB.Exec(query, persetujuan.IdPengajuan, persetujuan.Updater)
 
 	return err
 }
@@ -84,7 +84,20 @@ func (r *persetujuanRepositoryImpl) Update(persetujuan *entity.Persetujuan) erro
 		WHERE id_pengajuan = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, persetujuan.IdPengajuan, persetujuan.Status, persetujuan.StatusApoteker, persetujuan.StatusKeuangan, persetujuan.Apoteker, persetujuan.Keuangan, time.Now(), persetujuan.Updater)
+	var apoteker, keuangan any
+	if persetujuan.Apoteker == uuid.Nil {
+		apoteker = nil
+	} else {
+		apoteker = persetujuan.Apoteker
+	}
+
+	if persetujuan.Keuangan == uuid.Nil {
+		keuangan = nil
+	} else {
+		keuangan = persetujuan.Keuangan
+	}
+
+	_, err := r.DB.Exec(query, persetujuan.IdPengajuan, persetujuan.Status, persetujuan.StatusApoteker, persetujuan.StatusKeuangan, apoteker, keuangan, time.Now(), persetujuan.Updater)
 
 	return err
 }
