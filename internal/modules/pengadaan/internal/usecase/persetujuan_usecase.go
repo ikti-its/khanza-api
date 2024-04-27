@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"github.com/ikti-its/khanza-api/internal/app/helper"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan/internal/entity"
@@ -18,15 +19,13 @@ func NewPersetujuanUseCase(repository *repository.PersetujuanRepository) *Perset
 	}
 }
 
-func (u *PersetujuanUseCase) Create(request *model.PersetujuanRequest, user string) model.PersetujuanResponse {
+func (u *PersetujuanUseCase) Create(request *model.PersetujuanCreateRequest, user string) model.PersetujuanResponse {
 	updater := helper.MustParse(user)
 	persetujuan := entity.Persetujuan{
 		IdPengajuan:    helper.MustParse(request.IdPengajuan),
-		Status:         request.Status,
-		StatusApoteker: request.StatusApoteker,
-		StatusKeuangan: request.StatusKeuangan,
-		Apoteker:       helper.MustParse(request.Apoteker),
-		Keuangan:       helper.MustParse(request.Keuangan),
+		Status:         "Menunggu Persetujuan",
+		StatusApoteker: "Menunggu Persetujuan",
+		StatusKeuangan: "Menunggu Persetujuan",
 		Updater:        updater,
 	}
 
@@ -34,13 +33,26 @@ func (u *PersetujuanUseCase) Create(request *model.PersetujuanRequest, user stri
 		exception.PanicIfError(err, "Failed to insert persetujuan")
 	}
 
+	var apoteker, keuangan string
+	if persetujuan.Apoteker == uuid.Nil {
+		apoteker = ""
+	} else {
+		apoteker = persetujuan.Apoteker.String()
+	}
+
+	if persetujuan.Keuangan == uuid.Nil {
+		keuangan = ""
+	} else {
+		apoteker = persetujuan.Keuangan.String()
+	}
+
 	response := model.PersetujuanResponse{
 		IdPengajuan:    persetujuan.IdPengajuan.String(),
 		Status:         persetujuan.Status,
 		StatusApoteker: persetujuan.StatusApoteker,
 		StatusKeuangan: persetujuan.StatusKeuangan,
-		Apoteker:       persetujuan.Apoteker.String(),
-		Keuangan:       persetujuan.Keuangan.String(),
+		Apoteker:       apoteker,
+		Keuangan:       keuangan,
 	}
 
 	return response
@@ -52,13 +64,26 @@ func (u *PersetujuanUseCase) Get() []model.PersetujuanResponse {
 
 	response := make([]model.PersetujuanResponse, len(persetujuan))
 	for i, persetujuan := range persetujuan {
+		var apoteker, keuangan string
+		if persetujuan.Apoteker == uuid.Nil {
+			apoteker = ""
+		} else {
+			apoteker = persetujuan.Apoteker.String()
+		}
+
+		if persetujuan.Keuangan == uuid.Nil {
+			keuangan = ""
+		} else {
+			apoteker = persetujuan.Keuangan.String()
+		}
+
 		response[i] = model.PersetujuanResponse{
 			IdPengajuan:    persetujuan.IdPengajuan.String(),
 			Status:         persetujuan.Status,
 			StatusApoteker: persetujuan.StatusApoteker,
 			StatusKeuangan: persetujuan.StatusKeuangan,
-			Apoteker:       persetujuan.Apoteker.String(),
-			Keuangan:       persetujuan.Keuangan.String(),
+			Apoteker:       apoteker,
+			Keuangan:       keuangan,
 		}
 	}
 
@@ -71,13 +96,26 @@ func (u *PersetujuanUseCase) GetPage(page, size int) model.PersetujuanPageRespon
 
 	response := make([]model.PersetujuanResponse, len(persetujuan))
 	for i, persetujuan := range persetujuan {
+		var apoteker, keuangan string
+		if persetujuan.Apoteker == uuid.Nil {
+			apoteker = ""
+		} else {
+			apoteker = persetujuan.Apoteker.String()
+		}
+
+		if persetujuan.Keuangan == uuid.Nil {
+			keuangan = ""
+		} else {
+			apoteker = persetujuan.Keuangan.String()
+		}
+
 		response[i] = model.PersetujuanResponse{
 			IdPengajuan:    persetujuan.IdPengajuan.String(),
 			Status:         persetujuan.Status,
 			StatusApoteker: persetujuan.StatusApoteker,
 			StatusKeuangan: persetujuan.StatusKeuangan,
-			Apoteker:       persetujuan.Apoteker.String(),
-			Keuangan:       persetujuan.Keuangan.String(),
+			Apoteker:       apoteker,
+			Keuangan:       keuangan,
 		}
 	}
 
@@ -99,19 +137,32 @@ func (u *PersetujuanUseCase) GetById(id string) model.PersetujuanResponse {
 		})
 	}
 
+	var apoteker, keuangan string
+	if persetujuan.Apoteker == uuid.Nil {
+		apoteker = ""
+	} else {
+		apoteker = persetujuan.Apoteker.String()
+	}
+
+	if persetujuan.Keuangan == uuid.Nil {
+		keuangan = ""
+	} else {
+		apoteker = persetujuan.Keuangan.String()
+	}
+
 	response := model.PersetujuanResponse{
 		IdPengajuan:    persetujuan.IdPengajuan.String(),
 		Status:         persetujuan.Status,
 		StatusApoteker: persetujuan.StatusApoteker,
 		StatusKeuangan: persetujuan.StatusKeuangan,
-		Apoteker:       persetujuan.Apoteker.String(),
-		Keuangan:       persetujuan.Keuangan.String(),
+		Apoteker:       apoteker,
+		Keuangan:       keuangan,
 	}
 
 	return response
 }
 
-func (u *PersetujuanUseCase) Update(request *model.PersetujuanRequest, id, user string) model.PersetujuanResponse {
+func (u *PersetujuanUseCase) Update(request *model.PersetujuanUpdateRequest, id, user string) model.PersetujuanResponse {
 	persetujuan, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
 		panic(&exception.NotFoundError{
@@ -123,12 +174,35 @@ func (u *PersetujuanUseCase) Update(request *model.PersetujuanRequest, id, user 
 	persetujuan.Status = request.Status
 	persetujuan.StatusApoteker = request.StatusApoteker
 	persetujuan.StatusKeuangan = request.StatusKeuangan
-	persetujuan.Apoteker = helper.MustParse(request.Apoteker)
-	persetujuan.Keuangan = helper.MustParse(request.Keuangan)
 	persetujuan.Updater = helper.MustParse(user)
+
+	if request.Apoteker != "" {
+		persetujuan.Apoteker = helper.MustParse(request.Apoteker)
+	} else {
+		persetujuan.Apoteker = uuid.Nil
+	}
+
+	if request.Keuangan != "" {
+		persetujuan.Keuangan = helper.MustParse(request.Keuangan)
+	} else {
+		persetujuan.Keuangan = uuid.Nil
+	}
 
 	if err := u.Repository.Update(&persetujuan); err != nil {
 		exception.PanicIfError(err, "Failed to update persetujuan")
+	}
+
+	var apoteker, keuangan string
+	if persetujuan.Apoteker == uuid.Nil {
+		apoteker = ""
+	} else {
+		apoteker = persetujuan.Apoteker.String()
+	}
+
+	if persetujuan.Keuangan == uuid.Nil {
+		keuangan = ""
+	} else {
+		apoteker = persetujuan.Keuangan.String()
 	}
 
 	response := model.PersetujuanResponse{
@@ -136,8 +210,8 @@ func (u *PersetujuanUseCase) Update(request *model.PersetujuanRequest, id, user 
 		Status:         persetujuan.Status,
 		StatusApoteker: persetujuan.StatusApoteker,
 		StatusKeuangan: persetujuan.StatusKeuangan,
-		Apoteker:       persetujuan.Apoteker.String(),
-		Keuangan:       persetujuan.Keuangan.String(),
+		Apoteker:       apoteker,
+		Keuangan:       keuangan,
 	}
 
 	return response

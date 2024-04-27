@@ -22,7 +22,7 @@ func NewPersetujuanController(useCase *usecase.PersetujuanUseCase, validator *co
 }
 
 func (c *PersetujuanController) Create(ctx *fiber.Ctx) error {
-	var request model.PersetujuanRequest
+	var request model.PersetujuanCreateRequest
 
 	if err := ctx.BodyParser(&request); err != nil {
 		panic(&exception.BadRequestError{
@@ -87,7 +87,7 @@ func (c *PersetujuanController) GetById(ctx *fiber.Ctx) error {
 }
 
 func (c *PersetujuanController) Update(ctx *fiber.Ctx) error {
-	var request model.PersetujuanRequest
+	var request model.PersetujuanUpdateRequest
 	id := ctx.Params("id")
 
 	if err := ctx.BodyParser(&request); err != nil {
