@@ -19,9 +19,10 @@ func NewHomeRepository(db *sqlx.DB) repository.HomeRepository {
 
 func (r *homeRepositoryImpl) HomePegawai(id uuid.UUID, hari int) (entity.Home, error) {
 	query := `
-		SELECT a.id AS akun, p.id AS pegawai, p.nama, p.nip, a.email, p.telepon, a.foto AS profil, al.alamat, al.alamat_lat, al.alamat_lon, fp.foto, jp.id AS jadwal, s.nama AS shift, s.jam_masuk, s.jam_pulang
+		SELECT a.id AS akun, p.id AS pegawai, p.nama, p.nip, r.nama AS role, a.email, p.telepon, a.foto AS profil, al.alamat, al.alamat_lat, al.alamat_lon, fp.foto, jp.id AS jadwal, s.nama AS shift, s.jam_masuk, s.jam_pulang
 		FROM akun a
 		JOIN pegawai p ON a.id = p.id_akun
+		JOIN ref.role r ON a.role = r.id
 		JOIN alamat al ON a.id = al.id_akun
 		JOIN foto_pegawai fp ON p.id = fp.id_pegawai
 		JOIN jadwal_pegawai jp ON p.id = jp.id_pegawai

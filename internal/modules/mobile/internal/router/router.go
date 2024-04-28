@@ -14,6 +14,6 @@ func Route(
 
 	home := mobile.Group("/home")
 	{
-		home.Get("/pegawai", middleware.Authenticate([]int{1337, 1, 2}), homeController.GetHomePegawai)
+		home.Get("/", middleware.Authenticate([]int{0}), homeController.GetHome)
 	}
 }

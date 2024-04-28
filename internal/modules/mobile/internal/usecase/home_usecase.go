@@ -19,7 +19,7 @@ func NewHomeUseCase(repository *repository.HomeRepository) *HomeUseCase {
 	}
 }
 
-func (u *HomeUseCase) GetHomePegawai(id string, tanggal string) model.HomeResponse {
+func (u *HomeUseCase) GetHomePegawai(id string, tanggal string) model.HomePegawaiResponse {
 	if tanggal == "" || helper.ParseTime(tanggal, "2006-01-02").IsZero() {
 		panic(&exception.BadRequestError{
 			Message: "Invalid date format",
@@ -44,11 +44,12 @@ func (u *HomeUseCase) GetHomePegawai(id string, tanggal string) model.HomeRespon
 		status = false
 	}
 
-	response := model.HomeResponse{
+	response := model.HomePegawaiResponse{
 		Akun:      home.Akun.String(),
 		Pegawai:   home.Pegawai.String(),
 		Nama:      home.Nama,
 		NIP:       home.NIP,
+		Role:      home.Role,
 		Email:     home.Email,
 		Telepon:   home.Telepon,
 		Profil:    home.Profil,
