@@ -16,15 +16,27 @@ func NewHomeController(useCase *usecase.HomeUseCase) *HomeController {
 	}
 }
 
-func (c *HomeController) GetHomePegawai(ctx *fiber.Ctx) error {
+func (c *HomeController) GetHome(ctx *fiber.Ctx) error {
 	id := ctx.Locals("user").(string)
 	tanggal := ctx.Query("tanggal")
 
-	response := c.UseCase.GetHomePegawai(id, tanggal)
+	role := ctx.Locals("role").(int)
 
-	return ctx.Status(fiber.StatusOK).JSON(web.Response{
-		Code:   fiber.StatusOK,
-		Status: "OK",
-		Data:   response,
-	})
+	if role == 2 {
+		response := c.UseCase.GetHomePegawai(id, tanggal)
+
+		return ctx.Status(fiber.StatusOK).JSON(web.Response{
+			Code:   fiber.StatusOK,
+			Status: "OK",
+			Data:   response,
+		})
+	} else {
+		response := c.UseCase.GetHomePegawai(id, tanggal) // Change when get home pasien is ready
+
+		return ctx.Status(fiber.StatusOK).JSON(web.Response{
+			Code:   fiber.StatusOK,
+			Status: "OK",
+			Data:   response,
+		})
+	}
 }

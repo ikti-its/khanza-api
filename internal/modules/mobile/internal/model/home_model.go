@@ -1,10 +1,11 @@
 package model
 
-type HomeResponse struct {
+type HomePegawaiResponse struct {
 	Akun      string  `json:"akun"`
 	Pegawai   string  `json:"pegawai"`
 	Nama      string  `json:"nama"`
 	NIP       string  `json:"nip"`
+	Role      string  `json:"role"`
 	Email     string  `json:"email"`
 	Telepon   string  `json:"telepon"`
 	Profil    string  `json:"profil"`
