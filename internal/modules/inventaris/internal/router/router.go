@@ -14,6 +14,7 @@ func Route(
 	bhpController *controller.BhpController,
 	darahController *controller.DarahController,
 	stokController *controller.StokController,
+	supplierController *controller.SupplierController,
 ) {
 	inventaris := app.Group("/v1/inventaris")
 
@@ -73,5 +74,10 @@ func Route(
 		stok.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), stokController.GetById)
 		stok.Put("/:id", middleware.Authenticate([]int{1337, 1}), stokController.Update)
 		stok.Delete("/:id", middleware.Authenticate([]int{1337, 1}), stokController.Delete)
+	}
+
+	supplier := inventaris.Group("/supplier")
+	{
+		supplier.Get("/", middleware.Authenticate([]int{1337, 1, 2}), supplierController.Get)
 	}
 }
