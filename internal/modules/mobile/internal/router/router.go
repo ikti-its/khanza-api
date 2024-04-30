@@ -9,11 +9,17 @@ import (
 func Route(
 	app *fiber.App,
 	homeController *controller.HomeController,
+	profileController *controller.ProfileController,
 ) {
 	mobile := app.Group("/v1/m")
 
 	home := mobile.Group("/home")
 	{
 		home.Get("/", middleware.Authenticate([]int{0}), homeController.GetHome)
+	}
+
+	profile := mobile.Group("/profile")
+	{
+		profile.Put("/:id", middleware.Authenticate([]int{0}), profileController.Update)
 	}
 }
