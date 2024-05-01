@@ -18,7 +18,7 @@ func NewProfileRepository(db *sqlx.DB) repository.ProfileRepository {
 
 func (r *profileRepositoryImpl) FindById(id uuid.UUID) (entity.Profile, error) {
 	query := `
-		SELECT a.id AS akun, a.foto, a.email, al.alamat, al.alamat_lat, al.alamat_lon, al.kota, al.kode_pos
+		SELECT a.id AS akun, a.foto, a.email, al.alamat, al.alamat_lat, al.alamat_lon
 		FROM akun a
 		JOIN alamat al ON a.id = al.id_akun
 		WHERE a.id = $1 AND a.deleted_at IS NULL
@@ -39,12 +39,12 @@ func (r *profileRepositoryImpl) Update(profile *entity.Profile) error {
 
 	alamatQuery := `
 		UPDATE alamat
-		SET alamat = $2, alamat_lat = $3, alamat_lon = $4, kota = $5, kode_pos = $6, updated_at = $7, updater = $8
+		SET alamat = $2, alamat_lat = $3, alamat_lon = $4, updated_at = $5, updater = $6
 		WHERE id_akun = $1
 	`
 
 	_, err := r.DB.Exec(akunQuery, profile.Akun, profile.Foto, profile.Email, profile.Password, time.Now(), profile.Updater)
-	_, err = r.DB.Exec(alamatQuery, profile.Akun, profile.Alamat, profile.AlamatLat, profile.AlamatLon, profile.Kota, profile.KodePos, time.Now(), profile.Updater)
+	_, err = r.DB.Exec(alamatQuery, profile.Akun, profile.Alamat, profile.AlamatLat, profile.AlamatLon, time.Now(), profile.Updater)
 
 	return err
 }

@@ -36,8 +36,6 @@ func (u *ProfileUseCase) Update(request *model.ProfileRequest, id, user string) 
 	profile.Alamat = request.Alamat
 	profile.AlamatLat = request.AlamatLat
 	profile.AlamatLon = request.AlamatLon
-	profile.Kota = request.Kota
-	profile.KodePos = request.KodePos
 	profile.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&profile); err != nil {
@@ -51,8 +49,6 @@ func (u *ProfileUseCase) Update(request *model.ProfileRequest, id, user string) 
 		Alamat:    profile.Alamat,
 		AlamatLat: profile.AlamatLat,
 		AlamatLon: profile.AlamatLon,
-		Kota:      profile.Kota,
-		KodePos:   profile.KodePos,
 	}
 
 	return response
