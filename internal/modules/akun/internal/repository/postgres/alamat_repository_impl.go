@@ -19,18 +19,18 @@ func NewAlamatRepository(db *sqlx.DB) repository.AlamatRepository {
 
 func (r *alamatRepositoryImpl) Insert(alamat *entity.Alamat) error {
 	query := `
-		INSERT INTO alamat (id_akun, alamat, alamat_lat, alamat_lon, kota, kode_pos) 
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO alamat (id_akun, alamat, alamat_lat, alamat_lon) 
+		VALUES ($1, $2, $3, $4)
 	`
 
-	_, err := r.DB.Exec(query, alamat.IdAkun, alamat.Alamat, alamat.AlamatLat, alamat.AlamatLon, alamat.Kota, alamat.KodePos)
+	_, err := r.DB.Exec(query, alamat.IdAkun, alamat.Alamat, alamat.AlamatLat, alamat.AlamatLon)
 
 	return err
 }
 
 func (r *alamatRepositoryImpl) Find() ([]entity.Alamat, error) {
 	query := `
-		SELECT id_akun, alamat, alamat_lat, alamat_lon, kota, kode_pos
+		SELECT id_akun, alamat, alamat_lat, alamat_lon
 		FROM alamat
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *alamatRepositoryImpl) Find() ([]entity.Alamat, error) {
 
 func (r *alamatRepositoryImpl) FindPage(page, size int) ([]entity.Alamat, int, error) {
 	query := `
-		SELECT id_akun, alamat, alamat_lat, alamat_lon, kota, kode_pos
+		SELECT id_akun, alamat, alamat_lat, alamat_lon
 		FROM alamat
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *alamatRepositoryImpl) FindPage(page, size int) ([]entity.Alamat, int, e
 
 func (r *alamatRepositoryImpl) FindById(id uuid.UUID) (entity.Alamat, error) {
 	query := `
-		SELECT id_akun, alamat, alamat_lat, alamat_lon, kota, kode_pos 
+		SELECT id_akun, alamat, alamat_lat, alamat_lon 
 		FROM alamat 
 		WHERE id_akun = $1 AND deleted_at IS NULL
 	`
@@ -80,11 +80,11 @@ func (r *alamatRepositoryImpl) FindById(id uuid.UUID) (entity.Alamat, error) {
 func (r *alamatRepositoryImpl) Update(alamat *entity.Alamat) error {
 	query := `
 		UPDATE alamat 
-		SET id_akun = $1, alamat = $2, alamat_lat = $3, alamat_lon = $4, kota = $5, kode_pos = $6, updated_at = $7, updater = $8 
-		WHERE id_akun = $9 AND deleted_at IS NULL
+		SET alamat = $2, alamat_lat = $3, alamat_lon = $4, updated_at = $5, updater = $6 
+		WHERE id_akun = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, alamat.IdAkun, alamat.Alamat, alamat.AlamatLat, alamat.AlamatLon, alamat.Kota, alamat.KodePos, time.Now(), alamat.Updater, alamat.IdAkun)
+	_, err := r.DB.Exec(query, alamat.IdAkun, alamat.Alamat, alamat.AlamatLat, alamat.AlamatLon, time.Now(), alamat.Updater)
 
 	return err
 }
@@ -92,11 +92,11 @@ func (r *alamatRepositoryImpl) Update(alamat *entity.Alamat) error {
 func (r *alamatRepositoryImpl) Delete(alamat *entity.Alamat) error {
 	query := `
 		UPDATE alamat 
-		SET deleted_at = $1, updater = $2
-		WHERE id_akun = $3
+		SET deleted_at = $2, updater = $3
+		WHERE id_akun = $1
 	`
 
-	_, err := r.DB.Exec(query, time.Now(), alamat.Updater, alamat.IdAkun)
+	_, err := r.DB.Exec(query, alamat.IdAkun, time.Now(), alamat.Updater)
 
 	return err
 }

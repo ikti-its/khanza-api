@@ -25,8 +25,6 @@ func (u *AlamatUseCase) Create(request *model.AlamatRequest, user string) model.
 		Alamat:    request.Alamat,
 		AlamatLat: request.AlamatLat,
 		AlamatLon: request.AlamatLon,
-		Kota:      request.Kota,
-		KodePos:   request.KodePos,
 		Updater:   updater,
 	}
 
@@ -39,8 +37,6 @@ func (u *AlamatUseCase) Create(request *model.AlamatRequest, user string) model.
 		Alamat:    alamat.Alamat,
 		AlamatLat: alamat.AlamatLat,
 		AlamatLon: alamat.AlamatLon,
-		Kota:      alamat.Kota,
-		KodePos:   alamat.KodePos,
 	}
 
 	return response
@@ -57,8 +53,6 @@ func (u *AlamatUseCase) Get() []model.AlamatResponse {
 			Alamat:    alamat.Alamat,
 			AlamatLat: alamat.AlamatLat,
 			AlamatLon: alamat.AlamatLon,
-			Kota:      alamat.Kota,
-			KodePos:   alamat.KodePos,
 		}
 	}
 
@@ -76,8 +70,6 @@ func (u *AlamatUseCase) GetPage(page, size int) model.AlamatPageResponse {
 			Alamat:    alamat.Alamat,
 			AlamatLat: alamat.AlamatLat,
 			AlamatLon: alamat.AlamatLon,
-			Kota:      alamat.Kota,
-			KodePos:   alamat.KodePos,
 		}
 	}
 
@@ -104,8 +96,6 @@ func (u *AlamatUseCase) GetById(id string) model.AlamatResponse {
 		Alamat:    alamat.Alamat,
 		AlamatLat: alamat.AlamatLat,
 		AlamatLon: alamat.AlamatLon,
-		Kota:      alamat.Kota,
-		KodePos:   alamat.KodePos,
 	}
 
 	return response
@@ -123,8 +113,6 @@ func (u *AlamatUseCase) Update(request *model.AlamatRequest, id, user string) mo
 	alamat.Alamat = request.Alamat
 	alamat.AlamatLat = request.AlamatLat
 	alamat.AlamatLon = request.AlamatLon
-	alamat.Kota = request.Kota
-	alamat.KodePos = request.KodePos
 	alamat.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&alamat); err != nil {
@@ -136,8 +124,6 @@ func (u *AlamatUseCase) Update(request *model.AlamatRequest, id, user string) mo
 		Alamat:    alamat.Alamat,
 		AlamatLat: alamat.AlamatLat,
 		AlamatLon: alamat.AlamatLon,
-		Kota:      alamat.Kota,
-		KodePos:   alamat.KodePos,
 	}
 
 	return response
