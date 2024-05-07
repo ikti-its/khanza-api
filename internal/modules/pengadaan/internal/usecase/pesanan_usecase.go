@@ -29,6 +29,7 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 		Id:          helper.MustNew(),
 		IdPengajuan: helper.MustParse(request.IdPengajuan),
 		IdMedis:     helper.MustParse(request.IdMedis),
+		Satuan:      request.Satuan,
 		Harga:       request.Harga,
 		Pesanan:     request.Pesanan,
 		Diterima:    request.Diterima,
@@ -45,6 +46,7 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 		Id:          pesanan.Id.String(),
 		IdPengajuan: pesanan.IdPengajuan.String(),
 		IdMedis:     pesanan.IdMedis.String(),
+		Satuan:      pesanan.Satuan,
 		Harga:       pesanan.Harga,
 		Pesanan:     pesanan.Pesanan,
 		Diterima:    pesanan.Diterima,
@@ -65,6 +67,7 @@ func (u *PesananUseCase) Get() []model.PesananResponse {
 			Id:          pesanan.Id.String(),
 			IdPengajuan: pesanan.IdPengajuan.String(),
 			IdMedis:     pesanan.IdMedis.String(),
+			Satuan:      pesanan.Satuan,
 			Harga:       pesanan.Harga,
 			Pesanan:     pesanan.Pesanan,
 			Diterima:    pesanan.Diterima,
@@ -86,6 +89,7 @@ func (u *PesananUseCase) GetPage(page, size int) model.PesananPageResponse {
 			Id:          pesanan.Id.String(),
 			IdPengajuan: pesanan.IdPengajuan.String(),
 			IdMedis:     pesanan.IdMedis.String(),
+			Satuan:      pesanan.Satuan,
 			Harga:       pesanan.Harga,
 			Pesanan:     pesanan.Pesanan,
 			Diterima:    pesanan.Diterima,
@@ -114,6 +118,7 @@ func (u *PesananUseCase) GetByIdPengajuan(id string) []model.PesananResponse {
 			Id:          pesanan.Id.String(),
 			IdPengajuan: pesanan.IdPengajuan.String(),
 			IdMedis:     pesanan.IdMedis.String(),
+			Satuan:      pesanan.Satuan,
 			Harga:       pesanan.Harga,
 			Pesanan:     pesanan.Pesanan,
 			Diterima:    pesanan.Diterima,
@@ -137,6 +142,7 @@ func (u *PesananUseCase) GetById(id string) model.PesananResponse {
 		Id:          pesanan.Id.String(),
 		IdPengajuan: pesanan.IdPengajuan.String(),
 		IdMedis:     pesanan.IdMedis.String(),
+		Satuan:      pesanan.Satuan,
 		Harga:       pesanan.Harga,
 		Pesanan:     pesanan.Pesanan,
 		Diterima:    pesanan.Diterima,
@@ -157,6 +163,7 @@ func (u *PesananUseCase) Update(request *model.PesananRequest, id, user string) 
 
 	pesanan.IdPengajuan = helper.MustParse(request.IdPengajuan)
 	pesanan.IdMedis = helper.MustParse(request.IdMedis)
+	pesanan.Satuan = request.Satuan
 	pesanan.Harga = request.Harga
 	pesanan.Pesanan = request.Pesanan
 	pesanan.Diterima = request.Diterima
@@ -172,6 +179,7 @@ func (u *PesananUseCase) Update(request *model.PesananRequest, id, user string) 
 		Id:          pesanan.Id.String(),
 		IdPengajuan: pesanan.IdPengajuan.String(),
 		IdMedis:     pesanan.IdMedis.String(),
+		Satuan:      pesanan.Satuan,
 		Harga:       pesanan.Harga,
 		Pesanan:     pesanan.Pesanan,
 		Diterima:    pesanan.Diterima,
