@@ -19,18 +19,18 @@ func NewPesananRepository(db *sqlx.DB) repository.PesananRepository {
 
 func (r *pesananRepositoryImpl) Insert(pesanan *entity.Pesanan) error {
 	query := `
-		INSERT INTO pesanan_barang_medis (id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch, updater)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		INSERT INTO pesanan_barang_medis (id, id_pengajuan, id_barang_medis, id_satuan, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch, updater)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 	`
 
-	_, err := r.DB.Exec(query, pesanan.Id, pesanan.IdPengajuan, pesanan.IdMedis, pesanan.Harga, pesanan.Pesanan, pesanan.Diterima, pesanan.Kadaluwarsa, pesanan.Batch, pesanan.Updater)
+	_, err := r.DB.Exec(query, pesanan.Id, pesanan.IdPengajuan, pesanan.IdMedis, pesanan.Satuan, pesanan.Harga, pesanan.Pesanan, pesanan.Diterima, pesanan.Kadaluwarsa, pesanan.Batch, pesanan.Updater)
 
 	return err
 }
 
 func (r *pesananRepositoryImpl) Find() ([]entity.Pesanan, error) {
 	query := `
-		SELECT id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
+		SELECT id, id_pengajuan, id_barang_medis, id_satuan, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
 		FROM pesanan_barang_medis
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *pesananRepositoryImpl) Find() ([]entity.Pesanan, error) {
 
 func (r *pesananRepositoryImpl) FindPage(page, size int) ([]entity.Pesanan, int, error) {
 	query := `
-		SELECT id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
+		SELECT id, id_pengajuan, id_barang_medis, id_satuan, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
 		FROM pesanan_barang_medis
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *pesananRepositoryImpl) FindPage(page, size int) ([]entity.Pesanan, int,
 
 func (r *pesananRepositoryImpl) FindByIdPengajuan(id uuid.UUID) ([]entity.Pesanan, error) {
 	query := `
-		SELECT id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
+		SELECT id, id_pengajuan, id_barang_medis, id_satuan, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
 		FROM pesanan_barang_medis
 		WHERE id_pengajuan = $1 AND deleted_at IS NULL
 	`
@@ -79,7 +79,7 @@ func (r *pesananRepositoryImpl) FindByIdPengajuan(id uuid.UUID) ([]entity.Pesana
 
 func (r *pesananRepositoryImpl) FindById(id uuid.UUID) (entity.Pesanan, error) {
 	query := `
-		SELECT id, id_pengajuan, id_barang_medis, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
+		SELECT id, id_pengajuan, id_barang_medis, id_satuan, harga_satuan, jumlah_pesanan, jumlah_diterima, kadaluwarsa, no_batch
 		FROM pesanan_barang_medis
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -93,11 +93,11 @@ func (r *pesananRepositoryImpl) FindById(id uuid.UUID) (entity.Pesanan, error) {
 func (r *pesananRepositoryImpl) Update(pesanan *entity.Pesanan) error {
 	query := `
 		UPDATE pesanan_barang_medis
-		SET id_pengajuan = $2, id_barang_medis = $3, harga_satuan = $4, jumlah_pesanan = $5, jumlah_diterima = $6, kadaluwarsa = $7, no_batch = $8, updated_at = $9, updater = $10
+		SET id_pengajuan = $2, id_barang_medis = $3, id_satuan = $4, harga_satuan = $5, jumlah_pesanan = $6, jumlah_diterima = $7, kadaluwarsa = $8, no_batch = $9, updated_at = $10, updater = $11
 		WHERE id = $1
 	`
 
-	_, err := r.DB.Exec(query, pesanan.Id, pesanan.IdPengajuan, pesanan.IdMedis, pesanan.Harga, pesanan.Pesanan, pesanan.Diterima, pesanan.Kadaluwarsa, pesanan.Batch, time.Now(), pesanan.Updater)
+	_, err := r.DB.Exec(query, pesanan.Id, pesanan.IdPengajuan, pesanan.IdMedis, pesanan.Satuan, pesanan.Harga, pesanan.Pesanan, pesanan.Diterima, pesanan.Kadaluwarsa, pesanan.Batch, time.Now(), pesanan.Updater)
 
 	return err
 }

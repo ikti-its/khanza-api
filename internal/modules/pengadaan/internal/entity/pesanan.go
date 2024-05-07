@@ -9,6 +9,7 @@ type Pesanan struct {
 	Id          uuid.UUID `db:"id"`
 	IdPengajuan uuid.UUID `db:"id_pengajuan"`
 	IdMedis     uuid.UUID `db:"id_barang_medis"`
+	Satuan      int       `db:"id_satuan"`
 	Harga       float64   `db:"harga_satuan"`
 	Pesanan     int       `db:"jumlah_pesanan"`
 	Diterima    int       `db:"jumlah_diterima"`
