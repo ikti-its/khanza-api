@@ -24,6 +24,7 @@ func (u *MedisUseCase) Create(request *model.MedisRequest, user string) model.Me
 		Id:      helper.MustNew(),
 		Nama:    request.Nama,
 		Jenis:   request.Jenis,
+		Satuan:  request.Satuan,
 		Harga:   request.Harga,
 		Stok:    request.Stok,
 		Updater: updater,
@@ -34,11 +35,12 @@ func (u *MedisUseCase) Create(request *model.MedisRequest, user string) model.Me
 	}
 
 	response := model.MedisResponse{
-		Id:    medis.Id.String(),
-		Nama:  medis.Nama,
-		Jenis: medis.Jenis,
-		Harga: medis.Harga,
-		Stok:  medis.Stok,
+		Id:     medis.Id.String(),
+		Nama:   medis.Nama,
+		Jenis:  medis.Jenis,
+		Satuan: medis.Satuan,
+		Harga:  medis.Harga,
+		Stok:   medis.Stok,
 	}
 
 	return response
@@ -51,11 +53,12 @@ func (u *MedisUseCase) Get() []model.MedisResponse {
 	response := make([]model.MedisResponse, len(medis))
 	for i, medis := range medis {
 		response[i] = model.MedisResponse{
-			Id:    medis.Id.String(),
-			Nama:  medis.Nama,
-			Jenis: medis.Jenis,
-			Harga: medis.Harga,
-			Stok:  medis.Stok,
+			Id:     medis.Id.String(),
+			Nama:   medis.Nama,
+			Jenis:  medis.Jenis,
+			Satuan: medis.Satuan,
+			Harga:  medis.Harga,
+			Stok:   medis.Stok,
 		}
 	}
 
@@ -69,11 +72,12 @@ func (u *MedisUseCase) GetPage(page, size int) model.MedisPageResponse {
 	response := make([]model.MedisResponse, len(medis))
 	for i, medis := range medis {
 		response[i] = model.MedisResponse{
-			Id:    medis.Id.String(),
-			Nama:  medis.Nama,
-			Jenis: medis.Jenis,
-			Harga: medis.Harga,
-			Stok:  medis.Stok,
+			Id:     medis.Id.String(),
+			Nama:   medis.Nama,
+			Jenis:  medis.Jenis,
+			Satuan: medis.Satuan,
+			Harga:  medis.Harga,
+			Stok:   medis.Stok,
 		}
 	}
 
@@ -94,11 +98,12 @@ func (u *MedisUseCase) GetByJenis(jenis string) []model.MedisResponse {
 	response := make([]model.MedisResponse, len(medis))
 	for i, medis := range medis {
 		response[i] = model.MedisResponse{
-			Id:    medis.Id.String(),
-			Nama:  medis.Nama,
-			Jenis: medis.Jenis,
-			Harga: medis.Harga,
-			Stok:  medis.Stok,
+			Id:     medis.Id.String(),
+			Nama:   medis.Nama,
+			Jenis:  medis.Jenis,
+			Satuan: medis.Satuan,
+			Harga:  medis.Harga,
+			Stok:   medis.Stok,
 		}
 	}
 
@@ -114,11 +119,12 @@ func (u *MedisUseCase) GetById(id string) model.MedisResponse {
 	}
 
 	response := model.MedisResponse{
-		Id:    medis.Id.String(),
-		Nama:  medis.Nama,
-		Jenis: medis.Jenis,
-		Harga: medis.Harga,
-		Stok:  medis.Stok,
+		Id:     medis.Id.String(),
+		Nama:   medis.Nama,
+		Jenis:  medis.Jenis,
+		Satuan: medis.Satuan,
+		Harga:  medis.Harga,
+		Stok:   medis.Stok,
 	}
 
 	return response
@@ -134,6 +140,7 @@ func (u *MedisUseCase) Update(request *model.MedisRequest, id, user string) mode
 
 	medis.Nama = request.Nama
 	medis.Jenis = request.Jenis
+	medis.Satuan = request.Satuan
 	medis.Harga = request.Harga
 	medis.Stok = request.Stok
 	medis.Updater = helper.MustParse(user)
@@ -143,11 +150,12 @@ func (u *MedisUseCase) Update(request *model.MedisRequest, id, user string) mode
 	}
 
 	response := model.MedisResponse{
-		Id:    medis.Id.String(),
-		Nama:  medis.Nama,
-		Jenis: medis.Jenis,
-		Harga: medis.Harga,
-		Stok:  medis.Stok,
+		Id:     medis.Id.String(),
+		Nama:   medis.Nama,
+		Jenis:  medis.Jenis,
+		Satuan: medis.Satuan,
+		Harga:  medis.Harga,
+		Stok:   medis.Stok,
 	}
 
 	return response

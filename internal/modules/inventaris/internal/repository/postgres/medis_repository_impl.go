@@ -19,18 +19,18 @@ func NewMedisRepository(db *sqlx.DB) repository.MedisRepository {
 
 func (r *medisRepositoryImpl) Insert(medis *entity.Medis) error {
 	query := `
-		INSERT INTO barang_medis (id, nama, jenis, harga, stok)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO barang_medis (id, nama, jenis, id_satuan, harga, stok)
+		VALUES ($1, $2, $3, $4, $5, $6)
 	`
 
-	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Harga, medis.Stok)
+	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok)
 
 	return err
 }
 
 func (r *medisRepositoryImpl) Find() ([]entity.Medis, error) {
 	query := `
-		SELECT id, nama, jenis, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok
 		FROM barang_medis
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *medisRepositoryImpl) Find() ([]entity.Medis, error) {
 
 func (r *medisRepositoryImpl) FindPage(page, size int) ([]entity.Medis, int, error) {
 	query := `
-		SELECT id, nama, jenis, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok
 		FROM barang_medis
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *medisRepositoryImpl) FindPage(page, size int) ([]entity.Medis, int, err
 
 func (r *medisRepositoryImpl) FindByJenis(jenis string) ([]entity.Medis, error) {
 	query := `
-		SELECT id, nama, jenis, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok
 		FROM barang_medis
 		WHERE jenis = $1 AND deleted_at IS NULL
 	`
@@ -79,7 +79,7 @@ func (r *medisRepositoryImpl) FindByJenis(jenis string) ([]entity.Medis, error) 
 
 func (r *medisRepositoryImpl) FindById(id uuid.UUID) (entity.Medis, error) {
 	query := `
-		SELECT id, nama, jenis, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok
 		FROM barang_medis
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -93,11 +93,11 @@ func (r *medisRepositoryImpl) FindById(id uuid.UUID) (entity.Medis, error) {
 func (r *medisRepositoryImpl) Update(medis *entity.Medis) error {
 	query := `
 		UPDATE barang_medis
-		SET nama = $1, jenis = $2, harga = $3, stok = $4, updated_at = $5, updater = $6
-		WHERE id = $7 AND deleted_at IS NULL
+		SET nama = $2, jenis = $3, id_satuan = $4, harga = $5, stok = $6, updated_at = $7, updater = $8
+		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, medis.Nama, medis.Jenis, medis.Harga, medis.Stok, time.Now(), medis.Updater, medis.Id)
+	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok, time.Now(), medis.Updater)
 
 	return err
 }
@@ -105,11 +105,11 @@ func (r *medisRepositoryImpl) Update(medis *entity.Medis) error {
 func (r *medisRepositoryImpl) Delete(medis *entity.Medis) error {
 	query := `
 		UPDATE barang_medis
-		SET deleted_at = $1, updater = $2
-		WHERE id = $3
+		SET deleted_at = $2, updater = $3
+		WHERE id = $1
 	`
 
-	_, err := r.DB.Exec(query, time.Now(), medis.Updater, medis.Id)
+	_, err := r.DB.Exec(query, medis.Id, time.Now(), medis.Updater)
 
 	return err
 }
