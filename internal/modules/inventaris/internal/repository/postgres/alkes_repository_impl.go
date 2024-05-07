@@ -48,7 +48,7 @@ func (r *alkesRepositoryImpl) FindPage(page, size int) ([]entity.Alkes, int, err
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
 	`
-	totalQuery := "SELECT COUNT(*) FROM ... WHERE deleted_at IS NULL"
+	totalQuery := "SELECT COUNT(*) FROM alat_kesehatan WHERE deleted_at IS NULL"
 
 	var total int64
 	if err := r.DB.Get(&total, totalQuery); err != nil {
