@@ -19,18 +19,18 @@ func NewDarahRepository(db *sqlx.DB) repository.DarahRepository {
 
 func (r *darahRepositoryImpl) Insert(darah *entity.Darah) error {
 	query := `
-		INSERT INTO darah (id, id_barang_medis, keterangan, kadaluwarsa, updater)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO darah (id, id_barang_medis, jenis, keterangan, kadaluwarsa, updater)
+		VALUES ($1, $2, $3, $4, $5, $6)
 	`
 
-	_, err := r.DB.Exec(query, darah.Id, darah.IdMedis, darah.Keterangan, darah.Kadaluwarsa, darah.Updater)
+	_, err := r.DB.Exec(query, darah.Id, darah.IdMedis, darah.Jenis, darah.Keterangan, darah.Kadaluwarsa, darah.Updater)
 
 	return err
 }
 
 func (r *darahRepositoryImpl) Find() ([]entity.Darah, error) {
 	query := `
-		SELECT id, id_barang_medis, keterangan, kadaluwarsa
+		SELECT id, id_barang_medis, jenis, keterangan, kadaluwarsa
 		FROM darah
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *darahRepositoryImpl) Find() ([]entity.Darah, error) {
 
 func (r *darahRepositoryImpl) FindPage(page, size int) ([]entity.Darah, int, error) {
 	query := `
-		SELECT id, id_barang_medis, keterangan, kadaluwarsa
+		SELECT id, id_barang_medis, jenis, keterangan, kadaluwarsa
 		FROM darah
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *darahRepositoryImpl) FindPage(page, size int) ([]entity.Darah, int, err
 
 func (r *darahRepositoryImpl) FindById(id uuid.UUID) (entity.Darah, error) {
 	query := `
-		SELECT id, id_barang_medis, keterangan, kadaluwarsa
+		SELECT id, id_barang_medis, jenis, keterangan, kadaluwarsa
 		FROM darah
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -79,7 +79,7 @@ func (r *darahRepositoryImpl) FindById(id uuid.UUID) (entity.Darah, error) {
 
 func (r *darahRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Darah, error) {
 	query := `
-		SELECT id, id_barang_medis, keterangan, kadaluwarsa
+		SELECT id, id_barang_medis, jenis, keterangan, kadaluwarsa
 		FROM darah
 		WHERE id_barang_medis = $1 AND deleted_at IS NULL
 	`
@@ -93,11 +93,11 @@ func (r *darahRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Darah, error) 
 func (r *darahRepositoryImpl) Update(darah *entity.Darah) error {
 	query := `
 		UPDATE darah
-		SET id_barang_medis = $2, keterangan = $3, kadaluwarsa = $4, updated_at = $5, updater = $6
+		SET id_barang_medis = $2, jenis = $3, keterangan = $4, kadaluwarsa = $5, updated_at = $6, updater = $7
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, darah.Id, darah.IdMedis, darah.Keterangan, darah.Kadaluwarsa, time.Now(), darah.Updater)
+	_, err := r.DB.Exec(query, darah.Id, darah.IdMedis, darah.Jenis, darah.Keterangan, darah.Kadaluwarsa, time.Now(), darah.Updater)
 
 	return err
 }

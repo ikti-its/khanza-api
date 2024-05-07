@@ -23,6 +23,7 @@ func (u *DarahUseCase) Create(request *model.DarahRequest, user string) model.Da
 	darah := entity.Darah{
 		Id:          helper.MustNew(),
 		IdMedis:     helper.MustParse(request.IdMedis),
+		Jenis:       request.Jenis,
 		Keterangan:  request.Keterangan,
 		Kadaluwarsa: helper.ParseTime(request.Kadaluwarsa, "2006-01-02"),
 		Updater:     updater,
@@ -35,6 +36,7 @@ func (u *DarahUseCase) Create(request *model.DarahRequest, user string) model.Da
 	response := model.DarahResponse{
 		Id:          darah.Id.String(),
 		IdMedis:     darah.IdMedis.String(),
+		Jenis:       darah.Jenis,
 		Keterangan:  darah.Keterangan,
 		Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
 	}
@@ -51,6 +53,7 @@ func (u *DarahUseCase) Get() []model.DarahResponse {
 		response[i] = model.DarahResponse{
 			Id:          darah.Id.String(),
 			IdMedis:     darah.IdMedis.String(),
+			Jenis:       darah.Jenis,
 			Keterangan:  darah.Keterangan,
 			Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
 		}
@@ -68,6 +71,7 @@ func (u *DarahUseCase) GetPage(page, size int) model.DarahPageResponse {
 		response[i] = model.DarahResponse{
 			Id:          darah.Id.String(),
 			IdMedis:     darah.IdMedis.String(),
+			Jenis:       darah.Jenis,
 			Keterangan:  darah.Keterangan,
 			Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
 		}
@@ -94,6 +98,7 @@ func (u *DarahUseCase) GetById(id string) model.DarahResponse {
 	response := model.DarahResponse{
 		Id:          darah.Id.String(),
 		IdMedis:     darah.IdMedis.String(),
+		Jenis:       darah.Jenis,
 		Keterangan:  darah.Keterangan,
 		Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
 	}
@@ -112,6 +117,7 @@ func (u *DarahUseCase) GetByIdMedis(id string) model.DarahResponse {
 	response := model.DarahResponse{
 		Id:          darah.Id.String(),
 		IdMedis:     darah.IdMedis.String(),
+		Jenis:       darah.Jenis,
 		Keterangan:  darah.Keterangan,
 		Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
 	}
@@ -128,6 +134,7 @@ func (u *DarahUseCase) Update(request *model.DarahRequest, id, user string) mode
 	}
 
 	darah.IdMedis = helper.MustParse(request.IdMedis)
+	darah.Jenis = request.Jenis
 	darah.Keterangan = request.Keterangan
 	darah.Kadaluwarsa = helper.ParseTime(request.Kadaluwarsa, "2006-01-02")
 	darah.Updater = helper.MustParse(user)
@@ -139,6 +146,7 @@ func (u *DarahUseCase) Update(request *model.DarahRequest, id, user string) mode
 	response := model.DarahResponse{
 		Id:          darah.Id.String(),
 		IdMedis:     darah.IdMedis.String(),
+		Jenis:       darah.Jenis,
 		Keterangan:  darah.Keterangan,
 		Kadaluwarsa: helper.FormatTime(darah.Kadaluwarsa, "2006-01-02"),
 	}
