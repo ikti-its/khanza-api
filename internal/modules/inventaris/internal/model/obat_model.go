@@ -4,8 +4,7 @@ type ObatRequest struct {
 	IdMedis     string `json:"id_barang_medis" validate:"required,uuid4"`
 	Industri    int    `json:"industri_farmasi" validate:"required,numeric"`
 	Kandungan   string `json:"kandungan" validate:"required"`
-	SatuanBesar string `json:"satuan_besar" validate:"required,oneof=tablet kapsul ampul botol tube vial injeksi"`
-	SatuanKecil string `json:"satuan_kecil" validate:"required,oneof=tablet kapsul ampul botol tube vial injeksi"`
+	Satuan      int    `json:"satuan" validate:"required,numeric"`
 	Isi         int    `json:"isi" validate:"required,numeric"`
 	Kapasitas   int    `json:"kapasitas" validate:"required,numeric"`
 	Jenis       int    `json:"jenis" validate:"required,numeric"`
@@ -19,8 +18,7 @@ type ObatResponse struct {
 	IdMedis     string `json:"id_barang_medis"`
 	Industri    int    `json:"industri_farmasi"`
 	Kandungan   string `json:"kandungan"`
-	SatuanBesar string `json:"satuan_besar"`
-	SatuanKecil string `json:"satuan_kecil"`
+	Satuan      int    `json:"satuan"`
 	Isi         int    `json:"isi"`
 	Kapasitas   int    `json:"kapasitas"`
 	Jenis       int    `json:"jenis"`
