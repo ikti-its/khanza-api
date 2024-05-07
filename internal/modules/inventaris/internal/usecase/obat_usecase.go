@@ -25,8 +25,7 @@ func (u *ObatUseCase) Create(request *model.ObatRequest, user string) model.Obat
 		IdMedis:     helper.MustParse(request.IdMedis),
 		Industri:    request.Industri,
 		Kandungan:   request.Kandungan,
-		SatuanBesar: request.SatuanBesar,
-		SatuanKecil: request.SatuanKecil,
+		Satuan:      request.Satuan,
 		Isi:         request.Isi,
 		Kapasitas:   request.Kapasitas,
 		Jenis:       request.Jenis,
@@ -45,8 +44,7 @@ func (u *ObatUseCase) Create(request *model.ObatRequest, user string) model.Obat
 		IdMedis:     obat.IdMedis.String(),
 		Industri:    obat.Industri,
 		Kandungan:   obat.Kandungan,
-		SatuanBesar: obat.SatuanBesar,
-		SatuanKecil: obat.SatuanKecil,
+		Satuan:      obat.Satuan,
 		Isi:         obat.Isi,
 		Kapasitas:   obat.Kapasitas,
 		Jenis:       obat.Jenis,
@@ -69,8 +67,7 @@ func (u *ObatUseCase) Get() []model.ObatResponse {
 			IdMedis:     obat.IdMedis.String(),
 			Industri:    obat.Industri,
 			Kandungan:   obat.Kandungan,
-			SatuanBesar: obat.SatuanBesar,
-			SatuanKecil: obat.SatuanKecil,
+			Satuan:      obat.Satuan,
 			Isi:         obat.Isi,
 			Kapasitas:   obat.Kapasitas,
 			Jenis:       obat.Jenis,
@@ -94,8 +91,7 @@ func (u *ObatUseCase) GetPage(page, size int) model.ObatPageResponse {
 			IdMedis:     obat.IdMedis.String(),
 			Industri:    obat.Industri,
 			Kandungan:   obat.Kandungan,
-			SatuanBesar: obat.SatuanBesar,
-			SatuanKecil: obat.SatuanKecil,
+			Satuan:      obat.Satuan,
 			Isi:         obat.Isi,
 			Kapasitas:   obat.Kapasitas,
 			Jenis:       obat.Jenis,
@@ -128,8 +124,7 @@ func (u *ObatUseCase) GetById(id string) model.ObatResponse {
 		IdMedis:     obat.IdMedis.String(),
 		Industri:    obat.Industri,
 		Kandungan:   obat.Kandungan,
-		SatuanBesar: obat.SatuanBesar,
-		SatuanKecil: obat.SatuanKecil,
+		Satuan:      obat.Satuan,
 		Isi:         obat.Isi,
 		Kapasitas:   obat.Kapasitas,
 		Jenis:       obat.Jenis,
@@ -154,8 +149,7 @@ func (u *ObatUseCase) GetByIdMedis(id string) model.ObatResponse {
 		IdMedis:     obat.IdMedis.String(),
 		Industri:    obat.Industri,
 		Kandungan:   obat.Kandungan,
-		SatuanBesar: obat.SatuanBesar,
-		SatuanKecil: obat.SatuanKecil,
+		Satuan:      obat.Satuan,
 		Isi:         obat.Isi,
 		Kapasitas:   obat.Kapasitas,
 		Jenis:       obat.Jenis,
@@ -178,8 +172,7 @@ func (u *ObatUseCase) Update(request *model.ObatRequest, id, user string) model.
 	obat.IdMedis = helper.MustParse(request.IdMedis)
 	obat.Industri = request.Industri
 	obat.Kandungan = request.Kandungan
-	obat.SatuanBesar = request.SatuanBesar
-	obat.SatuanKecil = request.SatuanKecil
+	obat.Satuan = request.Satuan
 	obat.Isi = request.Isi
 	obat.Kapasitas = request.Kapasitas
 	obat.Jenis = request.Jenis
@@ -197,8 +190,7 @@ func (u *ObatUseCase) Update(request *model.ObatRequest, id, user string) model.
 		IdMedis:     obat.IdMedis.String(),
 		Industri:    obat.Industri,
 		Kandungan:   obat.Kandungan,
-		SatuanBesar: obat.SatuanBesar,
-		SatuanKecil: obat.SatuanKecil,
+		Satuan:      obat.Satuan,
 		Isi:         obat.Isi,
 		Kapasitas:   obat.Kapasitas,
 		Jenis:       obat.Jenis,

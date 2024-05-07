@@ -10,8 +10,7 @@ type Obat struct {
 	IdMedis     uuid.UUID `db:"id_barang_medis"`
 	Industri    int       `db:"id_industri_farmasi"`
 	Kandungan   string    `db:"kandungan"`
-	SatuanBesar string    `db:"id_satuan_besar"`
-	SatuanKecil string    `db:"id_satuan_kecil"`
+	Satuan      int       `db:"id_satuan_kecil"`
 	Isi         int       `db:"isi"`
 	Kapasitas   int       `db:"kapasitas"`
 	Jenis       int       `db:"id_jenis"`

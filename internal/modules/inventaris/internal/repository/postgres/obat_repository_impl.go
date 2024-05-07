@@ -19,18 +19,18 @@ func NewObatRepository(db *sqlx.DB) repository.ObatRepository {
 
 func (r *obatRepositoryImpl) Insert(obat *entity.Obat) error {
 	query := `
-		INSERT INTO obat (id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_besar, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+		INSERT INTO obat (id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`
 
-	_, err := r.DB.Exec(query, obat.Id, obat.IdMedis, obat.Industri, obat.Kandungan, obat.SatuanBesar, obat.SatuanKecil, obat.Isi, obat.Kapasitas, obat.Jenis, obat.Kategori, obat.Golongan, obat.Kadaluwarsa)
+	_, err := r.DB.Exec(query, obat.Id, obat.IdMedis, obat.Industri, obat.Kandungan, obat.Satuan, obat.Isi, obat.Kapasitas, obat.Jenis, obat.Kategori, obat.Golongan, obat.Kadaluwarsa)
 
 	return err
 }
 
 func (r *obatRepositoryImpl) Find() ([]entity.Obat, error) {
 	query := `
-		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_besar, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
+		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
 		FROM obat
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *obatRepositoryImpl) Find() ([]entity.Obat, error) {
 
 func (r *obatRepositoryImpl) FindPage(page, size int) ([]entity.Obat, int, error) {
 	query := `
-		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_besar, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
+		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
 		FROM obat
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *obatRepositoryImpl) FindPage(page, size int) ([]entity.Obat, int, error
 
 func (r *obatRepositoryImpl) FindById(id uuid.UUID) (entity.Obat, error) {
 	query := `
-		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_besar, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
+		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
 		FROM obat
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -79,7 +79,7 @@ func (r *obatRepositoryImpl) FindById(id uuid.UUID) (entity.Obat, error) {
 
 func (r *obatRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Obat, error) {
 	query := `
-		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_besar, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
+		SELECT id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa
 		FROM obat
 		WHERE id_barang_medis = $1 AND deleted_at IS NULL
 	`
@@ -93,11 +93,11 @@ func (r *obatRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Obat, error) {
 func (r *obatRepositoryImpl) Update(obat *entity.Obat) error {
 	query := `
 		UPDATE obat 
-		SET id_barang_medis = $2, id_industri_farmasi = $3, kandungan = $4, id_satuan_besar = $5, id_satuan_kecil = $6, isi = $7, kapasitas = $8, id_jenis = $9, id_kategori = $10, id_golongan = $11, kadaluwarsa = $12, updated_at = $13, updater = $14
+		SET id_barang_medis = $2, id_industri_farmasi = $3, kandungan = $4, id_satuan_kecil = $5, isi = $6, kapasitas = $7, id_jenis = $8, id_kategori = $9, id_golongan = $10, kadaluwarsa = $11, updated_at = $12, updater = $13
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, obat.Id, obat.IdMedis, obat.Industri, obat.Kandungan, obat.SatuanBesar, obat.SatuanKecil, obat.Isi, obat.Kapasitas, obat.Jenis, obat.Kategori, obat.Golongan, obat.Kadaluwarsa, time.Now(), obat.Updater)
+	_, err := r.DB.Exec(query, obat.Id, obat.IdMedis, obat.Industri, obat.Kandungan, obat.Satuan, obat.Isi, obat.Kapasitas, obat.Jenis, obat.Kategori, obat.Golongan, obat.Kadaluwarsa, time.Now(), obat.Updater)
 
 	return err
 }
