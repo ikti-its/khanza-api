@@ -39,6 +39,10 @@ func ProvideInventaris(app *fiber.App, db *sqlx.DB, validator *config.Validator)
 	supplierUseCase := usecase.NewSupplierUseCase(&supplierRepository)
 	supplierController := controller.NewSupplierController(supplierUseCase)
 
+	satuanRepository := postgres.NewSatuanRepository(db)
+	satuanUseCase := usecase.NewSatuanUseCase(&satuanRepository)
+	satuanController := controller.NewSatuanController(satuanUseCase)
+
 	router.Route(
 		app,
 		medisController,
@@ -48,5 +52,6 @@ func ProvideInventaris(app *fiber.App, db *sqlx.DB, validator *config.Validator)
 		darahController,
 		stokController,
 		supplierController,
+		satuanController,
 	)
 }
