@@ -19,18 +19,18 @@ func NewBhpRepository(db *sqlx.DB) repository.BhpRepository {
 
 func (r *bhpRepositoryImpl) Insert(bhp *entity.Bhp) error {
 	query := `
-		INSERT INTO bahan_habis_pakai (id, id_barang_medis, satuan, jumlah, kadaluwarsa, updater)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO bahan_habis_pakai (id, id_barang_medis, jumlah, kadaluwarsa, updater)
+		VALUES ($1, $2, $3, $4, $5)
 	`
 
-	_, err := r.DB.Exec(query, bhp.Id, bhp.IdMedis, bhp.Satuan, bhp.Jumlah, bhp.Kadaluwarsa, bhp.Updater)
+	_, err := r.DB.Exec(query, bhp.Id, bhp.IdMedis, bhp.Jumlah, bhp.Kadaluwarsa, bhp.Updater)
 
 	return err
 }
 
 func (r *bhpRepositoryImpl) Find() ([]entity.Bhp, error) {
 	query := `
-		SELECT id, id_barang_medis, satuan, jumlah, kadaluwarsa
+		SELECT id, id_barang_medis, jumlah, kadaluwarsa
 		FROM bahan_habis_pakai
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *bhpRepositoryImpl) Find() ([]entity.Bhp, error) {
 
 func (r *bhpRepositoryImpl) FindPage(page, size int) ([]entity.Bhp, int, error) {
 	query := `
-		SELECT id, id_barang_medis, satuan, jumlah, kadaluwarsa
+		SELECT id, id_barang_medis, jumlah, kadaluwarsa
 		FROM bahan_habis_pakai
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *bhpRepositoryImpl) FindPage(page, size int) ([]entity.Bhp, int, error) 
 
 func (r *bhpRepositoryImpl) FindById(id uuid.UUID) (entity.Bhp, error) {
 	query := `
-		SELECT id, id_barang_medis, satuan, jumlah, kadaluwarsa
+		SELECT id, id_barang_medis, jumlah, kadaluwarsa
 		FROM bahan_habis_pakai
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -79,7 +79,7 @@ func (r *bhpRepositoryImpl) FindById(id uuid.UUID) (entity.Bhp, error) {
 
 func (r *bhpRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Bhp, error) {
 	query := `
-		SELECT id, id_barang_medis, satuan, jumlah, kadaluwarsa
+		SELECT id, id_barang_medis, jumlah, kadaluwarsa
 		FROM bahan_habis_pakai
 		WHERE id_barang_medis = $1 AND deleted_at IS NULL
 	`
@@ -93,11 +93,11 @@ func (r *bhpRepositoryImpl) FindByIdMedis(id uuid.UUID) (entity.Bhp, error) {
 func (r *bhpRepositoryImpl) Update(bhp *entity.Bhp) error {
 	query := `
 		UPDATE bahan_habis_pakai
-		SET id_barang_medis = $2, satuan = $3, jumlah = $4, kadaluwarsa = $5, updated_at = $6, updater = $7
+		SET id_barang_medis = $2, jumlah = $3, kadaluwarsa = $4, updated_at = $5, updater = $6
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, bhp.Id, bhp.IdMedis, bhp.Satuan, bhp.Jumlah, bhp.Kadaluwarsa, time.Now(), bhp.Updater)
+	_, err := r.DB.Exec(query, bhp.Id, bhp.IdMedis, bhp.Jumlah, bhp.Kadaluwarsa, time.Now(), bhp.Updater)
 
 	return err
 }

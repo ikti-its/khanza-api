@@ -23,7 +23,6 @@ func (u *BhpUseCase) Create(request *model.BhpRequest, user string) model.BhpRes
 	bhp := entity.Bhp{
 		Id:          helper.MustNew(),
 		IdMedis:     helper.MustParse(request.IdMedis),
-		Satuan:      request.Satuan,
 		Jumlah:      request.Jumlah,
 		Kadaluwarsa: helper.ParseTime(request.Kadaluwarsa, "2006-01-02"),
 		Updater:     updater,
@@ -36,7 +35,6 @@ func (u *BhpUseCase) Create(request *model.BhpRequest, user string) model.BhpRes
 	response := model.BhpResponse{
 		Id:          bhp.Id.String(),
 		IdMedis:     bhp.IdMedis.String(),
-		Satuan:      bhp.Satuan,
 		Jumlah:      bhp.Jumlah,
 		Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
 	}
@@ -53,7 +51,6 @@ func (u *BhpUseCase) Get() []model.BhpResponse {
 		response[i] = model.BhpResponse{
 			Id:          bhp.Id.String(),
 			IdMedis:     bhp.IdMedis.String(),
-			Satuan:      bhp.Satuan,
 			Jumlah:      bhp.Jumlah,
 			Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
 		}
@@ -71,7 +68,6 @@ func (u *BhpUseCase) GetPage(page, size int) model.BhpPageResponse {
 		response[i] = model.BhpResponse{
 			Id:          bhp.Id.String(),
 			IdMedis:     bhp.IdMedis.String(),
-			Satuan:      bhp.Satuan,
 			Jumlah:      bhp.Jumlah,
 			Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
 		}
@@ -98,7 +94,6 @@ func (u *BhpUseCase) GetById(id string) model.BhpResponse {
 	response := model.BhpResponse{
 		Id:          bhp.Id.String(),
 		IdMedis:     bhp.IdMedis.String(),
-		Satuan:      bhp.Satuan,
 		Jumlah:      bhp.Jumlah,
 		Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
 	}
@@ -117,7 +112,6 @@ func (u *BhpUseCase) GetByIdMedis(id string) model.BhpResponse {
 	response := model.BhpResponse{
 		Id:          bhp.Id.String(),
 		IdMedis:     bhp.IdMedis.String(),
-		Satuan:      bhp.Satuan,
 		Jumlah:      bhp.Jumlah,
 		Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
 	}
@@ -134,7 +128,6 @@ func (u *BhpUseCase) Update(request *model.BhpRequest, id, user string) model.Bh
 	}
 
 	bhp.IdMedis = helper.MustParse(request.IdMedis)
-	bhp.Satuan = request.Satuan
 	bhp.Jumlah = request.Jumlah
 	bhp.Kadaluwarsa = helper.ParseTime(request.Kadaluwarsa, "2006-01-02")
 	bhp.Updater = helper.MustParse(user)
@@ -146,7 +139,6 @@ func (u *BhpUseCase) Update(request *model.BhpRequest, id, user string) model.Bh
 	response := model.BhpResponse{
 		Id:          bhp.Id.String(),
 		IdMedis:     bhp.IdMedis.String(),
-		Satuan:      bhp.Satuan,
 		Jumlah:      bhp.Jumlah,
 		Kadaluwarsa: helper.FormatTime(bhp.Kadaluwarsa, "2006-01-02"),
 	}
