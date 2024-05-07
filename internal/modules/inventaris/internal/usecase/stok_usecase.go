@@ -21,14 +21,13 @@ func NewStokUseCase(repository *repository.StokRepository) *StokUseCase {
 func (u *StokUseCase) Create(request *model.StokRequest, user string) model.StokResponse {
 	updater := helper.MustParse(user)
 	stok := entity.Stok{
-		Id:         helper.MustNew(),
-		Nomor:      request.Nomor,
-		IdMedis:    helper.MustParse(request.IdMedis),
-		IdPegawai:  helper.MustParse(request.IdPegawai),
-		Tanggal:    helper.ParseTime(request.Tanggal, "2006-01-02"),
-		Jumlah:     request.Jumlah,
-		Keterangan: request.Keterangan,
-		Updater:    updater,
+		Id:          helper.MustNew(),
+		IdTransaksi: helper.MustParse(request.IdTransaksi),
+		Nomor:       request.Nomor,
+		IdPegawai:   helper.MustParse(request.IdPegawai),
+		Tanggal:     helper.ParseTime(request.Tanggal, "2006-01-02"),
+		Keterangan:  request.Keterangan,
+		Updater:     updater,
 	}
 
 	if err := u.Repository.Insert(&stok); err != nil {
@@ -36,13 +35,12 @@ func (u *StokUseCase) Create(request *model.StokRequest, user string) model.Stok
 	}
 
 	response := model.StokResponse{
-		Id:         stok.Id.String(),
-		Nomor:      stok.Nomor,
-		IdMedis:    stok.IdMedis.String(),
-		IdPegawai:  stok.IdPegawai.String(),
-		Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-		Jumlah:     stok.Jumlah,
-		Keterangan: stok.Keterangan,
+		Id:          stok.Id.String(),
+		IdTransaksi: stok.IdTransaksi.String(),
+		Nomor:       stok.Nomor,
+		IdPegawai:   stok.IdPegawai.String(),
+		Tanggal:     helper.FormatTime(stok.Tanggal, "2006-01-02"),
+		Keterangan:  stok.Keterangan,
 	}
 
 	return response
@@ -55,13 +53,12 @@ func (u *StokUseCase) Get() []model.StokResponse {
 	response := make([]model.StokResponse, len(stok))
 	for i, stok := range stok {
 		response[i] = model.StokResponse{
-			Id:         stok.Id.String(),
-			Nomor:      stok.Nomor,
-			IdMedis:    stok.IdMedis.String(),
-			IdPegawai:  stok.IdPegawai.String(),
-			Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-			Jumlah:     stok.Jumlah,
-			Keterangan: stok.Keterangan,
+			Id:          stok.Id.String(),
+			IdTransaksi: stok.IdTransaksi.String(),
+			Nomor:       stok.Nomor,
+			IdPegawai:   stok.IdPegawai.String(),
+			Tanggal:     helper.FormatTime(stok.Tanggal, "2006-01-02"),
+			Keterangan:  stok.Keterangan,
 		}
 	}
 
@@ -75,13 +72,12 @@ func (u *StokUseCase) GetPage(page, size int) model.StokPageResponse {
 	response := make([]model.StokResponse, len(stok))
 	for i, stok := range stok {
 		response[i] = model.StokResponse{
-			Id:         stok.Id.String(),
-			Nomor:      stok.Nomor,
-			IdMedis:    stok.IdMedis.String(),
-			IdPegawai:  stok.IdPegawai.String(),
-			Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-			Jumlah:     stok.Jumlah,
-			Keterangan: stok.Keterangan,
+			Id:          stok.Id.String(),
+			IdTransaksi: stok.IdTransaksi.String(),
+			Nomor:       stok.Nomor,
+			IdPegawai:   stok.IdPegawai.String(),
+			Tanggal:     helper.FormatTime(stok.Tanggal, "2006-01-02"),
+			Keterangan:  stok.Keterangan,
 		}
 	}
 
@@ -104,13 +100,12 @@ func (u *StokUseCase) GetById(id string) model.StokResponse {
 	}
 
 	response := model.StokResponse{
-		Id:         stok.Id.String(),
-		Nomor:      stok.Nomor,
-		IdMedis:    stok.IdMedis.String(),
-		IdPegawai:  stok.IdPegawai.String(),
-		Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-		Jumlah:     stok.Jumlah,
-		Keterangan: stok.Keterangan,
+		Id:          stok.Id.String(),
+		IdTransaksi: stok.IdTransaksi.String(),
+		Nomor:       stok.Nomor,
+		IdPegawai:   stok.IdPegawai.String(),
+		Tanggal:     helper.FormatTime(stok.Tanggal, "2006-01-02"),
+		Keterangan:  stok.Keterangan,
 	}
 
 	return response
@@ -124,11 +119,10 @@ func (u *StokUseCase) Update(request *model.StokRequest, id, user string) model.
 		})
 	}
 
+	stok.IdTransaksi = helper.MustParse(request.IdTransaksi)
 	stok.Nomor = request.Nomor
-	stok.IdMedis = helper.MustParse(request.IdMedis)
 	stok.IdPegawai = helper.MustParse(request.IdPegawai)
 	stok.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
-	stok.Jumlah = request.Jumlah
 	stok.Keterangan = request.Keterangan
 	stok.Updater = helper.MustParse(user)
 
@@ -137,13 +131,12 @@ func (u *StokUseCase) Update(request *model.StokRequest, id, user string) model.
 	}
 
 	response := model.StokResponse{
-		Id:         stok.Id.String(),
-		Nomor:      stok.Nomor,
-		IdMedis:    stok.IdMedis.String(),
-		IdPegawai:  stok.IdPegawai.String(),
-		Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-		Jumlah:     stok.Jumlah,
-		Keterangan: stok.Keterangan,
+		Id:          stok.Id.String(),
+		IdTransaksi: stok.IdTransaksi.String(),
+		Nomor:       stok.Nomor,
+		IdPegawai:   stok.IdPegawai.String(),
+		Tanggal:     helper.FormatTime(stok.Tanggal, "2006-01-02"),
+		Keterangan:  stok.Keterangan,
 	}
 
 	return response
