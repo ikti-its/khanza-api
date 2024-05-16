@@ -4,6 +4,7 @@ import "github.com/google/uuid"
 
 type Transaksi struct {
 	Id      uuid.UUID `db:"id"`
+	IdStok  uuid.UUID `db:"id_stok_keluar"`
 	IdMedis uuid.UUID `db:"id_barang_medis"`
 	Batch   string    `db:"no_batch"`
 	Faktur  string    `db:"no_faktur"`

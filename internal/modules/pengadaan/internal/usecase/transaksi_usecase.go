@@ -22,6 +22,7 @@ func (u *TransaksiUseCase) Create(request *model.TransaksiRequest, user string) 
 	updater := helper.MustParse(user)
 	transaksi := entity.Transaksi{
 		Id:      helper.MustNew(),
+		IdStok:  helper.MustParse(request.IdStok),
 		IdMedis: helper.MustParse(request.IdMedis),
 		Batch:   request.Batch,
 		Faktur:  request.Faktur,
@@ -35,6 +36,7 @@ func (u *TransaksiUseCase) Create(request *model.TransaksiRequest, user string) 
 
 	response := model.TransaksiResponse{
 		Id:      transaksi.Id.String(),
+		IdStok:  transaksi.IdStok.String(),
 		IdMedis: transaksi.IdMedis.String(),
 		Batch:   transaksi.Batch,
 		Faktur:  transaksi.Faktur,
@@ -52,6 +54,7 @@ func (u *TransaksiUseCase) Get() []model.TransaksiResponse {
 	for i, transaksi := range transaksi {
 		response[i] = model.TransaksiResponse{
 			Id:      transaksi.Id.String(),
+			IdStok:  transaksi.IdStok.String(),
 			IdMedis: transaksi.IdMedis.String(),
 			Batch:   transaksi.Batch,
 			Faktur:  transaksi.Faktur,
@@ -70,6 +73,7 @@ func (u *TransaksiUseCase) GetPage(page, size int) model.TransaksiPageResponse {
 	for i, transaksi := range transaksi {
 		response[i] = model.TransaksiResponse{
 			Id:      transaksi.Id.String(),
+			IdStok:  transaksi.IdStok.String(),
 			IdMedis: transaksi.IdMedis.String(),
 			Batch:   transaksi.Batch,
 			Faktur:  transaksi.Faktur,
@@ -97,6 +101,7 @@ func (u *TransaksiUseCase) GetById(id string) model.TransaksiResponse {
 
 	response := model.TransaksiResponse{
 		Id:      transaksi.Id.String(),
+		IdStok:  transaksi.IdStok.String(),
 		IdMedis: transaksi.IdMedis.String(),
 		Batch:   transaksi.Batch,
 		Faktur:  transaksi.Faktur,
@@ -114,6 +119,7 @@ func (u *TransaksiUseCase) Update(request *model.TransaksiRequest, id, user stri
 		})
 	}
 
+	transaksi.IdStok = helper.MustParse(request.IdStok)
 	transaksi.IdMedis = helper.MustParse(request.IdMedis)
 	transaksi.Batch = request.Batch
 	transaksi.Faktur = request.Faktur
@@ -126,6 +132,7 @@ func (u *TransaksiUseCase) Update(request *model.TransaksiRequest, id, user stri
 
 	response := model.TransaksiResponse{
 		Id:      transaksi.Id.String(),
+		IdStok:  transaksi.IdStok.String(),
 		IdMedis: transaksi.IdMedis.String(),
 		Batch:   transaksi.Batch,
 		Faktur:  transaksi.Faktur,

@@ -11,7 +11,7 @@ type PengajuanRequest struct {
 	PajakJumlah  float64 `json:"pajak_jumlah" validate:"required"`
 	Materai      float64 `json:"materai" validate:"required"`
 	Catatan      string  `json:"catatan"`
-	Status       string  `json:"status_pesanan" validate:"required,oneof=0 1 2 3 4 5"`
+	Status       string  `json:"status_pesanan" validate:"required,oneof=0 1 2 3 4 5 6 7 8 9 10"`
 }
 
 type PengajuanResponse struct {
