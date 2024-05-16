@@ -19,18 +19,18 @@ func NewTransaksiRepository(db *sqlx.DB) repository.TransaksiRepository {
 
 func (r *transaksiRepositoryImpl) Insert(transaksi *entity.Transaksi) error {
 	query := `
-		INSERT INTO transaksi_keluar_barang_medis (id, id_barang_medis, no_batch, no_faktur, jumlah_keluar, updater)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO transaksi_keluar_barang_medis (id, id_stok_keluar, id_barang_medis, no_batch, no_faktur, jumlah_keluar, updater)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
 
-	_, err := r.DB.Exec(query, transaksi.Id, transaksi.IdMedis, transaksi.Batch, transaksi.Faktur, transaksi.Jumlah, transaksi.Updater)
+	_, err := r.DB.Exec(query, transaksi.Id, transaksi.IdStok, transaksi.IdMedis, transaksi.Batch, transaksi.Faktur, transaksi.Jumlah, transaksi.Updater)
 
 	return err
 }
 
 func (r *transaksiRepositoryImpl) Find() ([]entity.Transaksi, error) {
 	query := `
-		SELECT id, id_barang_medis, no_batch, no_faktur, jumlah_keluar
+		SELECT id, id_stok_keluar, id_barang_medis, no_batch, no_faktur, jumlah_keluar
 		FROM transaksi_keluar_barang_medis
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *transaksiRepositoryImpl) Find() ([]entity.Transaksi, error) {
 
 func (r *transaksiRepositoryImpl) FindPage(page, size int) ([]entity.Transaksi, int, error) {
 	query := `
-		SELECT id, id_barang_medis, no_batch, no_faktur, jumlah_keluar
+		SELECT id, id_stok_keluar, id_barang_medis, no_batch, no_faktur, jumlah_keluar
 		FROM transaksi_keluar_barang_medis
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *transaksiRepositoryImpl) FindPage(page, size int) ([]entity.Transaksi, 
 
 func (r *transaksiRepositoryImpl) FindById(id uuid.UUID) (entity.Transaksi, error) {
 	query := `
-		SELECT id, id_barang_medis, no_batch, no_faktur, jumlah_keluar
+		SELECT id, id_stok_keluar, id_barang_medis, no_batch, no_faktur, jumlah_keluar
 		FROM transaksi_keluar_barang_medis
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -80,11 +80,11 @@ func (r *transaksiRepositoryImpl) FindById(id uuid.UUID) (entity.Transaksi, erro
 func (r *transaksiRepositoryImpl) Update(transaksi *entity.Transaksi) error {
 	query := `
 		UPDATE transaksi_keluar_barang_medis
-		SET id_barang_medis = $2, no_batch = $3, no_faktur = $4, jumlah_keluar = $5, updated_at = $6, updater = $7
+		SET id_stok_keluar = $2, id_barang_medis = $3, no_batch = $4, no_faktur = $5, jumlah_keluar = $6, updated_at = $7, updater = $8
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, transaksi.Id, transaksi.IdMedis, transaksi.Batch, transaksi.Faktur, transaksi.Jumlah, time.Now(), transaksi.Updater)
+	_, err := r.DB.Exec(query, transaksi.Id, transaksi.IdStok, transaksi.IdMedis, transaksi.Batch, transaksi.Faktur, transaksi.Jumlah, time.Now(), transaksi.Updater)
 
 	return err
 }
