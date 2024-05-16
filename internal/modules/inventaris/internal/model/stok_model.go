@@ -1,20 +1,18 @@
 package model
 
 type StokRequest struct {
-	IdTransaksi string `json:"id_transaksi" validate:"required,uuid4"`
-	Nomor       string `json:"no_keluar" validate:"required"`
-	IdPegawai   string `json:"id_pegawai" validate:"required,uuid4"`
-	Tanggal     string `json:"tanggal_stok_keluar" validate:"required"`
-	Keterangan  string `json:"keterangan"`
+	Nomor      string `json:"no_keluar" validate:"required"`
+	IdPegawai  string `json:"id_pegawai" validate:"required,uuid4"`
+	Tanggal    string `json:"tanggal_stok_keluar" validate:"required"`
+	Keterangan string `json:"keterangan"`
 }
 
 type StokResponse struct {
-	Id          string `json:"id"`
-	IdTransaksi string `json:"id_transaksi"`
-	Nomor       string `json:"no_keluar"`
-	IdPegawai   string `json:"id_pegawai"`
-	Tanggal     string `json:"tanggal_stok_keluar"`
-	Keterangan  string `json:"keterangan"`
+	Id         string `json:"id"`
+	Nomor      string `json:"no_keluar"`
+	IdPegawai  string `json:"id_pegawai"`
+	Tanggal    string `json:"tanggal_stok_keluar"`
+	Keterangan string `json:"keterangan"`
 }
 
 type StokPageResponse struct {
