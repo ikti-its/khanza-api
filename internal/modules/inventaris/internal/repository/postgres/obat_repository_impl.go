@@ -19,11 +19,11 @@ func NewObatRepository(db *sqlx.DB) repository.ObatRepository {
 
 func (r *obatRepositoryImpl) Insert(obat *entity.Obat) error {
 	query := `
-		INSERT INTO obat (id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+		INSERT INTO obat (id, id_barang_medis, id_industri_farmasi, kandungan, id_satuan_kecil, isi, kapasitas, id_jenis, id_kategori, id_golongan, kadaluwarsa, updater)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 	`
 
-	_, err := r.DB.Exec(query, obat.Id, obat.IdMedis, obat.Industri, obat.Kandungan, obat.Satuan, obat.Isi, obat.Kapasitas, obat.Jenis, obat.Kategori, obat.Golongan, obat.Kadaluwarsa)
+	_, err := r.DB.Exec(query, obat.Id, obat.IdMedis, obat.Industri, obat.Kandungan, obat.Satuan, obat.Isi, obat.Kapasitas, obat.Jenis, obat.Kategori, obat.Golongan, obat.Kadaluwarsa, obat.Updater)
 
 	return err
 }

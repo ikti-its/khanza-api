@@ -19,11 +19,11 @@ func NewMedisRepository(db *sqlx.DB) repository.MedisRepository {
 
 func (r *medisRepositoryImpl) Insert(medis *entity.Medis) error {
 	query := `
-		INSERT INTO barang_medis (id, nama, jenis, id_satuan, harga, stok)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO barang_medis (id, nama, jenis, id_satuan, harga, stok, updater)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
 
-	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok)
+	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok, medis.Updater)
 
 	return err
 }
