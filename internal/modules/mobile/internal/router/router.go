@@ -10,6 +10,7 @@ func Route(
 	app *fiber.App,
 	homeController *controller.HomeController,
 	profileController *controller.ProfileController,
+	pegawaiController *controller.PegawaiController,
 ) {
 	mobile := app.Group("/v1/m")
 
@@ -21,5 +22,11 @@ func Route(
 	profile := mobile.Group("/profile")
 	{
 		profile.Put("/:id", middleware.Authenticate([]int{0}), profileController.Update)
+	}
+
+	pegawai := mobile.Group("/pegawai")
+	{
+		pegawai.Get("/", middleware.Authenticate([]int{1337, 1}), pegawaiController.Get)
+		pegawai.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.GetById)
 	}
 }
