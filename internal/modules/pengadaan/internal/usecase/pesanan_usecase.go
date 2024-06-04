@@ -26,16 +26,17 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 		kadaluwarsa = helper.ParseTime(request.Kadaluwarsa, "2006-01-02")
 	}
 	pesanan := entity.Pesanan{
-		Id:          helper.MustNew(),
-		IdPengajuan: helper.MustParse(request.IdPengajuan),
-		IdMedis:     helper.MustParse(request.IdMedis),
-		Satuan:      request.Satuan,
-		Harga:       request.Harga,
-		Pesanan:     request.Pesanan,
-		Diterima:    request.Diterima,
-		Kadaluwarsa: kadaluwarsa,
-		Batch:       request.Batch,
-		Updater:     updater,
+		Id:             helper.MustNew(),
+		IdPengajuan:    helper.MustParse(request.IdPengajuan),
+		IdMedis:        helper.MustParse(request.IdMedis),
+		Satuan:         request.Satuan,
+		HargaPengajuan: request.HargaPengajuan,
+		HargaPemesanan: request.HargaPemesanan,
+		Pesanan:        request.Pesanan,
+		Diterima:       request.Diterima,
+		Kadaluwarsa:    kadaluwarsa,
+		Batch:          request.Batch,
+		Updater:        updater,
 	}
 
 	if err := u.Repository.Insert(&pesanan); err != nil {
@@ -43,15 +44,16 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 	}
 
 	response := model.PesananResponse{
-		Id:          pesanan.Id.String(),
-		IdPengajuan: pesanan.IdPengajuan.String(),
-		IdMedis:     pesanan.IdMedis.String(),
-		Satuan:      pesanan.Satuan,
-		Harga:       pesanan.Harga,
-		Pesanan:     pesanan.Pesanan,
-		Diterima:    pesanan.Diterima,
-		Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
-		Batch:       pesanan.Batch,
+		Id:             pesanan.Id.String(),
+		IdPengajuan:    pesanan.IdPengajuan.String(),
+		IdMedis:        pesanan.IdMedis.String(),
+		Satuan:         pesanan.Satuan,
+		HargaPengajuan: pesanan.HargaPengajuan,
+		HargaPemesanan: pesanan.HargaPemesanan,
+		Pesanan:        pesanan.Pesanan,
+		Diterima:       pesanan.Diterima,
+		Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+		Batch:          pesanan.Batch,
 	}
 
 	return response
@@ -64,15 +66,16 @@ func (u *PesananUseCase) Get() []model.PesananResponse {
 	response := make([]model.PesananResponse, len(pesanan))
 	for i, pesanan := range pesanan {
 		response[i] = model.PesananResponse{
-			Id:          pesanan.Id.String(),
-			IdPengajuan: pesanan.IdPengajuan.String(),
-			IdMedis:     pesanan.IdMedis.String(),
-			Satuan:      pesanan.Satuan,
-			Harga:       pesanan.Harga,
-			Pesanan:     pesanan.Pesanan,
-			Diterima:    pesanan.Diterima,
-			Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
-			Batch:       pesanan.Batch,
+			Id:             pesanan.Id.String(),
+			IdPengajuan:    pesanan.IdPengajuan.String(),
+			IdMedis:        pesanan.IdMedis.String(),
+			Satuan:         pesanan.Satuan,
+			HargaPengajuan: pesanan.HargaPengajuan,
+			HargaPemesanan: pesanan.HargaPemesanan,
+			Pesanan:        pesanan.Pesanan,
+			Diterima:       pesanan.Diterima,
+			Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+			Batch:          pesanan.Batch,
 		}
 	}
 
@@ -86,15 +89,16 @@ func (u *PesananUseCase) GetPage(page, size int) model.PesananPageResponse {
 	response := make([]model.PesananResponse, len(pesanan))
 	for i, pesanan := range pesanan {
 		response[i] = model.PesananResponse{
-			Id:          pesanan.Id.String(),
-			IdPengajuan: pesanan.IdPengajuan.String(),
-			IdMedis:     pesanan.IdMedis.String(),
-			Satuan:      pesanan.Satuan,
-			Harga:       pesanan.Harga,
-			Pesanan:     pesanan.Pesanan,
-			Diterima:    pesanan.Diterima,
-			Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
-			Batch:       pesanan.Batch,
+			Id:             pesanan.Id.String(),
+			IdPengajuan:    pesanan.IdPengajuan.String(),
+			IdMedis:        pesanan.IdMedis.String(),
+			Satuan:         pesanan.Satuan,
+			HargaPengajuan: pesanan.HargaPengajuan,
+			HargaPemesanan: pesanan.HargaPemesanan,
+			Pesanan:        pesanan.Pesanan,
+			Diterima:       pesanan.Diterima,
+			Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+			Batch:          pesanan.Batch,
 		}
 	}
 
@@ -115,15 +119,16 @@ func (u *PesananUseCase) GetByIdPengajuan(id string) []model.PesananResponse {
 	response := make([]model.PesananResponse, len(pesanan))
 	for i, pesanan := range pesanan {
 		response[i] = model.PesananResponse{
-			Id:          pesanan.Id.String(),
-			IdPengajuan: pesanan.IdPengajuan.String(),
-			IdMedis:     pesanan.IdMedis.String(),
-			Satuan:      pesanan.Satuan,
-			Harga:       pesanan.Harga,
-			Pesanan:     pesanan.Pesanan,
-			Diterima:    pesanan.Diterima,
-			Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
-			Batch:       pesanan.Batch,
+			Id:             pesanan.Id.String(),
+			IdPengajuan:    pesanan.IdPengajuan.String(),
+			IdMedis:        pesanan.IdMedis.String(),
+			Satuan:         pesanan.Satuan,
+			HargaPengajuan: pesanan.HargaPengajuan,
+			HargaPemesanan: pesanan.HargaPemesanan,
+			Pesanan:        pesanan.Pesanan,
+			Diterima:       pesanan.Diterima,
+			Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+			Batch:          pesanan.Batch,
 		}
 	}
 
@@ -139,15 +144,16 @@ func (u *PesananUseCase) GetById(id string) model.PesananResponse {
 	}
 
 	response := model.PesananResponse{
-		Id:          pesanan.Id.String(),
-		IdPengajuan: pesanan.IdPengajuan.String(),
-		IdMedis:     pesanan.IdMedis.String(),
-		Satuan:      pesanan.Satuan,
-		Harga:       pesanan.Harga,
-		Pesanan:     pesanan.Pesanan,
-		Diterima:    pesanan.Diterima,
-		Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
-		Batch:       pesanan.Batch,
+		Id:             pesanan.Id.String(),
+		IdPengajuan:    pesanan.IdPengajuan.String(),
+		IdMedis:        pesanan.IdMedis.String(),
+		Satuan:         pesanan.Satuan,
+		HargaPengajuan: pesanan.HargaPengajuan,
+		HargaPemesanan: pesanan.HargaPemesanan,
+		Pesanan:        pesanan.Pesanan,
+		Diterima:       pesanan.Diterima,
+		Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+		Batch:          pesanan.Batch,
 	}
 
 	return response
@@ -164,7 +170,8 @@ func (u *PesananUseCase) Update(request *model.PesananRequest, id, user string) 
 	pesanan.IdPengajuan = helper.MustParse(request.IdPengajuan)
 	pesanan.IdMedis = helper.MustParse(request.IdMedis)
 	pesanan.Satuan = request.Satuan
-	pesanan.Harga = request.Harga
+	pesanan.HargaPengajuan = request.HargaPengajuan
+	pesanan.HargaPemesanan = request.HargaPemesanan
 	pesanan.Pesanan = request.Pesanan
 	pesanan.Diterima = request.Diterima
 	pesanan.Kadaluwarsa = helper.ParseTime(request.Kadaluwarsa, "2006-01-02")
@@ -176,15 +183,16 @@ func (u *PesananUseCase) Update(request *model.PesananRequest, id, user string) 
 	}
 
 	response := model.PesananResponse{
-		Id:          pesanan.Id.String(),
-		IdPengajuan: pesanan.IdPengajuan.String(),
-		IdMedis:     pesanan.IdMedis.String(),
-		Satuan:      pesanan.Satuan,
-		Harga:       pesanan.Harga,
-		Pesanan:     pesanan.Pesanan,
-		Diterima:    pesanan.Diterima,
-		Kadaluwarsa: helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
-		Batch:       pesanan.Batch,
+		Id:             pesanan.Id.String(),
+		IdPengajuan:    pesanan.IdPengajuan.String(),
+		IdMedis:        pesanan.IdMedis.String(),
+		Satuan:         pesanan.Satuan,
+		HargaPengajuan: pesanan.HargaPengajuan,
+		HargaPemesanan: pesanan.HargaPemesanan,
+		Pesanan:        pesanan.Pesanan,
+		Diterima:       pesanan.Diterima,
+		Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
+		Batch:          pesanan.Batch,
 	}
 
 	return response
