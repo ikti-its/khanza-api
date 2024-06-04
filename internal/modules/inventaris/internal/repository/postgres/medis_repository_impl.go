@@ -19,18 +19,18 @@ func NewMedisRepository(db *sqlx.DB) repository.MedisRepository {
 
 func (r *medisRepositoryImpl) Insert(medis *entity.Medis) error {
 	query := `
-		INSERT INTO barang_medis (id, nama, jenis, id_satuan, harga, stok, updater)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO barang_medis (id, nama, jenis, id_satuan, harga, stok, stok_minimum, notifikasi_kadaluwarsa_hari, updater)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	`
 
-	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok, medis.Updater)
+	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok, medis.StokMinimum, medis.Notifikasi, medis.Updater)
 
 	return err
 }
 
 func (r *medisRepositoryImpl) Find() ([]entity.Medis, error) {
 	query := `
-		SELECT id, nama, jenis, id_satuan, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok, stok_minimum, notifikasi_kadaluwarsa_hari
 		FROM barang_medis
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *medisRepositoryImpl) Find() ([]entity.Medis, error) {
 
 func (r *medisRepositoryImpl) FindPage(page, size int) ([]entity.Medis, int, error) {
 	query := `
-		SELECT id, nama, jenis, id_satuan, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok, stok_minimum, notifikasi_kadaluwarsa_hari
 		FROM barang_medis
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *medisRepositoryImpl) FindPage(page, size int) ([]entity.Medis, int, err
 
 func (r *medisRepositoryImpl) FindByJenis(jenis string) ([]entity.Medis, error) {
 	query := `
-		SELECT id, nama, jenis, id_satuan, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok, stok_minimum, notifikasi_kadaluwarsa_hari
 		FROM barang_medis
 		WHERE jenis = $1 AND deleted_at IS NULL
 	`
@@ -79,7 +79,7 @@ func (r *medisRepositoryImpl) FindByJenis(jenis string) ([]entity.Medis, error) 
 
 func (r *medisRepositoryImpl) FindById(id uuid.UUID) (entity.Medis, error) {
 	query := `
-		SELECT id, nama, jenis, id_satuan, harga, stok
+		SELECT id, nama, jenis, id_satuan, harga, stok, stok_minimum, notifikasi_kadaluwarsa_hari
 		FROM barang_medis
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -93,11 +93,11 @@ func (r *medisRepositoryImpl) FindById(id uuid.UUID) (entity.Medis, error) {
 func (r *medisRepositoryImpl) Update(medis *entity.Medis) error {
 	query := `
 		UPDATE barang_medis
-		SET nama = $2, jenis = $3, id_satuan = $4, harga = $5, stok = $6, updated_at = $7, updater = $8
+		SET nama = $2, jenis = $3, id_satuan = $4, harga = $5, stok = $6, stok_minimum = $7, notifikasi_kadaluwarsa_hari = $8, updated_at = $9, updater = $10
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok, time.Now(), medis.Updater)
+	_, err := r.DB.Exec(query, medis.Id, medis.Nama, medis.Jenis, medis.Satuan, medis.Harga, medis.Stok, medis.StokMinimum, medis.Notifikasi, time.Now(), medis.Updater)
 
 	return err
 }

@@ -21,13 +21,15 @@ func NewMedisUseCase(repository *repository.MedisRepository) *MedisUseCase {
 func (u *MedisUseCase) Create(request *model.MedisRequest, user string) model.MedisResponse {
 	updater := helper.MustParse(user)
 	medis := entity.Medis{
-		Id:      helper.MustNew(),
-		Nama:    request.Nama,
-		Jenis:   request.Jenis,
-		Satuan:  request.Satuan,
-		Harga:   request.Harga,
-		Stok:    request.Stok,
-		Updater: updater,
+		Id:          helper.MustNew(),
+		Nama:        request.Nama,
+		Jenis:       request.Jenis,
+		Satuan:      request.Satuan,
+		Harga:       request.Harga,
+		Stok:        request.Stok,
+		StokMinimum: request.StokMinimum,
+		Notifikasi:  request.Notifikasi,
+		Updater:     updater,
 	}
 
 	if err := u.Repository.Insert(&medis); err != nil {
@@ -35,12 +37,14 @@ func (u *MedisUseCase) Create(request *model.MedisRequest, user string) model.Me
 	}
 
 	response := model.MedisResponse{
-		Id:     medis.Id.String(),
-		Nama:   medis.Nama,
-		Jenis:  medis.Jenis,
-		Satuan: medis.Satuan,
-		Harga:  medis.Harga,
-		Stok:   medis.Stok,
+		Id:          medis.Id.String(),
+		Nama:        medis.Nama,
+		Jenis:       medis.Jenis,
+		Satuan:      medis.Satuan,
+		Harga:       medis.Harga,
+		Stok:        medis.Stok,
+		StokMinimum: medis.StokMinimum,
+		Notifikasi:  medis.Notifikasi,
 	}
 
 	return response
@@ -53,12 +57,14 @@ func (u *MedisUseCase) Get() []model.MedisResponse {
 	response := make([]model.MedisResponse, len(medis))
 	for i, medis := range medis {
 		response[i] = model.MedisResponse{
-			Id:     medis.Id.String(),
-			Nama:   medis.Nama,
-			Jenis:  medis.Jenis,
-			Satuan: medis.Satuan,
-			Harga:  medis.Harga,
-			Stok:   medis.Stok,
+			Id:          medis.Id.String(),
+			Nama:        medis.Nama,
+			Jenis:       medis.Jenis,
+			Satuan:      medis.Satuan,
+			Harga:       medis.Harga,
+			Stok:        medis.Stok,
+			StokMinimum: medis.StokMinimum,
+			Notifikasi:  medis.Notifikasi,
 		}
 	}
 
@@ -72,12 +78,14 @@ func (u *MedisUseCase) GetPage(page, size int) model.MedisPageResponse {
 	response := make([]model.MedisResponse, len(medis))
 	for i, medis := range medis {
 		response[i] = model.MedisResponse{
-			Id:     medis.Id.String(),
-			Nama:   medis.Nama,
-			Jenis:  medis.Jenis,
-			Satuan: medis.Satuan,
-			Harga:  medis.Harga,
-			Stok:   medis.Stok,
+			Id:          medis.Id.String(),
+			Nama:        medis.Nama,
+			Jenis:       medis.Jenis,
+			Satuan:      medis.Satuan,
+			Harga:       medis.Harga,
+			Stok:        medis.Stok,
+			StokMinimum: medis.StokMinimum,
+			Notifikasi:  medis.Notifikasi,
 		}
 	}
 
@@ -98,12 +106,14 @@ func (u *MedisUseCase) GetByJenis(jenis string) []model.MedisResponse {
 	response := make([]model.MedisResponse, len(medis))
 	for i, medis := range medis {
 		response[i] = model.MedisResponse{
-			Id:     medis.Id.String(),
-			Nama:   medis.Nama,
-			Jenis:  medis.Jenis,
-			Satuan: medis.Satuan,
-			Harga:  medis.Harga,
-			Stok:   medis.Stok,
+			Id:          medis.Id.String(),
+			Nama:        medis.Nama,
+			Jenis:       medis.Jenis,
+			Satuan:      medis.Satuan,
+			Harga:       medis.Harga,
+			Stok:        medis.Stok,
+			StokMinimum: medis.StokMinimum,
+			Notifikasi:  medis.Notifikasi,
 		}
 	}
 
@@ -119,12 +129,14 @@ func (u *MedisUseCase) GetById(id string) model.MedisResponse {
 	}
 
 	response := model.MedisResponse{
-		Id:     medis.Id.String(),
-		Nama:   medis.Nama,
-		Jenis:  medis.Jenis,
-		Satuan: medis.Satuan,
-		Harga:  medis.Harga,
-		Stok:   medis.Stok,
+		Id:          medis.Id.String(),
+		Nama:        medis.Nama,
+		Jenis:       medis.Jenis,
+		Satuan:      medis.Satuan,
+		Harga:       medis.Harga,
+		Stok:        medis.Stok,
+		StokMinimum: medis.StokMinimum,
+		Notifikasi:  medis.Notifikasi,
 	}
 
 	return response
@@ -143,6 +155,8 @@ func (u *MedisUseCase) Update(request *model.MedisRequest, id, user string) mode
 	medis.Satuan = request.Satuan
 	medis.Harga = request.Harga
 	medis.Stok = request.Stok
+	medis.StokMinimum = request.StokMinimum
+	medis.Notifikasi = request.Notifikasi
 	medis.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&medis); err != nil {
@@ -150,12 +164,14 @@ func (u *MedisUseCase) Update(request *model.MedisRequest, id, user string) mode
 	}
 
 	response := model.MedisResponse{
-		Id:     medis.Id.String(),
-		Nama:   medis.Nama,
-		Jenis:  medis.Jenis,
-		Satuan: medis.Satuan,
-		Harga:  medis.Harga,
-		Stok:   medis.Stok,
+		Id:          medis.Id.String(),
+		Nama:        medis.Nama,
+		Jenis:       medis.Jenis,
+		Satuan:      medis.Satuan,
+		Harga:       medis.Harga,
+		Stok:        medis.Stok,
+		StokMinimum: medis.StokMinimum,
+		Notifikasi:  medis.Notifikasi,
 	}
 
 	return response
