@@ -9,7 +9,6 @@ type Pengajuan struct {
 	Id           uuid.UUID `db:"id"`
 	Tanggal      time.Time `db:"tanggal_pengajuan"`
 	Nomor        string    `db:"nomor_pengajuan"`
-	Supplier     int       `db:"id_supplier"`
 	Pegawai      uuid.UUID `db:"id_pegawai"`
 	DiskonPersen float64   `db:"diskon_persen"`
 	DiskonJumlah float64   `db:"diskon_jumlah"`

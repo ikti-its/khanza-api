@@ -24,7 +24,6 @@ func (u *PengajuanUseCase) Create(request *model.PengajuanRequest, user string) 
 		Id:           helper.MustNew(),
 		Tanggal:      helper.ParseTime(request.Tanggal, "2006-01-02"),
 		Nomor:        request.Nomor,
-		Supplier:     request.Supplier,
 		Pegawai:      helper.MustParse(request.Pegawai),
 		DiskonPersen: request.DiskonPersen,
 		DiskonJumlah: request.DiskonJumlah,
@@ -44,7 +43,6 @@ func (u *PengajuanUseCase) Create(request *model.PengajuanRequest, user string) 
 		Id:           pengajuan.Id.String(),
 		Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
 		Nomor:        pengajuan.Nomor,
-		Supplier:     pengajuan.Supplier,
 		Pegawai:      pengajuan.Pegawai.String(),
 		DiskonPersen: pengajuan.DiskonPersen,
 		DiskonJumlah: pengajuan.DiskonJumlah,
@@ -68,7 +66,6 @@ func (u *PengajuanUseCase) Get() []model.PengajuanResponse {
 			Id:           pengajuan.Id.String(),
 			Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
 			Nomor:        pengajuan.Nomor,
-			Supplier:     pengajuan.Supplier,
 			Pegawai:      pengajuan.Pegawai.String(),
 			DiskonPersen: pengajuan.DiskonPersen,
 			DiskonJumlah: pengajuan.DiskonJumlah,
@@ -93,7 +90,6 @@ func (u *PengajuanUseCase) GetPage(page, size int) model.PengajuanPageResponse {
 			Id:           pengajuan.Id.String(),
 			Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
 			Nomor:        pengajuan.Nomor,
-			Supplier:     pengajuan.Supplier,
 			Pegawai:      pengajuan.Pegawai.String(),
 			DiskonPersen: pengajuan.DiskonPersen,
 			DiskonJumlah: pengajuan.DiskonJumlah,
@@ -127,7 +123,6 @@ func (u *PengajuanUseCase) GetById(id string) model.PengajuanResponse {
 		Id:           pengajuan.Id.String(),
 		Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
 		Nomor:        pengajuan.Nomor,
-		Supplier:     pengajuan.Supplier,
 		Pegawai:      pengajuan.Pegawai.String(),
 		DiskonPersen: pengajuan.DiskonPersen,
 		DiskonJumlah: pengajuan.DiskonJumlah,
@@ -151,7 +146,6 @@ func (u *PengajuanUseCase) Update(request *model.PengajuanRequest, id, user stri
 
 	pengajuan.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
 	pengajuan.Nomor = request.Nomor
-	pengajuan.Supplier = request.Supplier
 	pengajuan.Pegawai = helper.MustParse(request.Pegawai)
 	pengajuan.DiskonPersen = request.DiskonPersen
 	pengajuan.DiskonJumlah = request.DiskonJumlah
@@ -170,7 +164,6 @@ func (u *PengajuanUseCase) Update(request *model.PengajuanRequest, id, user stri
 		Id:           pengajuan.Id.String(),
 		Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
 		Nomor:        pengajuan.Nomor,
-		Supplier:     pengajuan.Supplier,
 		Pegawai:      pengajuan.Pegawai.String(),
 		DiskonPersen: pengajuan.DiskonPersen,
 		DiskonJumlah: pengajuan.DiskonJumlah,
