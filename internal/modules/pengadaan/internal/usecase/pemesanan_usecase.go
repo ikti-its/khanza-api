@@ -21,12 +21,18 @@ func NewPemesananUseCase(repository *repository.PemesananRepository) *PemesananU
 func (u *PemesananUseCase) Create(request *model.PemesananRequest, user string) model.PemesananResponse {
 	updater := helper.MustParse(user)
 	pemesanan := entity.Pemesanan{
-		Id:          helper.MustNew(),
-		Tanggal:     helper.ParseTime(request.Tanggal, "2006-01-02"),
-		Nomor:       request.Nomor,
-		IdPengajuan: helper.MustParse(request.IdPengajuan),
-		IdPegawai:   helper.MustParse(request.IdPegawai),
-		Updater:     updater,
+		Id:           helper.MustNew(),
+		Tanggal:      helper.ParseTime(request.Tanggal, "2006-01-02"),
+		Nomor:        request.Nomor,
+		IdPengajuan:  helper.MustParse(request.IdPengajuan),
+		Supplier:     request.Supplier,
+		IdPegawai:    helper.MustParse(request.IdPegawai),
+		DiskonPersen: request.DiskonPersen,
+		DiskonJumlah: request.DiskonJumlah,
+		PajakPersen:  request.PajakPersen,
+		PajakJumlah:  request.PajakJumlah,
+		Materai:      request.Materai,
+		Updater:      updater,
 	}
 
 	if err := u.Repository.Insert(&pemesanan); err != nil {
@@ -34,11 +40,17 @@ func (u *PemesananUseCase) Create(request *model.PemesananRequest, user string) 
 	}
 
 	response := model.PemesananResponse{
-		Id:          pemesanan.Id.String(),
-		Tanggal:     helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
-		Nomor:       pemesanan.Nomor,
-		IdPengajuan: pemesanan.IdPengajuan.String(),
-		IdPegawai:   pemesanan.IdPegawai.String(),
+		Id:           pemesanan.Id.String(),
+		Tanggal:      helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
+		Nomor:        pemesanan.Nomor,
+		IdPengajuan:  pemesanan.IdPengajuan.String(),
+		Supplier:     pemesanan.Supplier,
+		IdPegawai:    pemesanan.IdPegawai.String(),
+		DiskonPersen: pemesanan.DiskonPersen,
+		DiskonJumlah: pemesanan.DiskonJumlah,
+		PajakPersen:  pemesanan.PajakPersen,
+		PajakJumlah:  pemesanan.PajakJumlah,
+		Materai:      pemesanan.Materai,
 	}
 
 	return response
@@ -51,11 +63,17 @@ func (u *PemesananUseCase) Get() []model.PemesananResponse {
 	response := make([]model.PemesananResponse, len(pemesanan))
 	for i, pemesanan := range pemesanan {
 		response[i] = model.PemesananResponse{
-			Id:          pemesanan.Id.String(),
-			Tanggal:     helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
-			Nomor:       pemesanan.Nomor,
-			IdPengajuan: pemesanan.IdPengajuan.String(),
-			IdPegawai:   pemesanan.IdPegawai.String(),
+			Id:           pemesanan.Id.String(),
+			Tanggal:      helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
+			Nomor:        pemesanan.Nomor,
+			IdPengajuan:  pemesanan.IdPengajuan.String(),
+			Supplier:     pemesanan.Supplier,
+			IdPegawai:    pemesanan.IdPegawai.String(),
+			DiskonPersen: pemesanan.DiskonPersen,
+			DiskonJumlah: pemesanan.DiskonJumlah,
+			PajakPersen:  pemesanan.PajakPersen,
+			PajakJumlah:  pemesanan.PajakJumlah,
+			Materai:      pemesanan.Materai,
 		}
 	}
 
@@ -69,11 +87,17 @@ func (u *PemesananUseCase) GetPage(page, size int) model.PemesananPageResponse {
 	response := make([]model.PemesananResponse, len(pemesanan))
 	for i, pemesanan := range pemesanan {
 		response[i] = model.PemesananResponse{
-			Id:          pemesanan.Id.String(),
-			Tanggal:     helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
-			Nomor:       pemesanan.Nomor,
-			IdPengajuan: pemesanan.IdPengajuan.String(),
-			IdPegawai:   pemesanan.IdPegawai.String(),
+			Id:           pemesanan.Id.String(),
+			Tanggal:      helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
+			Nomor:        pemesanan.Nomor,
+			IdPengajuan:  pemesanan.IdPengajuan.String(),
+			Supplier:     pemesanan.Supplier,
+			IdPegawai:    pemesanan.IdPegawai.String(),
+			DiskonPersen: pemesanan.DiskonPersen,
+			DiskonJumlah: pemesanan.DiskonJumlah,
+			PajakPersen:  pemesanan.PajakPersen,
+			PajakJumlah:  pemesanan.PajakJumlah,
+			Materai:      pemesanan.Materai,
 		}
 	}
 
@@ -96,11 +120,17 @@ func (u *PemesananUseCase) GetById(id string) model.PemesananResponse {
 	}
 
 	response := model.PemesananResponse{
-		Id:          pemesanan.Id.String(),
-		Tanggal:     helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
-		Nomor:       pemesanan.Nomor,
-		IdPengajuan: pemesanan.IdPengajuan.String(),
-		IdPegawai:   pemesanan.IdPegawai.String(),
+		Id:           pemesanan.Id.String(),
+		Tanggal:      helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
+		Nomor:        pemesanan.Nomor,
+		IdPengajuan:  pemesanan.IdPengajuan.String(),
+		Supplier:     pemesanan.Supplier,
+		IdPegawai:    pemesanan.IdPegawai.String(),
+		DiskonPersen: pemesanan.DiskonPersen,
+		DiskonJumlah: pemesanan.DiskonJumlah,
+		PajakPersen:  pemesanan.PajakPersen,
+		PajakJumlah:  pemesanan.PajakJumlah,
+		Materai:      pemesanan.Materai,
 	}
 
 	return response
@@ -117,7 +147,13 @@ func (u *PemesananUseCase) Update(request *model.PemesananRequest, id, user stri
 	pemesanan.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
 	pemesanan.Nomor = request.Nomor
 	pemesanan.IdPengajuan = helper.MustParse(request.IdPengajuan)
+	pemesanan.Supplier = request.Supplier
 	pemesanan.IdPegawai = helper.MustParse(request.IdPegawai)
+	pemesanan.DiskonPersen = request.DiskonPersen
+	pemesanan.DiskonJumlah = request.DiskonJumlah
+	pemesanan.PajakPersen = request.PajakPersen
+	pemesanan.PajakJumlah = request.PajakJumlah
+	pemesanan.Materai = request.Materai
 	pemesanan.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&pemesanan); err != nil {
@@ -125,11 +161,17 @@ func (u *PemesananUseCase) Update(request *model.PemesananRequest, id, user stri
 	}
 
 	response := model.PemesananResponse{
-		Id:          pemesanan.Id.String(),
-		Tanggal:     helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
-		Nomor:       pemesanan.Nomor,
-		IdPengajuan: pemesanan.IdPengajuan.String(),
-		IdPegawai:   pemesanan.IdPegawai.String(),
+		Id:           pemesanan.Id.String(),
+		Tanggal:      helper.FormatTime(pemesanan.Tanggal, "2006-01-02"),
+		Nomor:        pemesanan.Nomor,
+		IdPengajuan:  pemesanan.IdPengajuan.String(),
+		Supplier:     pemesanan.Supplier,
+		IdPegawai:    pemesanan.IdPegawai.String(),
+		DiskonPersen: pemesanan.DiskonPersen,
+		DiskonJumlah: pemesanan.DiskonJumlah,
+		PajakPersen:  pemesanan.PajakPersen,
+		PajakJumlah:  pemesanan.PajakJumlah,
+		Materai:      pemesanan.Materai,
 	}
 
 	return response

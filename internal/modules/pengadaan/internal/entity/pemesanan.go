@@ -6,10 +6,16 @@ import (
 )
 
 type Pemesanan struct {
-	Id          uuid.UUID `db:"id"`
-	Tanggal     time.Time `db:"tanggal_pesan"`
-	Nomor       string    `db:"no_pemesanan"`
-	IdPengajuan uuid.UUID `db:"id_pengajuan"`
-	IdPegawai   uuid.UUID `db:"id_pegawai"`
-	Updater     uuid.UUID `db:"updater"`
+	Id           uuid.UUID `db:"id"`
+	Tanggal      time.Time `db:"tanggal_pesan"`
+	Nomor        string    `db:"no_pemesanan"`
+	IdPengajuan  uuid.UUID `db:"id_pengajuan"`
+	Supplier     int       `db:"id_supplier"`
+	IdPegawai    uuid.UUID `db:"id_pegawai"`
+	DiskonPersen float64   `db:"diskon_persen"`
+	DiskonJumlah float64   `db:"diskon_jumlah"`
+	PajakPersen  float64   `db:"pajak_persen"`
+	PajakJumlah  float64   `db:"pajak_jumlah"`
+	Materai      float64   `db:"materai"`
+	Updater      uuid.UUID `db:"updater"`
 }
