@@ -4,8 +4,8 @@ type PesananRequest struct {
 	IdPengajuan    string  `json:"id_pengajuan" validate:"required,uuid4"`
 	IdMedis        string  `json:"id_barang_medis" validate:"required,uuid4"`
 	Satuan         int     `json:"satuan" validate:"required,numeric"`
-	HargaPengajuan float64 `json:"harga_satuan_pengajuan" validate:"required"`
-	HargaPemesanan float64 `json:"harga_satuan_pemesanan" validate:"required"`
+	HargaPengajuan float64 `json:"harga_satuan_pengajuan"`
+	HargaPemesanan float64 `json:"harga_satuan_pemesanan"`
 	Pesanan        int     `json:"jumlah_pesanan" validate:"required,numeric"`
 	Diterima       int     `json:"jumlah_diterima" validate:"numeric"`
 	Kadaluwarsa    string  `json:"kadaluwarsa"`
