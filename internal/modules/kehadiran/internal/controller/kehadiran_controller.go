@@ -85,6 +85,7 @@ func (c *KehadiranController) Get(ctx *fiber.Ctx) error {
 
 	if page < 1 {
 		response := c.UseCase.Get()
+
 		return ctx.JSON(web.Response{
 			Code:   fiber.StatusOK,
 			Status: "OK",
@@ -100,7 +101,7 @@ func (c *KehadiranController) Get(ctx *fiber.Ctx) error {
 				Data:   response,
 			})
 		} else {
-			response := c.UseCase.Get()
+			response := c.UseCase.GetPage(page, size)
 
 			return ctx.Status(fiber.StatusOK).JSON(web.Response{
 				Code:   fiber.StatusOK,
