@@ -11,6 +11,6 @@ type Cuti struct {
 	TanggalMulai   time.Time `db:"tanggal_mulai"`
 	TanggalSelesai time.Time `db:"tanggal_selesai"`
 	IdAlasan       string    `db:"id_alasan_cuti"`
-	Status         bool      `db:"status"`
+	Status         string    `db:"status"`
 	Updater        uuid.UUID `db:"updater"`
 }
