@@ -5,7 +5,7 @@ type CutiRequest struct {
 	TanggalMulai   string `json:"tanggal_mulai" validate:"required"`
 	TanggalSelesai string `json:"tanggal_selesai" validate:"required"`
 	IdAlasan       string `json:"id_alasan_cuti" validate:"required,max=2,oneof=S I CT CB CM CU"`
-	Status         bool   `json:"status" validate:"boolean"`
+	Status         string `json:"status" validate:"oneof=Ditolak Diproses Diterima"`
 }
 
 type CutiResponse struct {
@@ -14,7 +14,7 @@ type CutiResponse struct {
 	TanggalMulai   string `json:"tanggal_mulai"`
 	TanggalSelesai string `json:"tanggal_selesai"`
 	IdAlasan       string `json:"id_alasan_cuti"`
-	Status         bool   `json:"status"`
+	Status         string `json:"status"`
 }
 
 type CutiPageResponse struct {

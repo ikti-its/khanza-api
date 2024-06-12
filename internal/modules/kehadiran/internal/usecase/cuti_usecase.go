@@ -19,12 +19,19 @@ func NewCutiUseCase(repository *repository.CutiRepository) *CutiUseCase {
 }
 
 func (u *CutiUseCase) Create(request *model.CutiRequest, updater string) model.CutiResponse {
+	if request.Status != "Diproses" {
+		panic(&exception.BadRequestError{
+			Message: "Pengajuan cuti harus diproses terlebih dahulu",
+		})
+	}
+
 	cuti := entity.Cuti{
 		Id:             helper.MustNew(),
 		IdPegawai:      helper.MustParse(request.IdPegawai),
 		TanggalMulai:   helper.ParseTime(request.TanggalMulai, "2006-01-02"),
 		TanggalSelesai: helper.ParseTime(request.TanggalSelesai, "2006-01-02"),
 		IdAlasan:       request.IdAlasan,
+		Status:         request.Status,
 		Updater:        helper.MustParse(updater),
 	}
 
@@ -147,6 +154,7 @@ func (u *CutiUseCase) Update(id string, request *model.CutiRequest, updater stri
 	cuti.TanggalMulai = helper.ParseTime(request.TanggalMulai, "2006-01-02")
 	cuti.TanggalSelesai = helper.ParseTime(request.TanggalSelesai, "2006-01-02")
 	cuti.IdAlasan = request.IdAlasan
+	cuti.Status = request.Status
 	cuti.Updater = helper.MustParse(updater)
 
 	if err := u.Repository.Update(&cuti); err != nil {
