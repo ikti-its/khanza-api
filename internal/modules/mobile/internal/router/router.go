@@ -11,6 +11,7 @@ func Route(
 	homeController *controller.HomeController,
 	profileController *controller.ProfileController,
 	pegawaiController *controller.PegawaiController,
+	ketersediaanController *controller.KetersediaanController,
 ) {
 	mobile := app.Group("/v1/m")
 
@@ -28,5 +29,10 @@ func Route(
 	{
 		pegawai.Get("/", middleware.Authenticate([]int{1337, 1}), pegawaiController.Get)
 		pegawai.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.GetById)
+	}
+
+	ketersediaan := mobile.Group("/ketersediaan")
+	{
+		ketersediaan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), ketersediaanController.Get)
 	}
 }
