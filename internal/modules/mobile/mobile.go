@@ -23,10 +23,15 @@ func ProvideMobile(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
 	pegawaiUseCase := usecase.NewPegawaiUseCase(&pegawaiRepository)
 	pegawaiController := controller.NewPegawaiController(pegawaiUseCase)
 
+	ketersediaanRepository := postgres.NewKetersediaanRepository(db)
+	ketersediaanUseCase := usecase.NewKetersediaanUseCase(&ketersediaanRepository)
+	ketersediaanController := controller.NewKetersediaanController(ketersediaanUseCase)
+
 	router.Route(
 		app,
 		homeController,
 		profileController,
 		pegawaiController,
+		ketersediaanController,
 	)
 }
