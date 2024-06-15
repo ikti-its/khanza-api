@@ -18,10 +18,3 @@ type PegawaiResponse struct {
 	Telepon      string `json:"telepon"`
 	TanggalMasuk string `json:"tanggal_masuk"`
 }
-
-type PegawaiPageResponse struct {
-	Page    int               `json:"page"`
-	Size    int               `json:"size"`
-	Total   int               `json:"total"`
-	Pegawai []PegawaiResponse `json:"pegawai"`
-}

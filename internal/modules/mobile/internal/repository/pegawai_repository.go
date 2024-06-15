@@ -6,7 +6,5 @@ import (
 )
 
 type PegawaiRepository interface {
-	Find() ([]entity.Pegawai, error)
-	FindPage(page, size int) ([]entity.Pegawai, int, error)
 	FindById(id uuid.UUID) (entity.Pegawai, error)
 }
