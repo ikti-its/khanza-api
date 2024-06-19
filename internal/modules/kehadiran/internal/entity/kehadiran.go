@@ -14,5 +14,6 @@ type Kehadiran struct {
 	JamMasuk        time.Time    `db:"jam_masuk"`
 	JamPulang       sql.NullTime `db:"jam_pulang"`
 	Keterangan      string       `db:"keterangan"`
+	Foto            string       `db:"foto"`
 	Updater         uuid.UUID    `db:"updater"`
 }

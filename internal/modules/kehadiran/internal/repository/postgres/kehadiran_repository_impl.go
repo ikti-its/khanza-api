@@ -19,18 +19,18 @@ func NewKehadiranRepository(db *sqlx.DB) repository.KehadiranRepository {
 
 func (r *kehadiranRepositoryImpl) Insert(kehadiran *entity.Kehadiran) error {
 	query := `
-		INSERT INTO presensi (id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, keterangan)
+		INSERT INTO presensi (id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, foto)
 		VALUES ($1, $2, $3, $4, $5, $6)
 	`
 
-	_, err := r.DB.Exec(query, kehadiran.Id, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.Keterangan)
+	_, err := r.DB.Exec(query, kehadiran.Id, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.Foto)
 
 	return err
 }
 
 func (r *kehadiranRepositoryImpl) Find() ([]entity.Kehadiran, error) {
 	query := `
-		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
 		FROM presensi
 		WHERE deleted_at IS NULL
 		ORDER BY tanggal
@@ -44,7 +44,7 @@ func (r *kehadiranRepositoryImpl) Find() ([]entity.Kehadiran, error) {
 
 func (r *kehadiranRepositoryImpl) FindPage(page, size int) ([]entity.Kehadiran, int, error) {
 	query := `
-		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
 		FROM presensi
 		WHERE deleted_at IS NULL
 		ORDER BY tanggal
@@ -68,7 +68,7 @@ func (r *kehadiranRepositoryImpl) FindPage(page, size int) ([]entity.Kehadiran, 
 
 func (r *kehadiranRepositoryImpl) FindByPegawaiId(id uuid.UUID) ([]entity.Kehadiran, error) {
 	query := `
-		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
 		FROM presensi
 		WHERE id_pegawai = $1 AND deleted_at IS NULL
 		ORDER BY tanggal
@@ -82,7 +82,7 @@ func (r *kehadiranRepositoryImpl) FindByPegawaiId(id uuid.UUID) ([]entity.Kehadi
 
 func (r *kehadiranRepositoryImpl) FindByTanggal(tanggal string) ([]entity.Kehadiran, error) {
 	query := `
-		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
 		FROM presensi
 		WHERE tanggal = $1 AND deleted_at IS NULL
 		ORDER BY tanggal
@@ -96,7 +96,7 @@ func (r *kehadiranRepositoryImpl) FindByTanggal(tanggal string) ([]entity.Kehadi
 
 func (r *kehadiranRepositoryImpl) FindById(id uuid.UUID) (entity.Kehadiran, error) {
 	query := `
-		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
 		FROM presensi
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -119,11 +119,11 @@ func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran) error {
 		            WHERE jp.id = $2
 		        ) THEN 'Terlambat' ELSE 'Hadir' END
 		    ), 
-		    updated_at = $6, updater = $7
-		WHERE id = $8 AND deleted_at IS NULL
+		    foto = $6, updated_at = $7, updater = $8
+		WHERE id = $9 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.JamPulang, time.Now(), kehadiran.Updater, kehadiran.Id)
+	_, err := r.DB.Exec(query, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.JamPulang, kehadiran.Foto, time.Now(), kehadiran.Updater, kehadiran.Id)
 
 	return err
 }
