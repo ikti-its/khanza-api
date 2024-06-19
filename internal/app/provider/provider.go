@@ -31,5 +31,5 @@ func (p *Provider) Provide() {
 	inventaris.ProvideInventaris(p.App, p.PG, p.Validator)
 	pengadaan.ProvidePengadaan(p.App, p.PG, p.Validator)
 	mobile.ProvideMobile(p.App, p.PG, p.Validator)
-	web.ProvideWeb(p.App, p.PG)
+	web.ProvideWeb(p.App, p.PG, p.Validator)
 }

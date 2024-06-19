@@ -25,6 +25,7 @@ func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater
 		IdJadwalPegawai: helper.MustParse(request.IdJadwalPegawai),
 		Tanggal:         helper.ParseTime(request.Tanggal, "2006-01-02"),
 		JamMasuk:        helper.ParseNow(),
+		Foto:            request.Foto,
 		Updater:         helper.MustParse(updater),
 	}
 
@@ -38,6 +39,7 @@ func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater
 		IdPegawai: kehadiran.IdPegawai.String(),
 		Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
 		JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+		Foto:      kehadiran.Foto,
 	}
 
 	return response
@@ -67,6 +69,7 @@ func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, updater s
 		JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
 		JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 		Keterangan: kehadiran.Keterangan,
+		Foto:       kehadiran.Foto,
 	}
 
 	return response
@@ -88,6 +91,7 @@ func (u *KehadiranUseCase) Get() []model.KehadiranResponse {
 				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
 				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 				Keterangan: kehadiran.Keterangan,
+				Foto:       kehadiran.Foto,
 			}
 		} else {
 			response[i] = model.KehadiranResponse{
@@ -95,6 +99,7 @@ func (u *KehadiranUseCase) Get() []model.KehadiranResponse {
 				IdPegawai: kehadiran.IdPegawai.String(),
 				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
 				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				Foto:      kehadiran.Foto,
 			}
 		}
 	}
@@ -118,6 +123,7 @@ func (u *KehadiranUseCase) GetPage(page, size int) model.KehadiranPageResponse {
 				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
 				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 				Keterangan: kehadiran.Keterangan,
+				Foto:       kehadiran.Foto,
 			}
 		} else {
 			response[i] = model.KehadiranResponse{
@@ -125,6 +131,7 @@ func (u *KehadiranUseCase) GetPage(page, size int) model.KehadiranPageResponse {
 				IdPegawai: kehadiran.IdPegawai.String(),
 				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
 				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				Foto:      kehadiran.Foto,
 			}
 		}
 	}
@@ -155,6 +162,7 @@ func (u *KehadiranUseCase) GetById(id string) model.KehadiranResponse {
 			JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
 			JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 			Keterangan: kehadiran.Keterangan,
+			Foto:       kehadiran.Foto,
 		}
 
 		return response
@@ -164,6 +172,7 @@ func (u *KehadiranUseCase) GetById(id string) model.KehadiranResponse {
 			IdPegawai: kehadiran.IdPegawai.String(),
 			Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
 			JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+			Foto:      kehadiran.Foto,
 		}
 
 		return response
@@ -188,6 +197,7 @@ func (u *KehadiranUseCase) GetByPegawaiId(id string) []model.KehadiranResponse {
 				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
 				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 				Keterangan: kehadiran.Keterangan,
+				Foto:       kehadiran.Foto,
 			}
 		} else {
 			response[i] = model.KehadiranResponse{
@@ -195,6 +205,7 @@ func (u *KehadiranUseCase) GetByPegawaiId(id string) []model.KehadiranResponse {
 				IdPegawai: kehadiran.IdPegawai.String(),
 				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
 				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				Foto:      kehadiran.Foto,
 			}
 		}
 	}
@@ -220,6 +231,7 @@ func (u *KehadiranUseCase) GetByTanggal(tanggal string) []model.KehadiranRespons
 				JamMasuk:   helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
 				JamPulang:  helper.FormatTime(kehadiran.JamPulang.Time, "15:04:05 +07:00"),
 				Keterangan: kehadiran.Keterangan,
+				Foto:       kehadiran.Foto,
 			}
 		} else {
 			response[i] = model.KehadiranResponse{
@@ -227,6 +239,7 @@ func (u *KehadiranUseCase) GetByTanggal(tanggal string) []model.KehadiranRespons
 				IdPegawai: kehadiran.IdPegawai.String(),
 				Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
 				JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+				Foto:      kehadiran.Foto,
 			}
 		}
 	}
