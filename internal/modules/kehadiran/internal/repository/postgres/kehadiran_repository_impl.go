@@ -19,11 +19,11 @@ func NewKehadiranRepository(db *sqlx.DB) repository.KehadiranRepository {
 
 func (r *kehadiranRepositoryImpl) Insert(kehadiran *entity.Kehadiran) error {
 	query := `
-		INSERT INTO presensi (id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, foto)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO presensi (id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, keterangan, foto)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
 
-	_, err := r.DB.Exec(query, kehadiran.Id, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.Foto)
+	_, err := r.DB.Exec(query, kehadiran.Id, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.Keterangan, kehadiran.Foto)
 
 	return err
 }
