@@ -4,6 +4,7 @@ type AttendKehadiranRequest struct {
 	IdPegawai       string `json:"id_pegawai" validate:"required,uuid4"`
 	IdJadwalPegawai string `json:"id_jadwal_pegawai" validate:"required,uuid4"`
 	Tanggal         string `json:"tanggal" validate:"required"`
+	Keterangan      string `json:"keterangan"`
 	Foto            string `json:"foto"`
 }
 

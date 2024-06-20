@@ -25,6 +25,7 @@ func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater
 		IdJadwalPegawai: helper.MustParse(request.IdJadwalPegawai),
 		Tanggal:         helper.ParseTime(request.Tanggal, "2006-01-02"),
 		JamMasuk:        helper.ParseNow(),
+		Keterangan:      request.Keterangan,
 		Foto:            request.Foto,
 		Updater:         helper.MustParse(updater),
 	}
