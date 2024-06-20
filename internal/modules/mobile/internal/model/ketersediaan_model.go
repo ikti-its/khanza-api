@@ -1,6 +1,7 @@
 package model
 
 type KetersediaanResponse struct {
+	Pegawai    string  `json:"pegawai"`
 	NIP        string  `json:"nip"`
 	Telepon    string  `json:"telepon"`
 	Jabatan    string  `json:"jabatan"`

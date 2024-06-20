@@ -29,6 +29,7 @@ func (u *KetersediaanUseCase) Get(tanggal string) []model.KetersediaanResponse {
 		}
 
 		response[i] = model.KetersediaanResponse{
+			Pegawai:    ketersediaan.Pegawai.String(),
 			NIP:        ketersediaan.NIP,
 			Telepon:    ketersediaan.Telepon,
 			Jabatan:    ketersediaan.Jabatan,
@@ -57,6 +58,7 @@ func (u *KetersediaanUseCase) GetPage(page, size int, tanggal string) model.Kete
 		}
 
 		response[i] = model.KetersediaanResponse{
+			Pegawai:    ketersediaan.Pegawai.String(),
 			NIP:        ketersediaan.NIP,
 			Telepon:    ketersediaan.Telepon,
 			Jabatan:    ketersediaan.Jabatan,
