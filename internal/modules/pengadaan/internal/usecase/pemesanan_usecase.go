@@ -32,6 +32,7 @@ func (u *PemesananUseCase) Create(request *model.PemesananRequest, user string) 
 		PajakPersen:  request.PajakPersen,
 		PajakJumlah:  request.PajakJumlah,
 		Materai:      request.Materai,
+		Total:        request.Total,
 		Updater:      updater,
 	}
 
@@ -51,6 +52,7 @@ func (u *PemesananUseCase) Create(request *model.PemesananRequest, user string) 
 		PajakPersen:  pemesanan.PajakPersen,
 		PajakJumlah:  pemesanan.PajakJumlah,
 		Materai:      pemesanan.Materai,
+		Total:        pemesanan.Total,
 	}
 
 	return response
@@ -74,6 +76,7 @@ func (u *PemesananUseCase) Get() []model.PemesananResponse {
 			PajakPersen:  pemesanan.PajakPersen,
 			PajakJumlah:  pemesanan.PajakJumlah,
 			Materai:      pemesanan.Materai,
+			Total:        pemesanan.Total,
 		}
 	}
 
@@ -98,6 +101,7 @@ func (u *PemesananUseCase) GetPage(page, size int) model.PemesananPageResponse {
 			PajakPersen:  pemesanan.PajakPersen,
 			PajakJumlah:  pemesanan.PajakJumlah,
 			Materai:      pemesanan.Materai,
+			Total:        pemesanan.Total,
 		}
 	}
 
@@ -131,6 +135,7 @@ func (u *PemesananUseCase) GetById(id string) model.PemesananResponse {
 		PajakPersen:  pemesanan.PajakPersen,
 		PajakJumlah:  pemesanan.PajakJumlah,
 		Materai:      pemesanan.Materai,
+		Total:        pemesanan.Total,
 	}
 
 	return response
@@ -154,6 +159,7 @@ func (u *PemesananUseCase) Update(request *model.PemesananRequest, id, user stri
 	pemesanan.PajakPersen = request.PajakPersen
 	pemesanan.PajakJumlah = request.PajakJumlah
 	pemesanan.Materai = request.Materai
+	pemesanan.Total = request.Total
 	pemesanan.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&pemesanan); err != nil {
@@ -172,6 +178,7 @@ func (u *PemesananUseCase) Update(request *model.PemesananRequest, id, user stri
 		PajakPersen:  pemesanan.PajakPersen,
 		PajakJumlah:  pemesanan.PajakJumlah,
 		Materai:      pemesanan.Materai,
+		Total:        pemesanan.Total,
 	}
 
 	return response

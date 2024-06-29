@@ -30,6 +30,7 @@ func (u *PengajuanUseCase) Create(request *model.PengajuanRequest, user string) 
 		PajakPersen:  request.PajakPersen,
 		PajakJumlah:  request.PajakJumlah,
 		Materai:      request.Materai,
+		Total:        request.Total,
 		Catatan:      request.Catatan,
 		Status:       request.Status,
 		Updater:      updater,
@@ -49,6 +50,7 @@ func (u *PengajuanUseCase) Create(request *model.PengajuanRequest, user string) 
 		PajakPersen:  pengajuan.PajakPersen,
 		PajakJumlah:  pengajuan.PajakJumlah,
 		Materai:      pengajuan.Materai,
+		Total:        pengajuan.Total,
 		Catatan:      pengajuan.Catatan,
 		Status:       pengajuan.Status,
 	}
@@ -72,6 +74,7 @@ func (u *PengajuanUseCase) Get() []model.PengajuanResponse {
 			PajakPersen:  pengajuan.PajakPersen,
 			PajakJumlah:  pengajuan.PajakJumlah,
 			Materai:      pengajuan.Materai,
+			Total:        pengajuan.Total,
 			Catatan:      pengajuan.Catatan,
 			Status:       pengajuan.Status,
 		}
@@ -96,6 +99,7 @@ func (u *PengajuanUseCase) GetPage(page, size int) model.PengajuanPageResponse {
 			PajakPersen:  pengajuan.PajakPersen,
 			PajakJumlah:  pengajuan.PajakJumlah,
 			Materai:      pengajuan.Materai,
+			Total:        pengajuan.Total,
 			Catatan:      pengajuan.Catatan,
 			Status:       pengajuan.Status,
 		}
@@ -129,6 +133,7 @@ func (u *PengajuanUseCase) GetById(id string) model.PengajuanResponse {
 		PajakPersen:  pengajuan.PajakPersen,
 		PajakJumlah:  pengajuan.PajakJumlah,
 		Materai:      pengajuan.Materai,
+		Total:        pengajuan.Total,
 		Catatan:      pengajuan.Catatan,
 		Status:       pengajuan.Status,
 	}
@@ -152,6 +157,7 @@ func (u *PengajuanUseCase) Update(request *model.PengajuanRequest, id, user stri
 	pengajuan.PajakPersen = request.PajakPersen
 	pengajuan.PajakJumlah = request.PajakJumlah
 	pengajuan.Materai = request.Materai
+	pengajuan.Total = request.Total
 	pengajuan.Catatan = request.Catatan
 	pengajuan.Status = request.Status
 	pengajuan.Updater = helper.MustParse(user)
@@ -170,6 +176,7 @@ func (u *PengajuanUseCase) Update(request *model.PengajuanRequest, id, user stri
 		PajakPersen:  pengajuan.PajakPersen,
 		PajakJumlah:  pengajuan.PajakJumlah,
 		Materai:      pengajuan.Materai,
+		Total:        pengajuan.Total,
 		Catatan:      pengajuan.Catatan,
 		Status:       pengajuan.Status,
 	}

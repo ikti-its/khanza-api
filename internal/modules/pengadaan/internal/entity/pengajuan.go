@@ -15,6 +15,7 @@ type Pengajuan struct {
 	PajakPersen  float64   `db:"pajak_persen"`
 	PajakJumlah  float64   `db:"pajak_jumlah"`
 	Materai      float64   `db:"materai"`
+	Total        int       `db:"total_pengajuan"`
 	Catatan      string    `db:"catatan"`
 	Status       string    `db:"status_pesanan"`
 	Updater      uuid.UUID `db:"updater"`

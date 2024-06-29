@@ -17,5 +17,6 @@ type Pemesanan struct {
 	PajakPersen  float64   `db:"pajak_persen"`
 	PajakJumlah  float64   `db:"pajak_jumlah"`
 	Materai      float64   `db:"materai"`
+	Total        int       `db:"total_pemesanan"`
 	Updater      uuid.UUID `db:"updater"`
 }
