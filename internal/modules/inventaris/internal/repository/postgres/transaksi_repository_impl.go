@@ -64,6 +64,19 @@ func (r *transaksiRepositoryImpl) FindPage(page, size int) ([]entity.Transaksi, 
 	return records, totalPage, err
 }
 
+func (r *transaksiRepositoryImpl) FindByStokId(id uuid.UUID) ([]entity.Transaksi, error) {
+	query := `
+		SELECT id, id_stok_keluar, id_barang_medis, no_batch, no_faktur, jumlah_keluar
+		FROM transaksi_keluar_barang_medis
+		WHERE id_stok_keluar = $1 AND deleted_at IS NULL
+	`
+
+	var records []entity.Transaksi
+	err := r.DB.Select(&records, query, id)
+
+	return records, err
+}
+
 func (r *transaksiRepositoryImpl) FindById(id uuid.UUID) (entity.Transaksi, error) {
 	query := `
 		SELECT id, id_stok_keluar, id_barang_medis, no_batch, no_faktur, jumlah_keluar

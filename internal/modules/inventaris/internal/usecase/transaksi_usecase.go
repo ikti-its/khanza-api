@@ -91,6 +91,25 @@ func (u *TransaksiUseCase) GetPage(page, size int) model.TransaksiPageResponse {
 	return pagedResponse
 }
 
+func (u *TransaksiUseCase) GetByStokId(id string) []model.TransaksiResponse {
+	transaksi, err := u.Repository.FindByStokId(helper.MustParse(id))
+	exception.PanicIfError(err, "Failed to get all transaksi by stok id")
+
+	response := make([]model.TransaksiResponse, len(transaksi))
+	for i, transaksi := range transaksi {
+		response[i] = model.TransaksiResponse{
+			Id:      transaksi.Id.String(),
+			IdStok:  transaksi.IdStok.String(),
+			IdMedis: transaksi.IdMedis.String(),
+			Batch:   transaksi.Batch,
+			Faktur:  transaksi.Faktur,
+			Jumlah:  transaksi.Jumlah,
+		}
+	}
+
+	return response
+}
+
 func (u *TransaksiUseCase) GetById(id string) model.TransaksiResponse {
 	transaksi, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {

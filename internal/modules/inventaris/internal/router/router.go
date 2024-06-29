@@ -92,6 +92,7 @@ func Route(
 	{
 		transaksi.Post("/", middleware.Authenticate([]int{1337, 1}), transaksiController.Create)
 		transaksi.Get("/", middleware.Authenticate([]int{1337, 1, 2}), transaksiController.Get)
+		transaksi.Get("/stok/:id", middleware.Authenticate([]int{1337, 1, 2}), transaksiController.GetByStokId)
 		transaksi.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), transaksiController.GetById)
 		transaksi.Put("/:id", middleware.Authenticate([]int{1337, 1}), transaksiController.Update)
 		transaksi.Delete("/:id", middleware.Authenticate([]int{1337, 1}), transaksiController.Delete)

@@ -9,6 +9,7 @@ type TransaksiRepository interface {
 	Insert(transaksi *entity.Transaksi) error
 	Find() ([]entity.Transaksi, error)
 	FindPage(page, size int) ([]entity.Transaksi, int, error)
+	FindByStokId(id uuid.UUID) ([]entity.Transaksi, error)
 	FindById(id uuid.UUID) (entity.Transaksi, error)
 	Update(transaksi *entity.Transaksi) error
 	Delete(transaksi *entity.Transaksi) error
