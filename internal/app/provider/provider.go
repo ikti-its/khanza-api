@@ -9,6 +9,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/inventaris"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran"
 	"github.com/ikti-its/khanza-api/internal/modules/mobile"
+	"github.com/ikti-its/khanza-api/internal/modules/organisasi"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan"
 	"github.com/ikti-its/khanza-api/internal/modules/web"
@@ -30,6 +31,7 @@ func (p *Provider) Provide() {
 	kehadiran.ProvideKehadiran(p.App, p.PG, p.Validator)
 	inventaris.ProvideInventaris(p.App, p.PG, p.Validator)
 	pengadaan.ProvidePengadaan(p.App, p.PG, p.Validator)
+	organisasi.ProvideOrganisasi(p.App, p.PG, p.Validator)
 	mobile.ProvideMobile(p.App, p.PG, p.Validator)
 	web.ProvideWeb(p.App, p.PG, p.Validator)
 }
