@@ -107,12 +107,13 @@ func (r *kehadiranRepositoryImpl) FindById(id uuid.UUID) (entity.Kehadiran, erro
 	return record, err
 }
 
-func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran) error {
+func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran, emergency bool) error {
 	query := `
 		UPDATE presensi
 		SET id_pegawai = $1, id_jadwal_pegawai = $2, tanggal = $3, jam_masuk = $4, jam_pulang = $5, 
 		    keterangan = (
-		        CASE WHEN $4 > (
+		        CASE WHEN $10 THEN 'Darurat'
+		        WHEN $4 > (
 		            SELECT s.jam_masuk
 		            FROM ref.shift s
 		            JOIN jadwal_pegawai jp ON s.id = jp.id_shift
@@ -123,7 +124,7 @@ func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran) error {
 		WHERE id = $9 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.JamPulang, kehadiran.Foto, time.Now(), kehadiran.Updater, kehadiran.Id)
+	_, err := r.DB.Exec(query, kehadiran.IdPegawai, kehadiran.IdJadwalPegawai, kehadiran.Tanggal, kehadiran.JamMasuk, kehadiran.JamPulang, kehadiran.Foto, time.Now(), kehadiran.Updater, kehadiran.Id, emergency)
 
 	return err
 }

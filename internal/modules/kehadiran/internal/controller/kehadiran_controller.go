@@ -49,6 +49,8 @@ func (c *KehadiranController) Attend(ctx *fiber.Ctx) error {
 }
 
 func (c *KehadiranController) Leave(ctx *fiber.Ctx) error {
+	emergency := ctx.QueryBool("emergency", false)
+
 	var request model.LeaveKehadiranRequest
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -65,7 +67,7 @@ func (c *KehadiranController) Leave(ctx *fiber.Ctx) error {
 	}
 
 	updater := ctx.Locals("user").(string)
-	response := c.UseCase.Leave(&request, updater)
+	response := c.UseCase.Leave(&request, emergency, updater)
 
 	return ctx.Status(fiber.StatusOK).JSON(web.Response{
 		Code:   fiber.StatusOK,

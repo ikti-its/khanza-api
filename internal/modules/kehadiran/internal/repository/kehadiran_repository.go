@@ -12,5 +12,5 @@ type KehadiranRepository interface {
 	FindByPegawaiId(id uuid.UUID) ([]entity.Kehadiran, error)
 	FindByTanggal(tanggal string) ([]entity.Kehadiran, error)
 	FindById(id uuid.UUID) (entity.Kehadiran, error)
-	Update(kehadiran *entity.Kehadiran) error
+	Update(kehadiran *entity.Kehadiran, emergency bool) error
 }

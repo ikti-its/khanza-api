@@ -46,7 +46,7 @@ func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater
 	return response
 }
 
-func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, updater string) model.KehadiranResponse {
+func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, emergency bool, updater string) model.KehadiranResponse {
 	kehadiran, err := u.Repository.FindById(helper.MustParse(request.Id))
 	if err != nil {
 		panic(&exception.NotFoundError{
@@ -58,7 +58,7 @@ func (u *KehadiranUseCase) Leave(request *model.LeaveKehadiranRequest, updater s
 	kehadiran.JamPulang.Valid = true
 	kehadiran.Updater = helper.MustParse(updater)
 
-	err = u.Repository.Update(&kehadiran)
+	err = u.Repository.Update(&kehadiran, emergency)
 	if err != nil {
 		exception.PanicIfError(err, "Failed to leave kehadiran")
 	}
