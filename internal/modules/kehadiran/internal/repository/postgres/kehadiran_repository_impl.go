@@ -114,7 +114,7 @@ func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran, emergency 
 		    keterangan = (
 		        CASE WHEN $10 THEN 'Darurat'
 		        WHEN $4 > (
-		            SELECT s.jam_masuk
+		            SELECT s.jam_masuk + INTERVAL '15 minutes'
 		            FROM ref.shift s
 		            JOIN jadwal_pegawai jp ON s.id = jp.id_shift
 		            WHERE jp.id = $2
