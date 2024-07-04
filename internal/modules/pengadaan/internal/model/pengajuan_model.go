@@ -9,7 +9,7 @@ type PengajuanRequest struct {
 	PajakPersen  float64 `json:"pajak_persen"`
 	PajakJumlah  float64 `json:"pajak_jumlah"`
 	Materai      float64 `json:"materai"`
-	Total        int     `json:"total_pengajuan"`
+	Total        float64 `json:"total_pengajuan"`
 	Catatan      string  `json:"catatan"`
 	Status       string  `json:"status_pesanan" validate:"required,oneof=0 1 2 3 4 5 6 7 8 9 10"`
 }
@@ -24,7 +24,7 @@ type PengajuanResponse struct {
 	PajakPersen  float64 `json:"pajak_persen"`
 	PajakJumlah  float64 `json:"pajak_jumlah"`
 	Materai      float64 `json:"materai"`
-	Total        int     `json:"total_pengajuan"`
+	Total        float64 `json:"total_pengajuan"`
 	Catatan      string  `json:"catatan"`
 	Status       string  `json:"status_pesanan"`
 }

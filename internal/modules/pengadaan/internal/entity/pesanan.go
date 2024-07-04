@@ -13,7 +13,7 @@ type Pesanan struct {
 	HargaPengajuan float64   `db:"harga_satuan_pengajuan"`
 	HargaPemesanan float64   `db:"harga_satuan_pemesanan"`
 	Pesanan        int       `db:"jumlah_pesanan"`
-	Total          int       `db:"total_per_item"`
+	Total          float64   `db:"total_per_item"`
 	Diterima       int       `db:"jumlah_diterima"`
 	Kadaluwarsa    time.Time `db:"kadaluwarsa"`
 	Batch          string    `db:"no_batch"`

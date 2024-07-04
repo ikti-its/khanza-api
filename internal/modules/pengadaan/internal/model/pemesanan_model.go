@@ -11,7 +11,7 @@ type PemesananRequest struct {
 	PajakPersen  float64 `json:"pajak_persen"`
 	PajakJumlah  float64 `json:"pajak_jumlah"`
 	Materai      float64 `json:"materai"`
-	Total        int     `json:"total_pemesanan"`
+	Total        float64 `json:"total_pemesanan"`
 }
 
 type PemesananResponse struct {
@@ -26,7 +26,7 @@ type PemesananResponse struct {
 	PajakPersen  float64 `json:"pajak_persen"`
 	PajakJumlah  float64 `json:"pajak_jumlah"`
 	Materai      float64 `json:"materai"`
-	Total        int     `json:"total_pemesanan"`
+	Total        float64 `json:"total_pemesanan"`
 }
 
 type PemesananPageResponse struct {
