@@ -29,7 +29,7 @@ func (u *FileUseCase) generateFileName(request *model.FileRequest, fileType stri
 			})
 		}
 
-		if request.File.Size > 2*1024*1024 {
+		if request.File.Size > 3*1024*1024 {
 			panic(&exception.BadRequestError{
 				Message: "File size exceeds limit",
 			})
