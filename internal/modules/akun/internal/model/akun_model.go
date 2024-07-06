@@ -4,7 +4,7 @@ type CreateAkunRequest struct {
 	Email    string `json:"email" validate:"required,email,max=50"`
 	Password string `json:"password" validate:"required,min=6,max=20"`
 	Foto     string `json:"foto"`
-	Role     int    `json:"role" validate:"required,numeric,max=4"`
+	Role     int    `json:"role" validate:"required,numeric"`
 }
 
 type UpdateAkunRequest struct {
