@@ -29,17 +29,17 @@ func Route(
 
 	pegawai := mobile.Group("/pegawai")
 	{
-		pegawai.Get("/", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.GetById)
+		pegawai.Get("/", middleware.Authenticate([]int{0}), pegawaiController.GetById)
 	}
 
 	ketersediaan := mobile.Group("/ketersediaan")
 	{
-		ketersediaan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), ketersediaanController.Get)
+		ketersediaan.Get("/", middleware.Authenticate([]int{1337, 1}), ketersediaanController.Get)
 	}
 
 	kehadiran := mobile.Group("/kehadiran")
 	{
-		kehadiran.Get("/jadwal/:id", middleware.Authenticate([]int{1337, 1, 2}), jadwalController.GetByPegawaiId)
-		kehadiran.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), kehadiranController.GetByPegawaiId)
+		kehadiran.Get("/jadwal/:id", middleware.Authenticate([]int{0}), jadwalController.GetByPegawaiId)
+		kehadiran.Get("/:id", middleware.Authenticate([]int{0}), kehadiranController.GetByPegawaiId)
 	}
 }

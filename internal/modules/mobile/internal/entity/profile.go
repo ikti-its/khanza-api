@@ -7,6 +7,7 @@ type Profile struct {
 	Foto      string    `db:"foto"`
 	Email     string    `db:"email"`
 	Password  string    `db:"password"`
+	Telepon   string    `db:"telepon"`
 	Alamat    string    `db:"alamat"`
 	AlamatLat float64   `db:"alamat_lat"`
 	AlamatLon float64   `db:"alamat_lon"`

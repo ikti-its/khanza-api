@@ -33,6 +33,7 @@ func (u *ProfileUseCase) Update(request *model.ProfileRequest, id, user string) 
 
 	profile.Password = string(encrypted)
 
+	profile.Telepon = request.Telepon
 	profile.Alamat = request.Alamat
 	profile.AlamatLat = request.AlamatLat
 	profile.AlamatLon = request.AlamatLon
@@ -46,6 +47,7 @@ func (u *ProfileUseCase) Update(request *model.ProfileRequest, id, user string) 
 		Akun:      profile.Akun.String(),
 		Foto:      profile.Foto,
 		Email:     profile.Email,
+		Telepon:   profile.Telepon,
 		Alamat:    profile.Alamat,
 		AlamatLat: profile.AlamatLat,
 		AlamatLon: profile.AlamatLon,
