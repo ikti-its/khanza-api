@@ -16,27 +16,27 @@ func Route(
 
 	berkas := base.Group("/berkas")
 	{
-		berkas.Post("/", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Create)
-		berkas.Get("/", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Get)
-		berkas.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), berkasController.GetById)
-		berkas.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), berkasController.Update)
+		berkas.Post("/", middleware.Authenticate([]int{0}), berkasController.Create)
+		berkas.Get("/", middleware.Authenticate([]int{0}), berkasController.Get)
+		berkas.Get("/:id", middleware.Authenticate([]int{0}), berkasController.GetById)
+		berkas.Put("/:id", middleware.Authenticate([]int{0}), berkasController.Update)
 		berkas.Delete("/:id", middleware.Authenticate([]int{1337, 1}), berkasController.Delete)
 	}
 
 	foto := base.Group("/foto")
 	{
-		foto.Post("/", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Create)
-		foto.Get("/", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Get)
-		foto.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.GetById)
-		foto.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), fotoController.Update)
+		foto.Post("/", middleware.Authenticate([]int{1337, 1}), fotoController.Create)
+		foto.Get("/", middleware.Authenticate([]int{0}), fotoController.Get)
+		foto.Get("/:id", middleware.Authenticate([]int{0}), fotoController.GetById)
+		foto.Put("/:id", middleware.Authenticate([]int{1337, 1}), fotoController.Update)
 		foto.Delete("/:id", middleware.Authenticate([]int{1337, 1}), fotoController.Delete)
 	}
 
 	pegawai := base.Group("/")
 	{
 		pegawai.Post("/", middleware.Authenticate([]int{1337, 1}), pegawaiController.Create)
-		pegawai.Get("/", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.Get)
-		pegawai.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pegawaiController.GetById)
+		pegawai.Get("/", middleware.Authenticate([]int{0}), pegawaiController.Get)
+		pegawai.Get("/:id", middleware.Authenticate([]int{0}), pegawaiController.GetById)
 		pegawai.Put("/:id", middleware.Authenticate([]int{1337, 1}), pegawaiController.Update)
 		pegawai.Delete("/:id", middleware.Authenticate([]int{1337, 1}), pegawaiController.Delete)
 	}

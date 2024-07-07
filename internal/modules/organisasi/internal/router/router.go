@@ -13,10 +13,10 @@ func Route(
 	organisasi := app.Group("/v1/organisasi")
 	{
 		organisasi.Post("/", middleware.Authenticate([]int{1337, 1}), organisasiController.Create)
-		organisasi.Get("/", middleware.Authenticate([]int{1337, 1, 2}), organisasiController.Get)
-		organisasi.Get("/current", middleware.Authenticate([]int{1337, 1, 2}), organisasiController.GetCurrent)
-		organisasi.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), organisasiController.GetById)
-		organisasi.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), organisasiController.Update)
+		organisasi.Get("/", middleware.Authenticate([]int{0}), organisasiController.Get)
+		organisasi.Get("/current", middleware.Authenticate([]int{0}), organisasiController.GetCurrent)
+		organisasi.Get("/:id", middleware.Authenticate([]int{0}), organisasiController.GetById)
+		organisasi.Put("/:id", middleware.Authenticate([]int{1337, 1}), organisasiController.Update)
 		organisasi.Delete("/:id", middleware.Authenticate([]int{1337, 1}), organisasiController.Delete)
 	}
 }
