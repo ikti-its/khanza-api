@@ -26,6 +26,7 @@ func (u *OrganisasiUseCase) Create(request *model.OrganisasiRequest, user string
 		Alamat:    request.Alamat,
 		Latitude:  request.Latitude,
 		Longitude: request.Longitude,
+		Radius:    request.Radius,
 		Updater:   updater,
 	}
 
@@ -39,6 +40,7 @@ func (u *OrganisasiUseCase) Create(request *model.OrganisasiRequest, user string
 		Alamat:    organisasi.Alamat,
 		Latitude:  organisasi.Latitude,
 		Longitude: organisasi.Longitude,
+		Radius:    organisasi.Radius,
 	}
 
 	return response
@@ -56,6 +58,7 @@ func (u *OrganisasiUseCase) Get() []model.OrganisasiResponse {
 			Alamat:    organisasi.Alamat,
 			Latitude:  organisasi.Latitude,
 			Longitude: organisasi.Longitude,
+			Radius:    organisasi.Radius,
 		}
 	}
 
@@ -74,6 +77,7 @@ func (u *OrganisasiUseCase) GetPage(page, size int) model.OrganisasiPageResponse
 			Alamat:    organisasi.Alamat,
 			Latitude:  organisasi.Latitude,
 			Longitude: organisasi.Longitude,
+			Radius:    organisasi.Radius,
 		}
 	}
 
@@ -101,6 +105,7 @@ func (u *OrganisasiUseCase) GetCurrent() model.OrganisasiResponse {
 		Alamat:    organisasi.Alamat,
 		Latitude:  organisasi.Latitude,
 		Longitude: organisasi.Longitude,
+		Radius:    organisasi.Radius,
 	}
 
 	return response
@@ -120,6 +125,7 @@ func (u *OrganisasiUseCase) GetById(id string) model.OrganisasiResponse {
 		Alamat:    organisasi.Alamat,
 		Latitude:  organisasi.Latitude,
 		Longitude: organisasi.Longitude,
+		Radius:    organisasi.Radius,
 	}
 
 	return response
@@ -137,6 +143,7 @@ func (u *OrganisasiUseCase) Update(request *model.OrganisasiRequest, id, user st
 	organisasi.Alamat = request.Alamat
 	organisasi.Latitude = request.Latitude
 	organisasi.Longitude = request.Longitude
+	organisasi.Radius = request.Radius
 	organisasi.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&organisasi); err != nil {
@@ -149,6 +156,7 @@ func (u *OrganisasiUseCase) Update(request *model.OrganisasiRequest, id, user st
 		Alamat:    organisasi.Alamat,
 		Latitude:  organisasi.Latitude,
 		Longitude: organisasi.Longitude,
+		Radius:    organisasi.Radius,
 	}
 
 	return response

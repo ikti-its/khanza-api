@@ -19,18 +19,18 @@ func NewOrganisasiRepository(db *sqlx.DB) repository.OrganisasiRepository {
 
 func (r *organisasiRepositoryImpl) Insert(organisasi *entity.Organisasi) error {
 	query := `
-		INSERT INTO organisasi (id, nama, alamat, latitude, longitude, updater) 
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO organisasi (id, nama, alamat, latitude, longitude, radius, updater) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
 
-	_, err := r.DB.Exec(query, organisasi.Id, organisasi.Nama, organisasi.Alamat, organisasi.Latitude, organisasi.Longitude, organisasi.Updater)
+	_, err := r.DB.Exec(query, organisasi.Id, organisasi.Nama, organisasi.Alamat, organisasi.Latitude, organisasi.Longitude, organisasi.Radius, organisasi.Updater)
 
 	return err
 }
 
 func (r *organisasiRepositoryImpl) Find() ([]entity.Organisasi, error) {
 	query := `
-		SELECT id, nama, alamat, latitude, longitude
+		SELECT id, nama, alamat, latitude, longitude, radius
 		FROM organisasi
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *organisasiRepositoryImpl) Find() ([]entity.Organisasi, error) {
 
 func (r *organisasiRepositoryImpl) FindPage(page, size int) ([]entity.Organisasi, int, error) {
 	query := `
-		SELECT id, nama, alamat, latitude, longitude
+		SELECT id, nama, alamat, latitude, longitude, radius
 		FROM organisasi
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *organisasiRepositoryImpl) FindPage(page, size int) ([]entity.Organisasi
 
 func (r *organisasiRepositoryImpl) FindCurrent() (entity.Organisasi, error) {
 	query := `
-		SELECT id, nama, alamat, latitude, longitude
+		SELECT id, nama, alamat, latitude, longitude, radius
 		FROM organisasi
 		WHERE deleted_at IS NULL
 		LIMIT 1
@@ -80,7 +80,7 @@ func (r *organisasiRepositoryImpl) FindCurrent() (entity.Organisasi, error) {
 
 func (r *organisasiRepositoryImpl) FindById(id uuid.UUID) (entity.Organisasi, error) {
 	query := `
-		SELECT id, nama, alamat, latitude, longitude
+		SELECT id, nama, alamat, latitude, longitude, radius
 		FROM organisasi
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -94,11 +94,11 @@ func (r *organisasiRepositoryImpl) FindById(id uuid.UUID) (entity.Organisasi, er
 func (r *organisasiRepositoryImpl) Update(organisasi *entity.Organisasi) error {
 	query := `
 		UPDATE organisasi
-		SET nama = $2, alamat = $3, latitude = $4, longitude = $5, updated_at = $6, updater = $7
+		SET nama = $2, alamat = $3, latitude = $4, longitude = $5, radius = $6, updated_at = $7, updater = $8
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, organisasi.Id, organisasi.Nama, organisasi.Alamat, organisasi.Latitude, organisasi.Longitude, time.Now(), organisasi.Updater)
+	_, err := r.DB.Exec(query, organisasi.Id, organisasi.Nama, organisasi.Alamat, organisasi.Latitude, organisasi.Radius, organisasi.Longitude, time.Now(), organisasi.Updater)
 
 	return err
 }
