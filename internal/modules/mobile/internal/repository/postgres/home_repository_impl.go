@@ -27,7 +27,7 @@ func (r *homeRepositoryImpl) HomePegawai(id uuid.UUID, hari int) (entity.Home, e
 		JOIN foto_pegawai fp ON p.id = fp.id_pegawai
 		JOIN jadwal_pegawai jp ON p.id = jp.id_pegawai
 		JOIN ref.shift s ON jp.id_shift = s.id
-		WHERE a.id = $1 AND jp.id_hari = $2 AND a.deleted_at IS NULL
+		WHERE a.id = $1 AND jp.id_hari = $2 AND p.id_status_aktif = 'A' AND a.deleted_at IS NULL
 	`
 
 	var record entity.Home

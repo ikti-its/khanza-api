@@ -22,7 +22,7 @@ func (r *profileRepositoryImpl) FindById(id uuid.UUID) (entity.Profile, error) {
 		FROM akun a
 		JOIN alamat al ON a.id = al.id_akun
 		JOIN pegawai p ON a.id = p.id_akun
-		WHERE a.id = $1 AND a.deleted_at IS NULL
+		WHERE a.id = $1 AND p.id_status_aktif = 'A' AND a.deleted_at IS NULL
 	`
 
 	var record entity.Profile
