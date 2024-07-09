@@ -84,7 +84,7 @@ func (r *pemesananRepositoryImpl) Update(pemesanan *entity.Pemesanan) error {
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, pemesanan.Id, pemesanan.Tanggal, pemesanan.Nomor, pemesanan.IdPengajuan, pemesanan.Supplier, pemesanan.IdPegawai, pemesanan.PajakPersen, pemesanan.PajakJumlah, pemesanan.Materai, time.Now(), pemesanan.Updater, pemesanan.Total)
+	_, err := r.DB.Exec(query, pemesanan.Id, pemesanan.Tanggal, pemesanan.Nomor, pemesanan.IdPengajuan, pemesanan.Supplier, pemesanan.IdPegawai, pemesanan.PajakPersen, pemesanan.PajakJumlah, pemesanan.Materai, pemesanan.Total, time.Now(), pemesanan.Updater)
 
 	return err
 }

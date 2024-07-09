@@ -84,7 +84,7 @@ func (r *pengajuanRepositoryImpl) Update(pengajuan *entity.Pengajuan) error {
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, pengajuan.Id, pengajuan.Tanggal, pengajuan.Nomor, pengajuan.Pegawai, pengajuan.Catatan, pengajuan.Status, time.Now(), pengajuan.Updater, pengajuan.Total)
+	_, err := r.DB.Exec(query, pengajuan.Id, pengajuan.Tanggal, pengajuan.Nomor, pengajuan.Pegawai, pengajuan.Total, pengajuan.Catatan, pengajuan.Status, time.Now(), pengajuan.Updater)
 
 	return err
 }

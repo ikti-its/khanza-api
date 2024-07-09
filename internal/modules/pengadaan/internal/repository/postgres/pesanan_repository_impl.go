@@ -93,11 +93,11 @@ func (r *pesananRepositoryImpl) FindById(id uuid.UUID) (entity.Pesanan, error) {
 func (r *pesananRepositoryImpl) Update(pesanan *entity.Pesanan) error {
 	query := `
 		UPDATE pesanan_barang_medis
-		SET id_pengajuan = $2, id_barang_medis = $3, id_satuan = $4, harga_satuan_pengajuan = $5, harga_satuan_pemesanan = $6, jumlah_pesanan = $7, total_per_item = $13, subtotal_per_item = $14, diskon_persen = $15, diskon_jumlah = $16, jumlah_diterima = $8, kadaluwarsa = $9, no_batch = $10, updated_at = $11, updater = $12
+		SET id_pengajuan = $2, id_barang_medis = $3, id_satuan = $4, harga_satuan_pengajuan = $5, harga_satuan_pemesanan = $6, jumlah_pesanan = $7, total_per_item = $8, subtotal_per_item = $9, diskon_persen = $10, diskon_jumlah = $11, jumlah_diterima = $12, kadaluwarsa = $13, no_batch = $14, updated_at = $15, updater = $16
 		WHERE id = $1
 	`
 
-	_, err := r.DB.Exec(query, pesanan.Id, pesanan.IdPengajuan, pesanan.IdMedis, pesanan.Satuan, pesanan.HargaPengajuan, pesanan.HargaPemesanan, pesanan.Pesanan, pesanan.Diterima, pesanan.Kadaluwarsa, pesanan.Batch, time.Now(), pesanan.Updater, pesanan.Total, pesanan.Subtotal, pesanan.DiskonPersen, pesanan.DiskonJumlah)
+	_, err := r.DB.Exec(query, pesanan.Id, pesanan.IdPengajuan, pesanan.IdMedis, pesanan.Satuan, pesanan.HargaPengajuan, pesanan.HargaPemesanan, pesanan.Pesanan, pesanan.Total, pesanan.Subtotal, pesanan.DiskonPersen, pesanan.DiskonJumlah, pesanan.Diterima, pesanan.Kadaluwarsa, pesanan.Batch, time.Now(), pesanan.Updater)
 
 	return err
 }
