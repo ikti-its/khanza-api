@@ -34,6 +34,9 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 		HargaPemesanan: request.HargaPemesanan,
 		Pesanan:        request.Pesanan,
 		Total:          request.Total,
+		Subtotal:       request.Subtotal,
+		DiskonPersen:   request.DiskonPersen,
+		DiskonJumlah:   request.DiskonJumlah,
 		Diterima:       request.Diterima,
 		Kadaluwarsa:    kadaluwarsa,
 		Batch:          request.Batch,
@@ -53,6 +56,9 @@ func (u *PesananUseCase) Create(request *model.PesananRequest, user string) mode
 		HargaPemesanan: pesanan.HargaPemesanan,
 		Pesanan:        pesanan.Pesanan,
 		Total:          pesanan.Total,
+		Subtotal:       pesanan.Subtotal,
+		DiskonPersen:   pesanan.DiskonPersen,
+		DiskonJumlah:   pesanan.DiskonJumlah,
 		Diterima:       pesanan.Diterima,
 		Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
 		Batch:          pesanan.Batch,
@@ -76,6 +82,9 @@ func (u *PesananUseCase) Get() []model.PesananResponse {
 			HargaPemesanan: pesanan.HargaPemesanan,
 			Pesanan:        pesanan.Pesanan,
 			Total:          pesanan.Total,
+			Subtotal:       pesanan.Subtotal,
+			DiskonPersen:   pesanan.DiskonPersen,
+			DiskonJumlah:   pesanan.DiskonJumlah,
 			Diterima:       pesanan.Diterima,
 			Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
 			Batch:          pesanan.Batch,
@@ -100,6 +109,9 @@ func (u *PesananUseCase) GetPage(page, size int) model.PesananPageResponse {
 			HargaPemesanan: pesanan.HargaPemesanan,
 			Pesanan:        pesanan.Pesanan,
 			Total:          pesanan.Total,
+			Subtotal:       pesanan.Subtotal,
+			DiskonPersen:   pesanan.DiskonPersen,
+			DiskonJumlah:   pesanan.DiskonJumlah,
 			Diterima:       pesanan.Diterima,
 			Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
 			Batch:          pesanan.Batch,
@@ -131,6 +143,9 @@ func (u *PesananUseCase) GetByIdPengajuan(id string) []model.PesananResponse {
 			HargaPemesanan: pesanan.HargaPemesanan,
 			Pesanan:        pesanan.Pesanan,
 			Total:          pesanan.Total,
+			Subtotal:       pesanan.Subtotal,
+			DiskonPersen:   pesanan.DiskonPersen,
+			DiskonJumlah:   pesanan.DiskonJumlah,
 			Diterima:       pesanan.Diterima,
 			Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
 			Batch:          pesanan.Batch,
@@ -157,6 +172,9 @@ func (u *PesananUseCase) GetById(id string) model.PesananResponse {
 		HargaPemesanan: pesanan.HargaPemesanan,
 		Pesanan:        pesanan.Pesanan,
 		Total:          pesanan.Total,
+		Subtotal:       pesanan.Subtotal,
+		DiskonPersen:   pesanan.DiskonPersen,
+		DiskonJumlah:   pesanan.DiskonJumlah,
 		Diterima:       pesanan.Diterima,
 		Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
 		Batch:          pesanan.Batch,
@@ -180,6 +198,9 @@ func (u *PesananUseCase) Update(request *model.PesananRequest, id, user string) 
 	pesanan.HargaPemesanan = request.HargaPemesanan
 	pesanan.Pesanan = request.Pesanan
 	pesanan.Total = request.Total
+	pesanan.Subtotal = request.Subtotal
+	pesanan.DiskonPersen = request.DiskonPersen
+	pesanan.DiskonJumlah = request.DiskonJumlah
 	pesanan.Diterima = request.Diterima
 	pesanan.Kadaluwarsa = helper.ParseTime(request.Kadaluwarsa, "2006-01-02")
 	pesanan.Batch = request.Batch
@@ -198,6 +219,9 @@ func (u *PesananUseCase) Update(request *model.PesananRequest, id, user string) 
 		HargaPemesanan: pesanan.HargaPemesanan,
 		Pesanan:        pesanan.Pesanan,
 		Total:          pesanan.Total,
+		Subtotal:       pesanan.Subtotal,
+		DiskonPersen:   pesanan.DiskonPersen,
+		DiskonJumlah:   pesanan.DiskonJumlah,
 		Diterima:       pesanan.Diterima,
 		Kadaluwarsa:    helper.FormatTime(pesanan.Kadaluwarsa, "2006-01-02"),
 		Batch:          pesanan.Batch,

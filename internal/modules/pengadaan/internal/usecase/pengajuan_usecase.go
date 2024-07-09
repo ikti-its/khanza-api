@@ -21,19 +21,14 @@ func NewPengajuanUseCase(repository *repository.PengajuanRepository) *PengajuanU
 func (u *PengajuanUseCase) Create(request *model.PengajuanRequest, user string) model.PengajuanResponse {
 	updater := helper.MustParse(user)
 	pengajuan := entity.Pengajuan{
-		Id:           helper.MustNew(),
-		Tanggal:      helper.ParseTime(request.Tanggal, "2006-01-02"),
-		Nomor:        request.Nomor,
-		Pegawai:      helper.MustParse(request.Pegawai),
-		DiskonPersen: request.DiskonPersen,
-		DiskonJumlah: request.DiskonJumlah,
-		PajakPersen:  request.PajakPersen,
-		PajakJumlah:  request.PajakJumlah,
-		Materai:      request.Materai,
-		Total:        request.Total,
-		Catatan:      request.Catatan,
-		Status:       request.Status,
-		Updater:      updater,
+		Id:      helper.MustNew(),
+		Tanggal: helper.ParseTime(request.Tanggal, "2006-01-02"),
+		Nomor:   request.Nomor,
+		Pegawai: helper.MustParse(request.Pegawai),
+		Total:   request.Total,
+		Catatan: request.Catatan,
+		Status:  request.Status,
+		Updater: updater,
 	}
 
 	if err := u.Repository.Insert(&pengajuan); err != nil {
@@ -41,18 +36,13 @@ func (u *PengajuanUseCase) Create(request *model.PengajuanRequest, user string) 
 	}
 
 	response := model.PengajuanResponse{
-		Id:           pengajuan.Id.String(),
-		Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
-		Nomor:        pengajuan.Nomor,
-		Pegawai:      pengajuan.Pegawai.String(),
-		DiskonPersen: pengajuan.DiskonPersen,
-		DiskonJumlah: pengajuan.DiskonJumlah,
-		PajakPersen:  pengajuan.PajakPersen,
-		PajakJumlah:  pengajuan.PajakJumlah,
-		Materai:      pengajuan.Materai,
-		Total:        pengajuan.Total,
-		Catatan:      pengajuan.Catatan,
-		Status:       pengajuan.Status,
+		Id:      pengajuan.Id.String(),
+		Tanggal: helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
+		Nomor:   pengajuan.Nomor,
+		Pegawai: pengajuan.Pegawai.String(),
+		Total:   pengajuan.Total,
+		Catatan: pengajuan.Catatan,
+		Status:  pengajuan.Status,
 	}
 
 	return response
@@ -65,18 +55,13 @@ func (u *PengajuanUseCase) Get() []model.PengajuanResponse {
 	response := make([]model.PengajuanResponse, len(pengajuan))
 	for i, pengajuan := range pengajuan {
 		response[i] = model.PengajuanResponse{
-			Id:           pengajuan.Id.String(),
-			Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
-			Nomor:        pengajuan.Nomor,
-			Pegawai:      pengajuan.Pegawai.String(),
-			DiskonPersen: pengajuan.DiskonPersen,
-			DiskonJumlah: pengajuan.DiskonJumlah,
-			PajakPersen:  pengajuan.PajakPersen,
-			PajakJumlah:  pengajuan.PajakJumlah,
-			Materai:      pengajuan.Materai,
-			Total:        pengajuan.Total,
-			Catatan:      pengajuan.Catatan,
-			Status:       pengajuan.Status,
+			Id:      pengajuan.Id.String(),
+			Tanggal: helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
+			Nomor:   pengajuan.Nomor,
+			Pegawai: pengajuan.Pegawai.String(),
+			Total:   pengajuan.Total,
+			Catatan: pengajuan.Catatan,
+			Status:  pengajuan.Status,
 		}
 	}
 
@@ -90,18 +75,13 @@ func (u *PengajuanUseCase) GetPage(page, size int) model.PengajuanPageResponse {
 	response := make([]model.PengajuanResponse, len(pengajuan))
 	for i, pengajuan := range pengajuan {
 		response[i] = model.PengajuanResponse{
-			Id:           pengajuan.Id.String(),
-			Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
-			Nomor:        pengajuan.Nomor,
-			Pegawai:      pengajuan.Pegawai.String(),
-			DiskonPersen: pengajuan.DiskonPersen,
-			DiskonJumlah: pengajuan.DiskonJumlah,
-			PajakPersen:  pengajuan.PajakPersen,
-			PajakJumlah:  pengajuan.PajakJumlah,
-			Materai:      pengajuan.Materai,
-			Total:        pengajuan.Total,
-			Catatan:      pengajuan.Catatan,
-			Status:       pengajuan.Status,
+			Id:      pengajuan.Id.String(),
+			Tanggal: helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
+			Nomor:   pengajuan.Nomor,
+			Pegawai: pengajuan.Pegawai.String(),
+			Total:   pengajuan.Total,
+			Catatan: pengajuan.Catatan,
+			Status:  pengajuan.Status,
 		}
 	}
 
@@ -124,18 +104,13 @@ func (u *PengajuanUseCase) GetById(id string) model.PengajuanResponse {
 	}
 
 	response := model.PengajuanResponse{
-		Id:           pengajuan.Id.String(),
-		Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
-		Nomor:        pengajuan.Nomor,
-		Pegawai:      pengajuan.Pegawai.String(),
-		DiskonPersen: pengajuan.DiskonPersen,
-		DiskonJumlah: pengajuan.DiskonJumlah,
-		PajakPersen:  pengajuan.PajakPersen,
-		PajakJumlah:  pengajuan.PajakJumlah,
-		Materai:      pengajuan.Materai,
-		Total:        pengajuan.Total,
-		Catatan:      pengajuan.Catatan,
-		Status:       pengajuan.Status,
+		Id:      pengajuan.Id.String(),
+		Tanggal: helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
+		Nomor:   pengajuan.Nomor,
+		Pegawai: pengajuan.Pegawai.String(),
+		Total:   pengajuan.Total,
+		Catatan: pengajuan.Catatan,
+		Status:  pengajuan.Status,
 	}
 
 	return response
@@ -152,11 +127,6 @@ func (u *PengajuanUseCase) Update(request *model.PengajuanRequest, id, user stri
 	pengajuan.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
 	pengajuan.Nomor = request.Nomor
 	pengajuan.Pegawai = helper.MustParse(request.Pegawai)
-	pengajuan.DiskonPersen = request.DiskonPersen
-	pengajuan.DiskonJumlah = request.DiskonJumlah
-	pengajuan.PajakPersen = request.PajakPersen
-	pengajuan.PajakJumlah = request.PajakJumlah
-	pengajuan.Materai = request.Materai
 	pengajuan.Total = request.Total
 	pengajuan.Catatan = request.Catatan
 	pengajuan.Status = request.Status
@@ -167,18 +137,13 @@ func (u *PengajuanUseCase) Update(request *model.PengajuanRequest, id, user stri
 	}
 
 	response := model.PengajuanResponse{
-		Id:           pengajuan.Id.String(),
-		Tanggal:      helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
-		Nomor:        pengajuan.Nomor,
-		Pegawai:      pengajuan.Pegawai.String(),
-		DiskonPersen: pengajuan.DiskonPersen,
-		DiskonJumlah: pengajuan.DiskonJumlah,
-		PajakPersen:  pengajuan.PajakPersen,
-		PajakJumlah:  pengajuan.PajakJumlah,
-		Materai:      pengajuan.Materai,
-		Total:        pengajuan.Total,
-		Catatan:      pengajuan.Catatan,
-		Status:       pengajuan.Status,
+		Id:      pengajuan.Id.String(),
+		Tanggal: helper.FormatTime(pengajuan.Tanggal, "2006-01-02"),
+		Nomor:   pengajuan.Nomor,
+		Pegawai: pengajuan.Pegawai.String(),
+		Total:   pengajuan.Total,
+		Catatan: pengajuan.Catatan,
+		Status:  pengajuan.Status,
 	}
 
 	return response
