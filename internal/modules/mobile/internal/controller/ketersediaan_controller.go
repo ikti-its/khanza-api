@@ -21,8 +21,8 @@ func (c *KetersediaanController) Get(ctx *fiber.Ctx) error {
 	page := ctx.QueryInt("page")
 	size := ctx.QueryInt("size")
 
-	if size < 10 {
-		size = 10
+	if size < 5 {
+		size = 5
 	}
 
 	if page < 1 {
