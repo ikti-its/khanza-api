@@ -16,10 +16,3 @@ type OrganisasiResponse struct {
 	Longitude float64 `json:"longitude"`
 	Radius    float64 `json:"radius"`
 }
-
-type OrganisasiPageResponse struct {
-	Page       int                  `json:"page"`
-	Size       int                  `json:"size"`
-	Total      int                  `json:"total"`
-	Organisasi []OrganisasiResponse `json:"organisasi"`
-}

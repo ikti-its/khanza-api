@@ -9,5 +9,4 @@ type Organisasi struct {
 	Latitude  float64   `db:"latitude"`
 	Longitude float64   `db:"longitude"`
 	Radius    float64   `db:"radius"`
-	Updater   uuid.UUID `db:"updater"`
 }
