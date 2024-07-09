@@ -12,6 +12,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan"
+	"github.com/ikti-its/khanza-api/internal/modules/ref"
 	"github.com/ikti-its/khanza-api/internal/modules/web"
 	"github.com/jmoiron/sqlx"
 )
@@ -32,6 +33,7 @@ func (p *Provider) Provide() {
 	inventaris.ProvideInventaris(p.App, p.PG, p.Validator)
 	pengadaan.ProvidePengadaan(p.App, p.PG, p.Validator)
 	organisasi.ProvideOrganisasi(p.App, p.PG, p.Validator)
+	ref.ProvideRef(p.App, p.PG)
 	mobile.ProvideMobile(p.App, p.PG, p.Validator)
 	web.ProvideWeb(p.App, p.PG, p.Validator)
 }
