@@ -21,12 +21,14 @@ func NewStokUseCase(repository *repository.StokRepository) *StokUseCase {
 func (u *StokUseCase) Create(request *model.StokRequest, user string) model.StokResponse {
 	updater := helper.MustParse(user)
 	stok := entity.Stok{
-		Id:         helper.MustNew(),
-		Nomor:      request.Nomor,
-		IdPegawai:  helper.MustParse(request.IdPegawai),
-		Tanggal:    helper.ParseTime(request.Tanggal, "2006-01-02"),
-		Keterangan: request.Keterangan,
-		Updater:    updater,
+		Id:            helper.MustNew(),
+		Nomor:         request.Nomor,
+		IdPegawai:     helper.MustParse(request.IdPegawai),
+		Tanggal:       helper.ParseTime(request.Tanggal, "2006-01-02"),
+		AsalRuangan:   request.AsalRuangan,
+		TujuanRuangan: request.TujuanRuangan,
+		Keterangan:    request.Keterangan,
+		Updater:       updater,
 	}
 
 	if err := u.Repository.Insert(&stok); err != nil {
@@ -34,11 +36,13 @@ func (u *StokUseCase) Create(request *model.StokRequest, user string) model.Stok
 	}
 
 	response := model.StokResponse{
-		Id:         stok.Id.String(),
-		Nomor:      stok.Nomor,
-		IdPegawai:  stok.IdPegawai.String(),
-		Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-		Keterangan: stok.Keterangan,
+		Id:            stok.Id.String(),
+		Nomor:         stok.Nomor,
+		IdPegawai:     stok.IdPegawai.String(),
+		Tanggal:       helper.FormatTime(stok.Tanggal, "2006-01-02"),
+		AsalRuangan:   stok.AsalRuangan,
+		TujuanRuangan: stok.TujuanRuangan,
+		Keterangan:    stok.Keterangan,
 	}
 
 	return response
@@ -51,11 +55,13 @@ func (u *StokUseCase) Get() []model.StokResponse {
 	response := make([]model.StokResponse, len(stok))
 	for i, stok := range stok {
 		response[i] = model.StokResponse{
-			Id:         stok.Id.String(),
-			Nomor:      stok.Nomor,
-			IdPegawai:  stok.IdPegawai.String(),
-			Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-			Keterangan: stok.Keterangan,
+			Id:            stok.Id.String(),
+			Nomor:         stok.Nomor,
+			IdPegawai:     stok.IdPegawai.String(),
+			Tanggal:       helper.FormatTime(stok.Tanggal, "2006-01-02"),
+			AsalRuangan:   stok.AsalRuangan,
+			TujuanRuangan: stok.TujuanRuangan,
+			Keterangan:    stok.Keterangan,
 		}
 	}
 
@@ -69,11 +75,13 @@ func (u *StokUseCase) GetPage(page, size int) model.StokPageResponse {
 	response := make([]model.StokResponse, len(stok))
 	for i, stok := range stok {
 		response[i] = model.StokResponse{
-			Id:         stok.Id.String(),
-			Nomor:      stok.Nomor,
-			IdPegawai:  stok.IdPegawai.String(),
-			Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-			Keterangan: stok.Keterangan,
+			Id:            stok.Id.String(),
+			Nomor:         stok.Nomor,
+			IdPegawai:     stok.IdPegawai.String(),
+			Tanggal:       helper.FormatTime(stok.Tanggal, "2006-01-02"),
+			AsalRuangan:   stok.AsalRuangan,
+			TujuanRuangan: stok.TujuanRuangan,
+			Keterangan:    stok.Keterangan,
 		}
 	}
 
@@ -96,11 +104,13 @@ func (u *StokUseCase) GetById(id string) model.StokResponse {
 	}
 
 	response := model.StokResponse{
-		Id:         stok.Id.String(),
-		Nomor:      stok.Nomor,
-		IdPegawai:  stok.IdPegawai.String(),
-		Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-		Keterangan: stok.Keterangan,
+		Id:            stok.Id.String(),
+		Nomor:         stok.Nomor,
+		IdPegawai:     stok.IdPegawai.String(),
+		Tanggal:       helper.FormatTime(stok.Tanggal, "2006-01-02"),
+		AsalRuangan:   stok.AsalRuangan,
+		TujuanRuangan: stok.TujuanRuangan,
+		Keterangan:    stok.Keterangan,
 	}
 
 	return response
@@ -117,6 +127,8 @@ func (u *StokUseCase) Update(request *model.StokRequest, id, user string) model.
 	stok.Nomor = request.Nomor
 	stok.IdPegawai = helper.MustParse(request.IdPegawai)
 	stok.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
+	stok.AsalRuangan = request.AsalRuangan
+	stok.TujuanRuangan = request.TujuanRuangan
 	stok.Keterangan = request.Keterangan
 	stok.Updater = helper.MustParse(user)
 
@@ -125,11 +137,13 @@ func (u *StokUseCase) Update(request *model.StokRequest, id, user string) model.
 	}
 
 	response := model.StokResponse{
-		Id:         stok.Id.String(),
-		Nomor:      stok.Nomor,
-		IdPegawai:  stok.IdPegawai.String(),
-		Tanggal:    helper.FormatTime(stok.Tanggal, "2006-01-02"),
-		Keterangan: stok.Keterangan,
+		Id:            stok.Id.String(),
+		Nomor:         stok.Nomor,
+		IdPegawai:     stok.IdPegawai.String(),
+		Tanggal:       helper.FormatTime(stok.Tanggal, "2006-01-02"),
+		AsalRuangan:   stok.AsalRuangan,
+		TujuanRuangan: stok.TujuanRuangan,
+		Keterangan:    stok.Keterangan,
 	}
 
 	return response

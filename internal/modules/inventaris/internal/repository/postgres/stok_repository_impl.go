@@ -19,18 +19,18 @@ func NewStokRepository(db *sqlx.DB) repository.StokRepository {
 
 func (r *stokRepositoryImpl) Insert(stok *entity.Stok) error {
 	query := `
-		INSERT INTO stok_keluar_barang_medis (id, no_keluar, id_pegawai, tanggal_stok_keluar, keterangan, updater)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO stok_keluar_barang_medis (id, no_keluar, id_pegawai, tanggal_stok_keluar, asal_ruangan, tujuan_ruangan, keterangan, updater)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	`
 
-	_, err := r.DB.Exec(query, stok.Id, stok.Nomor, stok.IdPegawai, stok.Tanggal, stok.Keterangan, stok.Updater)
+	_, err := r.DB.Exec(query, stok.Id, stok.Nomor, stok.IdPegawai, stok.Tanggal, stok.AsalRuangan, stok.TujuanRuangan, stok.Keterangan, stok.Updater)
 
 	return err
 }
 
 func (r *stokRepositoryImpl) Find() ([]entity.Stok, error) {
 	query := `
-		SELECT id, no_keluar, id_pegawai, tanggal_stok_keluar, keterangan
+		SELECT id, no_keluar, id_pegawai, tanggal_stok_keluar, asal_ruangan, tujuan_ruangan, keterangan
 		FROM stok_keluar_barang_medis
 		WHERE deleted_at IS NULL
 	`
@@ -43,7 +43,7 @@ func (r *stokRepositoryImpl) Find() ([]entity.Stok, error) {
 
 func (r *stokRepositoryImpl) FindPage(page, size int) ([]entity.Stok, int, error) {
 	query := `
-		SELECT id, no_keluar, id_pegawai, tanggal_stok_keluar, keterangan
+		SELECT id, no_keluar, id_pegawai, tanggal_stok_keluar, asal_ruangan, tujuan_ruangan, keterangan
 		FROM stok_keluar_barang_medis
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
@@ -66,7 +66,7 @@ func (r *stokRepositoryImpl) FindPage(page, size int) ([]entity.Stok, int, error
 
 func (r *stokRepositoryImpl) FindById(id uuid.UUID) (entity.Stok, error) {
 	query := `
-		SELECT id, no_keluar, id_pegawai, tanggal_stok_keluar, keterangan
+		SELECT id, no_keluar, id_pegawai, tanggal_stok_keluar, asal_ruangan, tujuan_ruangan, keterangan
 		FROM stok_keluar_barang_medis
 		WHERE id = $1 AND deleted_at IS NULL
 	`
@@ -80,11 +80,11 @@ func (r *stokRepositoryImpl) FindById(id uuid.UUID) (entity.Stok, error) {
 func (r *stokRepositoryImpl) Update(stok *entity.Stok) error {
 	query := `
 		UPDATE stok_keluar_barang_medis
-		SET no_keluar = $2, id_pegawai = $3, tanggal_stok_keluar = $4, keterangan = $5, updated_at = $6, updater = $7
+		SET no_keluar = $2, id_pegawai = $3, tanggal_stok_keluar = $4, asal_ruangan = $5, tujuan_ruangan = $6, keterangan = $7, updated_at = $8, updater = $9
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
-	_, err := r.DB.Exec(query, stok.Id, stok.Nomor, stok.IdPegawai, stok.Tanggal, stok.Keterangan, time.Now(), stok.Updater)
+	_, err := r.DB.Exec(query, stok.Id, stok.Nomor, stok.IdPegawai, stok.Tanggal, stok.AsalRuangan, stok.TujuanRuangan, stok.Keterangan, time.Now(), stok.Updater)
 
 	return err
 }
