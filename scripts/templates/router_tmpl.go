@@ -4,7 +4,7 @@ var RouterTmpl = `package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/fathoor/go-modular/internal/modules/{{.ModuleName}}/internal/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/{{.ModuleName}}/internal/controller"
 )
 
 func Route(
