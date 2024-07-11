@@ -22,79 +22,79 @@ func Route(
 
 	medis := inventaris.Group("/medis")
 	{
-		medis.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), medisController.Create)
-		medis.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), medisController.Get)
-		medis.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), medisController.GetById)
-		medis.Put("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), medisController.Update)
-		medis.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), medisController.Delete)
+		medis.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4002}), medisController.Create)
+		medis.Get("/", middleware.Authenticate([]int{1337, 1, 2}), medisController.Get)
+		medis.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), medisController.GetById)
+		medis.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), medisController.Update)
+		medis.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), medisController.Delete)
 	}
 
 	obat := inventaris.Group("/obat")
 	{
-		obat.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), obatController.Create)
-		obat.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), obatController.Get)
-		obat.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), obatController.GetByIdMedis)
-		obat.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), obatController.GetById)
-		obat.Put("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), obatController.Update)
-		obat.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), obatController.Delete)
+		obat.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4002}), obatController.Create)
+		obat.Get("/", middleware.Authenticate([]int{1337, 1, 2}), obatController.Get)
+		obat.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), obatController.GetByIdMedis)
+		obat.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), obatController.GetById)
+		obat.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), obatController.Update)
+		obat.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), obatController.Delete)
 	}
 
 	alkes := inventaris.Group("/alkes")
 	{
-		alkes.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), alkesController.Create)
-		alkes.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), alkesController.Get)
-		alkes.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), alkesController.GetByIdMedis)
-		alkes.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), alkesController.GetById)
-		alkes.Put("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), alkesController.Update)
-		alkes.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), alkesController.Delete)
+		alkes.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4002}), alkesController.Create)
+		alkes.Get("/", middleware.Authenticate([]int{1337, 1, 2}), alkesController.Get)
+		alkes.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), alkesController.GetByIdMedis)
+		alkes.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), alkesController.GetById)
+		alkes.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), alkesController.Update)
+		alkes.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), alkesController.Delete)
 	}
 
 	bhp := inventaris.Group("/bhp")
 	{
-		bhp.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), bhpController.Create)
-		bhp.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), bhpController.Get)
-		bhp.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), bhpController.GetByIdMedis)
-		bhp.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), bhpController.GetById)
-		bhp.Put("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), bhpController.Update)
-		bhp.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), bhpController.Delete)
+		bhp.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4002}), bhpController.Create)
+		bhp.Get("/", middleware.Authenticate([]int{1337, 1, 2}), bhpController.Get)
+		bhp.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), bhpController.GetByIdMedis)
+		bhp.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), bhpController.GetById)
+		bhp.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), bhpController.Update)
+		bhp.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), bhpController.Delete)
 	}
 
 	darah := inventaris.Group("/darah")
 	{
-		darah.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), darahController.Create)
-		darah.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), darahController.Get)
-		darah.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), darahController.GetByIdMedis)
-		darah.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), darahController.GetById)
-		darah.Put("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), darahController.Update)
-		darah.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002}), darahController.Delete)
+		darah.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4002}), darahController.Create)
+		darah.Get("/", middleware.Authenticate([]int{1337, 1, 2}), darahController.Get)
+		darah.Get("/medis/:id", middleware.Authenticate([]int{1337, 1, 2}), darahController.GetByIdMedis)
+		darah.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), darahController.GetById)
+		darah.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), darahController.Update)
+		darah.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4002}), darahController.Delete)
 	}
 
 	stok := inventaris.Group("/stok")
 	{
-		stok.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4004}), stokController.Create)
-		stok.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), stokController.Get)
-		stok.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), stokController.GetById)
-		stok.Put("/:id", middleware.Authenticate([]int{1337, 4000, 4004}), stokController.Update)
-		stok.Delete("/:id", middleware.Authenticate([]int{1337, 4000, 4004}), stokController.Delete)
+		stok.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4004}), stokController.Create)
+		stok.Get("/", middleware.Authenticate([]int{1337, 1, 2}), stokController.Get)
+		stok.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), stokController.GetById)
+		stok.Put("/:id", middleware.Authenticate([]int{1337, 4001, 4004}), stokController.Update)
+		stok.Delete("/:id", middleware.Authenticate([]int{1337, 4001, 4004}), stokController.Delete)
 	}
 
 	supplier := inventaris.Group("/supplier")
 	{
-		supplier.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), supplierController.Get)
+		supplier.Get("/", middleware.Authenticate([]int{1337, 1, 2}), supplierController.Get)
 	}
 
 	satuan := inventaris.Group("/satuan")
 	{
-		satuan.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), satuanController.Get)
+		satuan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), satuanController.Get)
 	}
 
 	transaksi := inventaris.Group("/transaksi")
 	{
-		transaksi.Post("/", middleware.Authenticate([]int{1337, 1, 4000, 4004}), transaksiController.Create)
-		transaksi.Get("/", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), transaksiController.Get)
-		transaksi.Get("/stok/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), transaksiController.GetByStokId)
-		transaksi.Get("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4001, 4002, 4003, 4004}), transaksiController.GetById)
-		transaksi.Put("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4004}), transaksiController.Update)
-		transaksi.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4000, 4004}), transaksiController.Delete)
+		transaksi.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4004}), transaksiController.Create)
+		transaksi.Get("/", middleware.Authenticate([]int{1337, 1, 2}), transaksiController.Get)
+		transaksi.Get("/stok/:id", middleware.Authenticate([]int{1337, 1, 2}), transaksiController.GetByStokId)
+		transaksi.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), transaksiController.GetById)
+		transaksi.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4004}), transaksiController.Update)
+		transaksi.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4004}), transaksiController.Delete)
 	}
 }
