@@ -28,7 +28,7 @@ func Route(
 
 	persetujuan := pengadaan.Group("/persetujuan")
 	{
-		persetujuan.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 5001}), persetujuanController.Create)
+		persetujuan.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4003, 5001}), persetujuanController.Create)
 		persetujuan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), persetujuanController.Get)
 		persetujuan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), persetujuanController.GetById)
 		persetujuan.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 5001}), persetujuanController.Update)

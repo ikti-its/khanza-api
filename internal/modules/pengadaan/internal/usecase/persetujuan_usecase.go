@@ -43,7 +43,7 @@ func (u *PersetujuanUseCase) Create(request *model.PersetujuanCreateRequest, use
 	if persetujuan.Keuangan == uuid.Nil {
 		keuangan = ""
 	} else {
-		apoteker = persetujuan.Keuangan.String()
+		keuangan = persetujuan.Keuangan.String()
 	}
 
 	response := model.PersetujuanResponse{
@@ -74,7 +74,7 @@ func (u *PersetujuanUseCase) Get() []model.PersetujuanResponse {
 		if persetujuan.Keuangan == uuid.Nil {
 			keuangan = ""
 		} else {
-			apoteker = persetujuan.Keuangan.String()
+			keuangan = persetujuan.Keuangan.String()
 		}
 
 		response[i] = model.PersetujuanResponse{
@@ -106,7 +106,7 @@ func (u *PersetujuanUseCase) GetPage(page, size int) model.PersetujuanPageRespon
 		if persetujuan.Keuangan == uuid.Nil {
 			keuangan = ""
 		} else {
-			apoteker = persetujuan.Keuangan.String()
+			keuangan = persetujuan.Keuangan.String()
 		}
 
 		response[i] = model.PersetujuanResponse{
@@ -147,7 +147,7 @@ func (u *PersetujuanUseCase) GetById(id string) model.PersetujuanResponse {
 	if persetujuan.Keuangan == uuid.Nil {
 		keuangan = ""
 	} else {
-		apoteker = persetujuan.Keuangan.String()
+		keuangan = persetujuan.Keuangan.String()
 	}
 
 	response := model.PersetujuanResponse{
@@ -202,7 +202,7 @@ func (u *PersetujuanUseCase) Update(request *model.PersetujuanUpdateRequest, id,
 	if persetujuan.Keuangan == uuid.Nil {
 		keuangan = ""
 	} else {
-		apoteker = persetujuan.Keuangan.String()
+		keuangan = persetujuan.Keuangan.String()
 	}
 
 	response := model.PersetujuanResponse{
