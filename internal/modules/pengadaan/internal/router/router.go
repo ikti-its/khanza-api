@@ -22,7 +22,7 @@ func Route(
 		pengajuan.Post("/", middleware.Authenticate([]int{1337, 1, 4001, 4003}), pengajuanController.Create)
 		pengajuan.Get("/", middleware.Authenticate([]int{1337, 1, 2}), pengajuanController.Get)
 		pengajuan.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), pengajuanController.GetById)
-		pengajuan.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4003}), pengajuanController.Update)
+		pengajuan.Put("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4003, 4004, 5001}), pengajuanController.Update)
 		pengajuan.Delete("/:id", middleware.Authenticate([]int{1337, 1, 4001, 4003}), pengajuanController.Delete)
 	}
 
