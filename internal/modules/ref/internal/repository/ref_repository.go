@@ -9,4 +9,11 @@ type RefRepository interface {
 	FindStatusAktif() ([]entity.StatusAktif, error)
 	FindShift() ([]entity.Shift, error)
 	FindAlasanCuti() ([]entity.AlasanCuti, error)
+	FindIndustriFarmasi() ([]entity.IndustriFarmasi, error)
+	FindSatuanBarangMedis() ([]entity.SatuanBarangMedis, error)
+	FindJenisBarangMedis() ([]entity.JenisBarangMedis, error)
+	FindKategoriBarangMedis() ([]entity.KategoriBarangMedis, error)
+	FindGolonganBarangMedis() ([]entity.GolonganBarangMedis, error)
+	FindRuangan() ([]entity.Ruangan, error)
+	FindSupplierBarangMedis() ([]entity.SupplierBarangMedis, error)
 }

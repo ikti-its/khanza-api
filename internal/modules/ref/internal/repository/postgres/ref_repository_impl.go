@@ -10,6 +10,10 @@ type refRepositoryImpl struct {
 	DB *sqlx.DB
 }
 
+func NewRefRepository(db *sqlx.DB) repository.RefRepository {
+	return &refRepositoryImpl{db}
+}
+
 func (r refRepositoryImpl) FindRole() ([]entity.Role, error) {
 	query := `
 		SELECT id, nama
@@ -82,6 +86,86 @@ func (r refRepositoryImpl) FindAlasanCuti() ([]entity.AlasanCuti, error) {
 	return records, err
 }
 
-func NewRefRepository(db *sqlx.DB) repository.RefRepository {
-	return &refRepositoryImpl{db}
+func (r refRepositoryImpl) FindIndustriFarmasi() ([]entity.IndustriFarmasi, error) {
+	query := `
+		SELECT id, kode, nama, alamat, kota, telepon
+		FROM ref.industri_farmasi
+	`
+
+	var records []entity.IndustriFarmasi
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r refRepositoryImpl) FindSatuanBarangMedis() ([]entity.SatuanBarangMedis, error) {
+	query := `
+		SELECT id, nama
+		FROM ref.satuan_barang_medis
+	`
+
+	var records []entity.SatuanBarangMedis
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r refRepositoryImpl) FindJenisBarangMedis() ([]entity.JenisBarangMedis, error) {
+	query := `
+		SELECT id, nama
+		FROM ref.jenis_barang_medis
+	`
+
+	var records []entity.JenisBarangMedis
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r refRepositoryImpl) FindKategoriBarangMedis() ([]entity.KategoriBarangMedis, error) {
+	query := `
+		SELECT id, nama
+		FROM ref.kategori_barang_medis
+	`
+
+	var records []entity.KategoriBarangMedis
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r refRepositoryImpl) FindGolonganBarangMedis() ([]entity.GolonganBarangMedis, error) {
+	query := `
+		SELECT id, nama
+		FROM ref.golongan_barang_medis
+	`
+
+	var records []entity.GolonganBarangMedis
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r refRepositoryImpl) FindRuangan() ([]entity.Ruangan, error) {
+	query := `
+		SELECT id, nama
+		FROM ref.ruangan
+	`
+
+	var records []entity.Ruangan
+	err := r.DB.Select(&records, query)
+
+	return records, err
+}
+
+func (r refRepositoryImpl) FindSupplierBarangMedis() ([]entity.SupplierBarangMedis, error) {
+	query := `
+		SELECT id, nama, alamat, no_telp, kota, nama_bank, no_rekening
+		FROM ref.supplier_barang_medis
+	`
+
+	var records []entity.SupplierBarangMedis
+	err := r.DB.Select(&records, query)
+
+	return records, err
 }

@@ -105,3 +105,117 @@ func (u *RefUseCase) GetAlasanCuti() []model.AlasanCutiResponse {
 
 	return response
 }
+
+func (u *RefUseCase) GetIndustriFarmasi() []model.IndustriFarmasiResponse {
+	industri, err := u.Repository.FindIndustriFarmasi()
+	exception.PanicIfError(err, "Failed to get all industri farmasi")
+
+	response := make([]model.IndustriFarmasiResponse, len(industri))
+	for i, industri := range industri {
+		response[i] = model.IndustriFarmasiResponse{
+			Id:      industri.Id,
+			Kode:    industri.Kode,
+			Nama:    industri.Nama,
+			Alamat:  industri.Alamat,
+			Kota:    industri.Kota,
+			Telepon: industri.Telepon,
+		}
+	}
+
+	return response
+}
+
+func (u *RefUseCase) GetSatuanBarangMedis() []model.SatuanBarangMedisResponse {
+	satuan, err := u.Repository.FindSatuanBarangMedis()
+	exception.PanicIfError(err, "Failed to get all satuan")
+
+	response := make([]model.SatuanBarangMedisResponse, len(satuan))
+	for i, satuan := range satuan {
+		response[i] = model.SatuanBarangMedisResponse{
+			Id:   satuan.Id,
+			Nama: satuan.Nama,
+		}
+	}
+
+	return response
+}
+
+func (u *RefUseCase) GetJenisBarangMedis() []model.JenisBarangMedisResponse {
+	jenis, err := u.Repository.FindJenisBarangMedis()
+	exception.PanicIfError(err, "Failed to get all jenis")
+
+	response := make([]model.JenisBarangMedisResponse, len(jenis))
+	for i, jenis := range jenis {
+		response[i] = model.JenisBarangMedisResponse{
+			Id:   jenis.Id,
+			Nama: jenis.Nama,
+		}
+	}
+
+	return response
+}
+
+func (u *RefUseCase) GetKategoriBarangMedis() []model.KategoriBarangMedisResponse {
+	kategori, err := u.Repository.FindKategoriBarangMedis()
+	exception.PanicIfError(err, "Failed to get all kategori")
+
+	response := make([]model.KategoriBarangMedisResponse, len(kategori))
+	for i, kategori := range kategori {
+		response[i] = model.KategoriBarangMedisResponse{
+			Id:   kategori.Id,
+			Nama: kategori.Nama,
+		}
+	}
+
+	return response
+}
+
+func (u *RefUseCase) GetGolonganBarangMedis() []model.GolonganBarangMedisResponse {
+	golongan, err := u.Repository.FindGolonganBarangMedis()
+	exception.PanicIfError(err, "Failed to get all golongan")
+
+	response := make([]model.GolonganBarangMedisResponse, len(golongan))
+	for i, golongan := range golongan {
+		response[i] = model.GolonganBarangMedisResponse{
+			Id:   golongan.Id,
+			Nama: golongan.Nama,
+		}
+	}
+
+	return response
+}
+
+func (u *RefUseCase) GetRuangan() []model.RuanganResponse {
+	ruangan, err := u.Repository.FindRuangan()
+	exception.PanicIfError(err, "Failed to get all ruangan")
+
+	response := make([]model.RuanganResponse, len(ruangan))
+	for i, ruangan := range ruangan {
+		response[i] = model.RuanganResponse{
+			Id:   ruangan.Id,
+			Nama: ruangan.Nama,
+		}
+	}
+
+	return response
+}
+
+func (u *RefUseCase) GetSupplierBarangMedis() []model.SupplierBarangMedisResponse {
+	supplier, err := u.Repository.FindSupplierBarangMedis()
+	exception.PanicIfError(err, "Failed to get all supplier")
+
+	response := make([]model.SupplierBarangMedisResponse, len(supplier))
+	for i, supplier := range supplier {
+		response[i] = model.SupplierBarangMedisResponse{
+			Id:         supplier.Id,
+			Nama:       supplier.Nama,
+			Alamat:     supplier.Alamat,
+			NoTelp:     supplier.NoTelp,
+			Kota:       supplier.Kota,
+			NamaBank:   supplier.NamaBank,
+			NoRekening: supplier.NoRekening,
+		}
+	}
+
+	return response
+}

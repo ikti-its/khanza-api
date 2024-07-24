@@ -75,3 +75,67 @@ func (c *RefController) GetAlasanCuti(ctx *fiber.Ctx) error {
 		Data:   response,
 	})
 }
+
+func (c *RefController) GetIndustriFarmasi(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetIndustriFarmasi()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+func (c *RefController) GetSatuanBarangMedis(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetSatuanBarangMedis()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+func (c *RefController) GetJenisBarangMedis(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetJenisBarangMedis()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+func (c *RefController) GetKategoriBarangMedis(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetKategoriBarangMedis()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+func (c *RefController) GetGolonganBarangMedis(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetGolonganBarangMedis()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+func (c *RefController) GetRuangan(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetRuangan()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+func (c *RefController) GetSupplierBarangMedis(ctx *fiber.Ctx) error {
+	response := c.UseCase.GetSupplierBarangMedis()
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
