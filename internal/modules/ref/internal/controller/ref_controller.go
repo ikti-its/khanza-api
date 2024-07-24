@@ -2,7 +2,9 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
+	"github.com/ikti-its/khanza-api/internal/modules/ref/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/ref/internal/usecase"
 )
 
@@ -56,6 +58,24 @@ func (c *RefController) GetStatusAktif(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *RefController) CreateShift(ctx *fiber.Ctx) error {
+	var request model.ShiftRequest
+
+	if err := ctx.BodyParser(&request); err != nil {
+		panic(&exception.BadRequestError{
+			Message: "Invalid request body",
+		})
+	}
+
+	response := c.UseCase.CreateShift(&request)
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+
 func (c *RefController) GetShift(ctx *fiber.Ctx) error {
 	response := c.UseCase.GetShift()
 
@@ -64,6 +84,33 @@ func (c *RefController) GetShift(ctx *fiber.Ctx) error {
 		Status: "Created",
 		Data:   response,
 	})
+}
+
+func (c *RefController) UpdateShift(ctx *fiber.Ctx) error {
+	var request model.ShiftRequest
+	id := ctx.Params("id")
+
+	if err := ctx.BodyParser(&request); err != nil {
+		panic(&exception.BadRequestError{
+			Message: "Invalid request body",
+		})
+	}
+
+	response := c.UseCase.UpdateShift(&request, id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *RefController) DeleteShift(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	c.UseCase.DeleteShift(id)
+
+	return ctx.SendStatus(fiber.StatusNoContent)
 }
 
 func (c *RefController) GetAlasanCuti(ctx *fiber.Ctx) error {

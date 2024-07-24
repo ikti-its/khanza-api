@@ -1,5 +1,7 @@
 package entity
 
+import "time"
+
 type Role struct {
 	Id   int    `db:"id"`
 	Nama string `db:"nama"`
@@ -21,8 +23,10 @@ type StatusAktif struct {
 }
 
 type Shift struct {
-	Id   string `db:"id"`
-	Nama string `db:"nama"`
+	Id        string    `db:"id"`
+	Nama      string    `db:"nama"`
+	JamMasuk  time.Time `db:"jam_masuk"`
+	JamPulang time.Time `db:"jam_pulang"`
 }
 
 type AlasanCuti struct {

@@ -62,9 +62,20 @@ func (r refRepositoryImpl) FindStatusAktif() ([]entity.StatusAktif, error) {
 	return records, err
 }
 
+func (r refRepositoryImpl) InsertShift(shift *entity.Shift) error {
+	query := `
+		INSERT INTO ref.shift
+		VALUES ($1, $2, $3, $4)
+	`
+
+	_, err := r.DB.Exec(query, shift.Id, shift.Nama, shift.JamMasuk, shift.JamPulang)
+
+	return err
+}
+
 func (r refRepositoryImpl) FindShift() ([]entity.Shift, error) {
 	query := `
-		SELECT id, nama
+		SELECT id, nama, jam_masuk, jam_pulang
 		FROM ref.shift
 	`
 
@@ -72,6 +83,42 @@ func (r refRepositoryImpl) FindShift() ([]entity.Shift, error) {
 	err := r.DB.Select(&records, query)
 
 	return records, err
+}
+
+func (r refRepositoryImpl) FindShiftById(id string) (entity.Shift, error) {
+	query := `
+		SELECT id, nama, jam_masuk, jam_pulang
+		FROM ref.shift
+		WHERE id = $1
+	`
+
+	var record entity.Shift
+	err := r.DB.Get(&record, query, id)
+
+	return record, err
+}
+
+func (r refRepositoryImpl) UpdateShift(shift *entity.Shift) error {
+	query := `
+		UPDATE ref.shift
+		SET id = $1, nama = $2, jam_masuk = $3, jam_pulang = $4
+		WHERE id = $1
+	`
+
+	_, err := r.DB.Exec(query, shift.Id, shift.Nama, shift.JamMasuk, shift.JamPulang)
+
+	return err
+}
+
+func (r refRepositoryImpl) DeleteShift(shift *entity.Shift) error {
+	query := `
+		DELETE FROM ref.shift
+		WHERE id = $1
+	`
+
+	_, err := r.DB.Exec(query, shift.Id)
+
+	return err
 }
 
 func (r refRepositoryImpl) FindAlasanCuti() ([]entity.AlasanCuti, error) {

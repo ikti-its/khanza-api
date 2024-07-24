@@ -7,7 +7,13 @@ type RefRepository interface {
 	FindJabatan() ([]entity.Jabatan, error)
 	FindDepartemen() ([]entity.Departemen, error)
 	FindStatusAktif() ([]entity.StatusAktif, error)
+
+	InsertShift(shift *entity.Shift) error
 	FindShift() ([]entity.Shift, error)
+	FindShiftById(id string) (entity.Shift, error)
+	UpdateShift(shift *entity.Shift) error
+	DeleteShift(shift *entity.Shift) error
+
 	FindAlasanCuti() ([]entity.AlasanCuti, error)
 	FindIndustriFarmasi() ([]entity.IndustriFarmasi, error)
 	FindSatuanBarangMedis() ([]entity.SatuanBarangMedis, error)

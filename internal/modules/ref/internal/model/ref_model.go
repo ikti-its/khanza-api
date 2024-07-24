@@ -20,9 +20,18 @@ type StatusAktifResponse struct {
 	Nama string `json:"nama"`
 }
 
+type ShiftRequest struct {
+	Id        string `json:"id"`
+	Nama      string `json:"nama"`
+	JamMasuk  string `json:"jam_masuk"`
+	JamPulang string `json:"jam_pulang"`
+}
+
 type ShiftResponse struct {
-	Id   string `json:"id"`
-	Nama string `json:"nama"`
+	Id        string `json:"id"`
+	Nama      string `json:"nama"`
+	JamMasuk  string `json:"jam_masuk"`
+	JamPulang string `json:"jam_pulang"`
 }
 
 type AlasanCutiResponse struct {

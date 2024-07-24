@@ -16,7 +16,6 @@ func Route(
 		ref.Get("/jabatan", middleware.Authenticate([]int{0}), refController.GetJabatan)
 		ref.Get("/departemen", middleware.Authenticate([]int{0}), refController.GetDepartemen)
 		ref.Get("/status-aktif", middleware.Authenticate([]int{0}), refController.GetStatusAktif)
-		ref.Get("/shift", middleware.Authenticate([]int{0}), refController.GetShift)
 		ref.Get("/alasan-cuti", middleware.Authenticate([]int{0}), refController.GetAlasanCuti)
 	}
 
@@ -24,9 +23,18 @@ func Route(
 	{
 		inventory.Get("/industri", middleware.Authenticate([]int{0}), refController.GetIndustriFarmasi)
 		inventory.Get("/satuan", middleware.Authenticate([]int{0}), refController.GetSatuanBarangMedis)
+		inventory.Get("/jenis", middleware.Authenticate([]int{0}), refController.GetJenisBarangMedis)
 		inventory.Get("/kategori", middleware.Authenticate([]int{0}), refController.GetKategoriBarangMedis)
 		inventory.Get("/golongan", middleware.Authenticate([]int{0}), refController.GetGolonganBarangMedis)
 		inventory.Get("/ruangan", middleware.Authenticate([]int{0}), refController.GetRuangan)
 		inventory.Get("/supplier", middleware.Authenticate([]int{0}), refController.GetSupplierBarangMedis)
+	}
+
+	shift := ref.Group("/shift")
+	{
+		shift.Post("/", middleware.Authenticate([]int{1337, 1}), refController.CreateShift)
+		shift.Get("/", middleware.Authenticate([]int{0}), refController.GetShift)
+		shift.Put("/:id", middleware.Authenticate([]int{1337, 1}), refController.UpdateShift)
+		shift.Delete("/:id", middleware.Authenticate([]int{1337, 1}), refController.DeleteShift)
 	}
 }

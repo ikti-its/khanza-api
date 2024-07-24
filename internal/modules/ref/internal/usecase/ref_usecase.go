@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"github.com/ikti-its/khanza-api/internal/app/exception"
+	"github.com/ikti-its/khanza-api/internal/app/helper"
+	"github.com/ikti-its/khanza-api/internal/modules/ref/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/ref/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/ref/internal/repository"
 )
@@ -76,6 +78,28 @@ func (u *RefUseCase) GetStatusAktif() []model.StatusAktifResponse {
 	return response
 }
 
+func (u *RefUseCase) CreateShift(request *model.ShiftRequest) model.ShiftResponse {
+	shift := entity.Shift{
+		Id:        request.Id,
+		Nama:      request.Nama,
+		JamMasuk:  helper.ParseTime(request.JamMasuk, "15:04:05"),
+		JamPulang: helper.ParseTime(request.JamPulang, "15:04:05"),
+	}
+
+	if err := u.Repository.InsertShift(&shift); err != nil {
+		exception.PanicIfError(err, "Failed to insert shift")
+	}
+
+	response := model.ShiftResponse{
+		Id:        shift.Id,
+		Nama:      shift.Nama,
+		JamMasuk:  helper.FormatTime(shift.JamMasuk, "15:04:05"),
+		JamPulang: helper.FormatTime(shift.JamPulang, "15:04:05"),
+	}
+
+	return response
+}
+
 func (u *RefUseCase) GetShift() []model.ShiftResponse {
 	shift, err := u.Repository.FindShift()
 	exception.PanicIfError(err, "Failed to get all shift")
@@ -83,12 +107,54 @@ func (u *RefUseCase) GetShift() []model.ShiftResponse {
 	response := make([]model.ShiftResponse, len(shift))
 	for i, shift := range shift {
 		response[i] = model.ShiftResponse{
-			Id:   shift.Id,
-			Nama: shift.Nama,
+			Id:        shift.Id,
+			Nama:      shift.Nama,
+			JamMasuk:  helper.FormatTime(shift.JamMasuk, "15:04:05"),
+			JamPulang: helper.FormatTime(shift.JamPulang, "15:04:05"),
 		}
 	}
 
 	return response
+}
+
+func (u *RefUseCase) UpdateShift(request *model.ShiftRequest, id string) model.ShiftResponse {
+	shift, err := u.Repository.FindShiftById(id)
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Shift not found",
+		})
+	}
+
+	shift.Id = request.Id
+	shift.Nama = request.Nama
+	shift.JamMasuk = helper.ParseTime(request.JamMasuk, "15:04:05")
+	shift.JamPulang = helper.ParseTime(request.JamPulang, "15:04:05")
+
+	if err := u.Repository.UpdateShift(&shift); err != nil {
+		exception.PanicIfError(err, "Failed to update shift")
+	}
+
+	response := model.ShiftResponse{
+		Id:        shift.Id,
+		Nama:      shift.Nama,
+		JamMasuk:  helper.FormatTime(shift.JamMasuk, "15:04:05"),
+		JamPulang: helper.FormatTime(shift.JamPulang, "15:04:05"),
+	}
+
+	return response
+}
+
+func (u *RefUseCase) DeleteShift(id string) {
+	shift, err := u.Repository.FindShiftById(id)
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Shift not found",
+		})
+	}
+
+	if err := u.Repository.DeleteShift(&shift); err != nil {
+		exception.PanicIfError(err, "Failed to delete shift")
+	}
 }
 
 func (u *RefUseCase) GetAlasanCuti() []model.AlasanCutiResponse {
