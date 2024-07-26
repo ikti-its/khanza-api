@@ -8,6 +8,7 @@ import (
 type GudangBarangRepository interface {
 	Insert(opname *entity.GudangBarang) error
 	Find() ([]entity.GudangBarang, error)
+	FindByIdMedis(id uuid.UUID) ([]entity.GudangBarang, error)
 	FindById(id uuid.UUID) (entity.GudangBarang, error)
 	Update(opname *entity.GudangBarang) error
 	Delete(opname *entity.GudangBarang) error

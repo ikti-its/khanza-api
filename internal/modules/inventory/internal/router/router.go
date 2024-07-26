@@ -41,6 +41,7 @@ func Route(
 	{
 		gudangbarang.Post("/", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.Create)
 		gudangbarang.Get("/", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.Get)
+		gudangbarang.Get("/barang/:id", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.GetByIdMedis)
 		gudangbarang.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.GetById)
 		gudangbarang.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.Update)
 		gudangbarang.Delete("/:id", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.Delete)

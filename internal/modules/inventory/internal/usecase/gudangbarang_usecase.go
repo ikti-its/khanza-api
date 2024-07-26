@@ -63,6 +63,25 @@ func (u *GudangBarangUseCase) Get() []model.GudangBarangResponse {
 	return response
 }
 
+func (u *GudangBarangUseCase) GetByIdMedis(id string) []model.GudangBarangResponse {
+	opname, err := u.Repository.FindByIdMedis(helper.MustParse(id))
+	exception.PanicIfError(err, "Failed to get all gudang barang")
+
+	response := make([]model.GudangBarangResponse, len(opname))
+	for i, opname := range opname {
+		response[i] = model.GudangBarangResponse{
+			Id:            opname.Id.String(),
+			IdBarangMedis: opname.IdBarangMedis.String(),
+			IdRuangan:     opname.IdRuangan,
+			Stok:          opname.Stok,
+			NoBatch:       opname.NoBatch,
+			NoFaktur:      opname.NoFaktur,
+		}
+	}
+
+	return response
+}
+
 func (u *GudangBarangUseCase) GetById(id string) model.GudangBarangResponse {
 	opname, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {

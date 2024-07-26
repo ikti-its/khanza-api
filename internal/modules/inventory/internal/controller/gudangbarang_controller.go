@@ -44,6 +44,18 @@ func (c *GudangBarangController) Get(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *GudangBarangController) GetByIdMedis(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	response := c.UseCase.GetByIdMedis(id)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *GudangBarangController) GetById(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 

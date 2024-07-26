@@ -32,6 +32,15 @@ func (r *gudangbarangRepositoryImpl) Find() ([]entity.GudangBarang, error) {
 	return records, err
 }
 
+func (r *gudangbarangRepositoryImpl) FindByIdMedis(id uuid.UUID) ([]entity.GudangBarang, error) {
+	query := "SELECT * FROM gudang_barang WHERE id_barang_medis = $1"
+
+	var records []entity.GudangBarang
+	err := r.DB.Select(&records, query, id)
+
+	return records, err
+}
+
 func (r *gudangbarangRepositoryImpl) FindById(id uuid.UUID) (entity.GudangBarang, error) {
 	query := "SELECT * FROM gudang_barang WHERE id = $1"
 
