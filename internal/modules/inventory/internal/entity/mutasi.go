@@ -6,6 +6,7 @@ import (
 )
 
 type Mutasi struct {
+	Id            uuid.UUID `db:"id"`
 	IdBarangMedis uuid.UUID `db:"id_barang_medis"`
 	Jumlah        int       `db:"jumlah"`
 	Harga         float64   `db:"harga"`

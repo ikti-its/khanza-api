@@ -8,6 +8,7 @@ import (
 type Brgmedis struct {
 	Id          uuid.UUID    `db:"id"`
 	KodeBarang  string       `db:"kode_barang"`
+	Kandungan   string       `db:"kandungan"`
 	IdIndustri  int          `db:"id_industri"`
 	Nama        string       `db:"nama"`
 	IdSatBesar  int          `db:"id_satbesar"`

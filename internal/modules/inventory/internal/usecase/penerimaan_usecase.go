@@ -160,6 +160,7 @@ func (u *PenerimaanUseCase) DetailCreate(request *model.DetailPenerimaanRequest)
 		IdSatuan:        request.IdSatuan,
 		UbahMaster:      request.UbahMaster,
 		Jumlah:          request.Jumlah,
+		HPesan:          request.HPesan,
 		SubtotalPerItem: request.SubtotalPerItem,
 		DiskonPersen:    request.DiskonPersen,
 		DiskonJumlah:    request.DiskonJumlah,
@@ -179,6 +180,7 @@ func (u *PenerimaanUseCase) DetailCreate(request *model.DetailPenerimaanRequest)
 		IdSatuan:        detail.IdSatuan,
 		UbahMaster:      detail.UbahMaster,
 		Jumlah:          detail.Jumlah,
+		HPesan:          detail.HPesan,
 		SubtotalPerItem: detail.SubtotalPerItem,
 		DiskonPersen:    detail.DiskonPersen,
 		DiskonJumlah:    detail.DiskonJumlah,
@@ -203,6 +205,7 @@ func (u *PenerimaanUseCase) DetailGet() []model.DetailPenerimaanResponse {
 			IdSatuan:        detail.IdSatuan,
 			UbahMaster:      detail.UbahMaster,
 			Jumlah:          detail.Jumlah,
+			HPesan:          detail.HPesan,
 			SubtotalPerItem: detail.SubtotalPerItem,
 			DiskonPersen:    detail.DiskonPersen,
 			DiskonJumlah:    detail.DiskonJumlah,
@@ -228,6 +231,7 @@ func (u *PenerimaanUseCase) DetailGetById(id string) []model.DetailPenerimaanRes
 			IdSatuan:        detail.IdSatuan,
 			UbahMaster:      detail.UbahMaster,
 			Jumlah:          detail.Jumlah,
+			HPesan:          detail.HPesan,
 			SubtotalPerItem: detail.SubtotalPerItem,
 			DiskonPersen:    detail.DiskonPersen,
 			DiskonJumlah:    detail.DiskonJumlah,
@@ -255,6 +259,7 @@ func (u *PenerimaanUseCase) DetailGetByPenerimaanBarang(penerimaan, barang strin
 		IdSatuan:        detail.IdSatuan,
 		UbahMaster:      detail.UbahMaster,
 		Jumlah:          detail.Jumlah,
+		HPesan:          detail.HPesan,
 		SubtotalPerItem: detail.SubtotalPerItem,
 		DiskonPersen:    detail.DiskonPersen,
 		DiskonJumlah:    detail.DiskonJumlah,
@@ -286,6 +291,7 @@ func (u *PenerimaanUseCase) DetailUpdate(request *model.DetailPenerimaanRequest,
 	detail.IdSatuan = request.IdSatuan
 	detail.UbahMaster = request.UbahMaster
 	detail.Jumlah = request.Jumlah
+	detail.HPesan = request.HPesan
 	detail.SubtotalPerItem = request.SubtotalPerItem
 	detail.DiskonPersen = request.DiskonPersen
 	detail.DiskonJumlah = request.DiskonJumlah
@@ -304,6 +310,7 @@ func (u *PenerimaanUseCase) DetailUpdate(request *model.DetailPenerimaanRequest,
 		IdSatuan:        detail.IdSatuan,
 		UbahMaster:      detail.UbahMaster,
 		Jumlah:          detail.Jumlah,
+		HPesan:          detail.HPesan,
 		SubtotalPerItem: detail.SubtotalPerItem,
 		DiskonPersen:    detail.DiskonPersen,
 		DiskonJumlah:    detail.DiskonJumlah,

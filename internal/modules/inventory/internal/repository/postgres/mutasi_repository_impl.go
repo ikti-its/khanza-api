@@ -16,9 +16,9 @@ func NewMutasiRepository(db *sqlx.DB) repository.MutasiRepository {
 }
 
 func (r *mutasiRepositoryImpl) Insert(mutasi *entity.Mutasi) error {
-	query := "INSERT INTO mutasi_barang VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	query := "INSERT INTO mutasi_barang VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
-	_, err := r.DB.Exec(query, mutasi.IdBarangMedis, mutasi.Jumlah, mutasi.Harga, mutasi.IdRuanganDari, mutasi.IdRuanganKe, mutasi.Tanggal, mutasi.Keterangan, mutasi.NoBatch, mutasi.NoFaktur)
+	_, err := r.DB.Exec(query, mutasi.Id, mutasi.IdBarangMedis, mutasi.Jumlah, mutasi.Harga, mutasi.IdRuanganDari, mutasi.IdRuanganKe, mutasi.Tanggal, mutasi.Keterangan, mutasi.NoBatch, mutasi.NoFaktur)
 
 	return err
 }
@@ -33,7 +33,7 @@ func (r *mutasiRepositoryImpl) Find() ([]entity.Mutasi, error) {
 }
 
 func (r *mutasiRepositoryImpl) FindById(id uuid.UUID) (entity.Mutasi, error) {
-	query := "SELECT * FROM mutasi_barang WHERE id_barang_medis = $1"
+	query := "SELECT * FROM mutasi_barang WHERE id = $1"
 
 	var record entity.Mutasi
 	err := r.DB.Get(&record, query, id)
@@ -42,17 +42,17 @@ func (r *mutasiRepositoryImpl) FindById(id uuid.UUID) (entity.Mutasi, error) {
 }
 
 func (r *mutasiRepositoryImpl) Update(mutasi *entity.Mutasi) error {
-	query := "UPDATE mutasi_barang SET jumlah = $2, harga = $3, id_ruangandari = $4, id_ruanganke = $5, tanggal = $6, keterangan = $7, no_batch = $8, no_faktur = $9 WHERE id_barang_medis = $1"
+	query := "UPDATE mutasi_barang SET id_barang_medis = $2, jumlah = $3, harga = $4, id_ruangandari = $5, id_ruanganke = $6, tanggal = $7, keterangan = $8, no_batch = $9, no_faktur = $10 WHERE id = $1"
 
-	_, err := r.DB.Exec(query, mutasi.IdBarangMedis, mutasi.Jumlah, mutasi.Harga, mutasi.IdRuanganDari, mutasi.IdRuanganKe, mutasi.Tanggal, mutasi.Keterangan, mutasi.NoBatch, mutasi.NoFaktur)
+	_, err := r.DB.Exec(query, mutasi.Id, mutasi.IdBarangMedis, mutasi.Jumlah, mutasi.Harga, mutasi.IdRuanganDari, mutasi.IdRuanganKe, mutasi.Tanggal, mutasi.Keterangan, mutasi.NoBatch, mutasi.NoFaktur)
 
 	return err
 }
 
 func (r *mutasiRepositoryImpl) Delete(mutasi *entity.Mutasi) error {
-	query := "DELETE FROM mutasi_barang WHERE id_barang_medis = $1"
+	query := "DELETE FROM mutasi_barang WHERE id = $1"
 
-	_, err := r.DB.Exec(query, mutasi.IdBarangMedis)
+	_, err := r.DB.Exec(query, mutasi.Id)
 
 	return err
 }

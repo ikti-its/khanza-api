@@ -32,7 +32,7 @@ func (r *batchRepositoryImpl) Find() ([]entity.Batch, error) {
 	return records, err
 }
 
-func (r *batchRepositoryImpl) FindByBatch(id uuid.UUID) ([]entity.Batch, error) {
+func (r *batchRepositoryImpl) FindByBatch(id string) ([]entity.Batch, error) {
 	query := "SELECT * FROM data_batch WHERE no_batch = $1"
 
 	var records []entity.Batch
@@ -41,7 +41,7 @@ func (r *batchRepositoryImpl) FindByBatch(id uuid.UUID) ([]entity.Batch, error) 
 	return records, err
 }
 
-func (r *batchRepositoryImpl) FindById(batch, faktur, barang uuid.UUID) (entity.Batch, error) {
+func (r *batchRepositoryImpl) FindById(batch, faktur string, barang uuid.UUID) (entity.Batch, error) {
 	query := "SELECT * FROM data_batch WHERE no_batch = $1 AND no_faktur = $2 AND id_barang_medis = $3"
 
 	var record entity.Batch

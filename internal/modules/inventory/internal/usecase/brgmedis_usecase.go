@@ -31,6 +31,7 @@ func (u *BrgmedisUseCase) Create(request *model.BrgmedisRequest) model.BrgmedisR
 	brgmedis := entity.Brgmedis{
 		Id:          helper.MustNew(),
 		KodeBarang:  request.KodeBarang,
+		Kandungan:   request.Kandungan,
 		IdIndustri:  request.IdIndustri,
 		Nama:        request.Nama,
 		IdSatBesar:  request.IdSatBesar,
@@ -63,6 +64,7 @@ func (u *BrgmedisUseCase) Create(request *model.BrgmedisRequest) model.BrgmedisR
 	response := model.BrgmedisResponse{
 		Id:          brgmedis.Id.String(),
 		KodeBarang:  brgmedis.KodeBarang,
+		Kandungan:   brgmedis.Kandungan,
 		IdIndustri:  brgmedis.IdIndustri,
 		Nama:        brgmedis.Nama,
 		IdSatBesar:  brgmedis.IdSatBesar,
@@ -100,6 +102,7 @@ func (u *BrgmedisUseCase) Get() []model.BrgmedisResponse {
 		response[i] = model.BrgmedisResponse{
 			Id:          brgmedis.Id.String(),
 			KodeBarang:  brgmedis.KodeBarang,
+			Kandungan:   brgmedis.Kandungan,
 			IdIndustri:  brgmedis.IdIndustri,
 			Nama:        brgmedis.Nama,
 			IdSatBesar:  brgmedis.IdSatBesar,
@@ -140,6 +143,7 @@ func (u *BrgmedisUseCase) GetById(id string) model.BrgmedisResponse {
 	response := model.BrgmedisResponse{
 		Id:          brgmedis.Id.String(),
 		KodeBarang:  brgmedis.KodeBarang,
+		Kandungan:   brgmedis.Kandungan,
 		IdIndustri:  brgmedis.IdIndustri,
 		Nama:        brgmedis.Nama,
 		IdSatBesar:  brgmedis.IdSatBesar,
@@ -185,6 +189,7 @@ func (u *BrgmedisUseCase) Update(request *model.BrgmedisRequest, id string) mode
 	}
 
 	brgmedis.KodeBarang = request.KodeBarang
+	brgmedis.Kandungan = request.Kandungan
 	brgmedis.IdIndustri = request.IdIndustri
 	brgmedis.Nama = request.Nama
 	brgmedis.IdSatBesar = request.IdSatBesar
@@ -216,6 +221,7 @@ func (u *BrgmedisUseCase) Update(request *model.BrgmedisRequest, id string) mode
 	response := model.BrgmedisResponse{
 		Id:          brgmedis.Id.String(),
 		KodeBarang:  brgmedis.KodeBarang,
+		Kandungan:   brgmedis.Kandungan,
 		IdIndustri:  brgmedis.IdIndustri,
 		Nama:        brgmedis.Nama,
 		IdSatBesar:  brgmedis.IdSatBesar,

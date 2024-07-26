@@ -16,9 +16,9 @@ func NewOpnameRepository(db *sqlx.DB) repository.OpnameRepository {
 }
 
 func (r *opnameRepositoryImpl) Insert(opname *entity.Opname) error {
-	query := "INSERT INTO opname VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	query := "INSERT INTO opname VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"
 
-	_, err := r.DB.Exec(query, opname.IdBarangMedis, opname.IdRuangan, opname.HBeli, opname.Tanggal, opname.Real, opname.Stok, opname.Keterangan, opname.NoBatch, opname.NoFaktur)
+	_, err := r.DB.Exec(query, opname.Id, opname.IdBarangMedis, opname.IdRuangan, opname.HBeli, opname.Tanggal, opname.Real, opname.Stok, opname.Keterangan, opname.NoBatch, opname.NoFaktur)
 
 	return err
 }
@@ -33,7 +33,7 @@ func (r *opnameRepositoryImpl) Find() ([]entity.Opname, error) {
 }
 
 func (r *opnameRepositoryImpl) FindById(id uuid.UUID) (entity.Opname, error) {
-	query := "SELECT * FROM opname WHERE id_barang_medis = $1"
+	query := "SELECT * FROM opname WHERE id = $1"
 
 	var record entity.Opname
 	err := r.DB.Get(&record, query, id)
@@ -42,15 +42,15 @@ func (r *opnameRepositoryImpl) FindById(id uuid.UUID) (entity.Opname, error) {
 }
 
 func (r *opnameRepositoryImpl) Update(opname *entity.Opname) error {
-	query := "UPDATE opname SET id_ruangan = $2, h_beli = $3, tanggal = $4, real = $5, stok = $6, keterangan = $7, no_batch = $8, no_faktur = $9 WHERE id_barang_medis = $1"
+	query := "UPDATE opname SET id_barang_medis = $2, id_ruangan = $3, h_beli = $4, tanggal = $5, real = $6, stok = $7, keterangan = $8, no_batch = $9, no_faktur = $10 WHERE id = $1"
 
-	_, err := r.DB.Exec(query, opname.IdBarangMedis, opname.IdRuangan, opname.HBeli, opname.Tanggal, opname.Real, opname.Stok, opname.Keterangan, opname.NoBatch, opname.NoFaktur)
+	_, err := r.DB.Exec(query, opname.Id, opname.IdBarangMedis, opname.IdRuangan, opname.HBeli, opname.Tanggal, opname.Real, opname.Stok, opname.Keterangan, opname.NoBatch, opname.NoFaktur)
 
 	return err
 }
 
 func (r *opnameRepositoryImpl) Delete(opname *entity.Opname) error {
-	query := "DELETE FROM opname WHERE id_barang_medis = $1"
+	query := "DELETE FROM opname WHERE id = $1"
 
 	_, err := r.DB.Exec(query, opname.IdBarangMedis)
 

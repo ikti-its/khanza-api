@@ -24,6 +24,7 @@ type DetailPenerimaan struct {
 	IdSatuan        int          `db:"id_satuan"`
 	UbahMaster      string       `db:"ubah_master"`
 	Jumlah          int          `db:"jumlah"`
+	HPesan          float64      `db:"h_pesan"`
 	SubtotalPerItem float64      `db:"subtotal_per_item"`
 	DiskonPersen    float64      `db:"diskon_persen"`
 	DiskonJumlah    float64      `db:"diskon_jumlah"`

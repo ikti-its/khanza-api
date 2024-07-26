@@ -19,7 +19,7 @@ type BatchRequest struct {
 	HBeliLuar     float64 `json:"h_beliluar"`
 	HJualBebas    float64 `json:"h_jualbebas"`
 	HKaryawan     float64 `json:"h_karyawan"`
-	JumlahBeli    int     `json:"jumlah_beli"`
+	JumlahBeli    int     `json:"jumlahbeli"`
 	Sisa          int     `json:"sisa"`
 }
 
@@ -42,6 +42,6 @@ type BatchResponse struct {
 	HBeliLuar     float64 `json:"h_beliluar"`
 	HJualBebas    float64 `json:"h_jualbebas"`
 	HKaryawan     float64 `json:"h_karyawan"`
-	JumlahBeli    int     `json:"jumlah_beli"`
+	JumlahBeli    int     `json:"jumlahbeli"`
 	Sisa          int     `json:"sisa"`
 }

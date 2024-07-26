@@ -20,6 +20,7 @@ func NewMutasiUseCase(repository *repository.MutasiRepository) *MutasiUseCase {
 
 func (u *MutasiUseCase) Create(request *model.MutasiRequest) model.MutasiResponse {
 	mutasi := entity.Mutasi{
+		Id:            helper.MustNew(),
 		IdBarangMedis: helper.MustParse(request.IdBarangMedis),
 		Jumlah:        request.Jumlah,
 		Harga:         request.Harga,
@@ -36,6 +37,7 @@ func (u *MutasiUseCase) Create(request *model.MutasiRequest) model.MutasiRespons
 	}
 
 	response := model.MutasiResponse{
+		Id:            mutasi.Id.String(),
 		IdBarangMedis: mutasi.IdBarangMedis.String(),
 		Jumlah:        mutasi.Jumlah,
 		Harga:         mutasi.Harga,
@@ -57,6 +59,7 @@ func (u *MutasiUseCase) Get() []model.MutasiResponse {
 	response := make([]model.MutasiResponse, len(mutasi))
 	for i, mutasi := range mutasi {
 		response[i] = model.MutasiResponse{
+			Id:            mutasi.Id.String(),
 			IdBarangMedis: mutasi.IdBarangMedis.String(),
 			Jumlah:        mutasi.Jumlah,
 			Harga:         mutasi.Harga,
@@ -81,6 +84,7 @@ func (u *MutasiUseCase) GetById(id string) model.MutasiResponse {
 	}
 
 	response := model.MutasiResponse{
+		Id:            mutasi.Id.String(),
 		IdBarangMedis: mutasi.IdBarangMedis.String(),
 		Jumlah:        mutasi.Jumlah,
 		Harga:         mutasi.Harga,
@@ -103,6 +107,7 @@ func (u *MutasiUseCase) Update(request *model.MutasiRequest, id string) model.Mu
 		})
 	}
 
+	mutasi.IdBarangMedis = helper.MustParse(request.IdBarangMedis)
 	mutasi.Jumlah = request.Jumlah
 	mutasi.Harga = request.Harga
 	mutasi.IdRuanganDari = request.IdRuanganDari
@@ -117,6 +122,7 @@ func (u *MutasiUseCase) Update(request *model.MutasiRequest, id string) model.Mu
 	}
 
 	response := model.MutasiResponse{
+		Id:            mutasi.Id.String(),
 		IdBarangMedis: mutasi.IdBarangMedis.String(),
 		Jumlah:        mutasi.Jumlah,
 		Harga:         mutasi.Harga,

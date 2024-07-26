@@ -13,6 +13,7 @@ type MutasiRequest struct {
 }
 
 type MutasiResponse struct {
+	Id            string  `json:"id"`
 	IdBarangMedis string  `json:"id_barang_medis"`
 	Jumlah        int     `json:"jumlah"`
 	Harga         float64 `json:"harga"`

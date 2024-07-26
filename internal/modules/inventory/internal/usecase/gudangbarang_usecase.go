@@ -20,6 +20,7 @@ func NewGudangBarangUseCase(repository *repository.GudangBarangRepository) *Guda
 
 func (u *GudangBarangUseCase) Create(request *model.GudangBarangRequest) model.GudangBarangResponse {
 	opname := entity.GudangBarang{
+		Id:            helper.MustNew(),
 		IdBarangMedis: helper.MustParse(request.IdBarangMedis),
 		IdRuangan:     request.IdRuangan,
 		Stok:          request.Stok,
@@ -32,6 +33,7 @@ func (u *GudangBarangUseCase) Create(request *model.GudangBarangRequest) model.G
 	}
 
 	response := model.GudangBarangResponse{
+		Id:            opname.Id.String(),
 		IdBarangMedis: opname.IdBarangMedis.String(),
 		IdRuangan:     opname.IdRuangan,
 		Stok:          opname.Stok,
@@ -49,6 +51,7 @@ func (u *GudangBarangUseCase) Get() []model.GudangBarangResponse {
 	response := make([]model.GudangBarangResponse, len(opname))
 	for i, opname := range opname {
 		response[i] = model.GudangBarangResponse{
+			Id:            opname.Id.String(),
 			IdBarangMedis: opname.IdBarangMedis.String(),
 			IdRuangan:     opname.IdRuangan,
 			Stok:          opname.Stok,
@@ -69,6 +72,7 @@ func (u *GudangBarangUseCase) GetById(id string) model.GudangBarangResponse {
 	}
 
 	response := model.GudangBarangResponse{
+		Id:            opname.Id.String(),
 		IdBarangMedis: opname.IdBarangMedis.String(),
 		IdRuangan:     opname.IdRuangan,
 		Stok:          opname.Stok,
@@ -87,6 +91,7 @@ func (u *GudangBarangUseCase) Update(request *model.GudangBarangRequest, id stri
 		})
 	}
 
+	opname.IdBarangMedis = helper.MustParse(request.IdBarangMedis)
 	opname.IdRuangan = request.IdRuangan
 	opname.Stok = request.Stok
 	opname.NoBatch = request.NoBatch
@@ -97,6 +102,7 @@ func (u *GudangBarangUseCase) Update(request *model.GudangBarangRequest, id stri
 	}
 
 	response := model.GudangBarangResponse{
+		Id:            opname.Id.String(),
 		IdBarangMedis: opname.IdBarangMedis.String(),
 		IdRuangan:     opname.IdRuangan,
 		Stok:          opname.Stok,

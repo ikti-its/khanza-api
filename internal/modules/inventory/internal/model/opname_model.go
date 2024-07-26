@@ -13,6 +13,7 @@ type OpnameRequest struct {
 }
 
 type OpnameResponse struct {
+	Id            string  `json:"id"`
 	IdBarangMedis string  `json:"id_barang_medis"`
 	IdRuangan     int     `json:"id_ruangan"`
 	HBeli         float64 `json:"h_beli"`

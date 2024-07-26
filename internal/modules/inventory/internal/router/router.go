@@ -83,7 +83,7 @@ func Route(
 		penerimaan.Delete("/:id", middleware.Authenticate([]int{1337, 1, 2}), penerimaanController.Delete)
 	}
 
-	detail := penerimaan.Group("/detail") // /penerimaan/detail
+	detail := inventory.Group("/detail")
 	{
 		detail.Post("/", middleware.Authenticate([]int{1337, 1, 2}), penerimaanController.DetailCreate)
 		detail.Get("/", middleware.Authenticate([]int{1337, 1, 2}), penerimaanController.DetailGet)

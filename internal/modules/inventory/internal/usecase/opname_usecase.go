@@ -20,6 +20,7 @@ func NewOpnameUseCase(repository *repository.OpnameRepository) *OpnameUseCase {
 
 func (u *OpnameUseCase) Create(request *model.OpnameRequest) model.OpnameResponse {
 	opname := entity.Opname{
+		Id:            helper.MustNew(),
 		IdBarangMedis: helper.MustParse(request.IdBarangMedis),
 		IdRuangan:     request.IdRuangan,
 		HBeli:         request.HBeli,
@@ -36,6 +37,7 @@ func (u *OpnameUseCase) Create(request *model.OpnameRequest) model.OpnameRespons
 	}
 
 	response := model.OpnameResponse{
+		Id:            opname.Id.String(),
 		IdBarangMedis: opname.IdBarangMedis.String(),
 		IdRuangan:     opname.IdRuangan,
 		HBeli:         opname.HBeli,
@@ -57,6 +59,7 @@ func (u *OpnameUseCase) Get() []model.OpnameResponse {
 	response := make([]model.OpnameResponse, len(opname))
 	for i, opname := range opname {
 		response[i] = model.OpnameResponse{
+			Id:            opname.Id.String(),
 			IdBarangMedis: opname.IdBarangMedis.String(),
 			IdRuangan:     opname.IdRuangan,
 			HBeli:         opname.HBeli,
@@ -81,6 +84,7 @@ func (u *OpnameUseCase) GetById(id string) model.OpnameResponse {
 	}
 
 	response := model.OpnameResponse{
+		Id:            opname.Id.String(),
 		IdBarangMedis: opname.IdBarangMedis.String(),
 		IdRuangan:     opname.IdRuangan,
 		HBeli:         opname.HBeli,
@@ -103,6 +107,7 @@ func (u *OpnameUseCase) Update(request *model.OpnameRequest, id string) model.Op
 		})
 	}
 
+	opname.IdBarangMedis = helper.MustParse(request.IdBarangMedis)
 	opname.IdRuangan = request.IdRuangan
 	opname.HBeli = request.HBeli
 	opname.Tanggal = helper.ParseTime(request.Tanggal, "2006-01-02")
@@ -117,6 +122,7 @@ func (u *OpnameUseCase) Update(request *model.OpnameRequest, id string) model.Op
 	}
 
 	response := model.OpnameResponse{
+		Id:            opname.Id.String(),
 		IdBarangMedis: opname.IdBarangMedis.String(),
 		IdRuangan:     opname.IdRuangan,
 		HBeli:         opname.HBeli,

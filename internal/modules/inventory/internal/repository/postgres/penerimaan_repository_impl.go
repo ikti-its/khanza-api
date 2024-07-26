@@ -58,9 +58,9 @@ func (r *penerimaanRepositoryImpl) Delete(penerimaan *entity.Penerimaan) error {
 }
 
 func (r *penerimaanRepositoryImpl) DetailInsert(detail *entity.DetailPenerimaan) error {
-	query := "INSERT INTO detail_penerimaan_barang_medis VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
+	query := "INSERT INTO detail_penerimaan_barang_medis VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
 
-	_, err := r.DB.Exec(query, detail.IdPenerimaan, detail.IdBarangMedis, detail.IdSatuan, detail.UbahMaster, detail.Jumlah, detail.SubtotalPerItem, detail.DiskonPersen, detail.DiskonJumlah, detail.TotalPerItem, detail.JumlahDiterima, detail.Kadaluwarsa, detail.NoBatch)
+	_, err := r.DB.Exec(query, detail.IdPenerimaan, detail.IdBarangMedis, detail.IdSatuan, detail.UbahMaster, detail.Jumlah, detail.HPesan, detail.SubtotalPerItem, detail.DiskonPersen, detail.DiskonJumlah, detail.TotalPerItem, detail.JumlahDiterima, detail.Kadaluwarsa, detail.NoBatch)
 
 	return err
 }
@@ -93,9 +93,9 @@ func (r *penerimaanRepositoryImpl) DetailFindByPenerimaanBarang(penerimaan, bara
 }
 
 func (r *penerimaanRepositoryImpl) DetailUpdate(detail *entity.DetailPenerimaan) error {
-	query := "UPDATE detail_penerimaan_barang_medis SET id_satuan = $3, ubah_master = $4, jumlah = $5, subtotal_per_item = $6, diskon_persen = $7, diskon_jumlah = $8, total_per_item = $9, jumlah_diterima = $10, kadaluwarsa = $11, no_batch = $12 WHERE id_penerimaan = $1 AND id_barang_medis = $2"
+	query := "UPDATE detail_penerimaan_barang_medis SET id_satuan = $3, ubah_master = $4, jumlah = $5, h_pesan = $6, subtotal_per_item = $7, diskon_persen = $8, diskon_jumlah = $9, total_per_item = $10, jumlah_diterima = $11, kadaluwarsa = $12, no_batch = $13 WHERE id_penerimaan = $1 AND id_barang_medis = $2"
 
-	_, err := r.DB.Exec(query, detail.IdPenerimaan, detail.IdBarangMedis, detail.IdSatuan, detail.UbahMaster, detail.Jumlah, detail.SubtotalPerItem, detail.DiskonPersen, detail.DiskonJumlah, detail.TotalPerItem, detail.JumlahDiterima, detail.Kadaluwarsa, detail.NoBatch)
+	_, err := r.DB.Exec(query, detail.IdPenerimaan, detail.IdBarangMedis, detail.IdSatuan, detail.UbahMaster, detail.Jumlah, detail.HPesan, detail.SubtotalPerItem, detail.DiskonPersen, detail.DiskonJumlah, detail.TotalPerItem, detail.JumlahDiterima, detail.Kadaluwarsa, detail.NoBatch)
 
 	return err
 }

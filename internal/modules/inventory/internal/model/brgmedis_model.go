@@ -2,6 +2,7 @@ package model
 
 type BrgmedisRequest struct {
 	KodeBarang  string  `json:"kode_barang"`
+	Kandungan   string  `json:"kandungan"`
 	IdIndustri  int     `json:"id_industri"`
 	Nama        string  `json:"nama"`
 	IdSatBesar  int     `json:"id_satbesar"`
@@ -30,6 +31,7 @@ type BrgmedisRequest struct {
 type BrgmedisResponse struct {
 	Id          string  `json:"id"`
 	KodeBarang  string  `json:"kode_barang"`
+	Kandungan   string  `json:"kandungan"`
 	IdIndustri  int     `json:"id_industri"`
 	Nama        string  `json:"nama"`
 	IdSatBesar  int     `json:"id_satbesar"`

@@ -115,7 +115,7 @@ func (u *BatchUseCase) Get() []model.BatchResponse {
 }
 
 func (u *BatchUseCase) GetByBatch(id string) []model.BatchResponse {
-	batch, err := u.Repository.FindByBatch(helper.MustParse(id))
+	batch, err := u.Repository.FindByBatch(id)
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Batch not found",
@@ -152,7 +152,7 @@ func (u *BatchUseCase) GetByBatch(id string) []model.BatchResponse {
 }
 
 func (u *BatchUseCase) Update(request *model.BatchRequest, id, faktur, barang string) model.BatchResponse {
-	batch, err := u.Repository.FindById(helper.MustParse(id), helper.MustParse(faktur), helper.MustParse(barang))
+	batch, err := u.Repository.FindById(id, faktur, helper.MustParse(barang))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Batch not found",
@@ -219,7 +219,7 @@ func (u *BatchUseCase) Update(request *model.BatchRequest, id, faktur, barang st
 }
 
 func (u *BatchUseCase) Delete(id, faktur, barang string) {
-	batch, err := u.Repository.FindById(helper.MustParse(id), helper.MustParse(faktur), helper.MustParse(barang))
+	batch, err := u.Repository.FindById(id, faktur, helper.MustParse(barang))
 	if err != nil {
 		panic(&exception.NotFoundError{
 			Message: "Batch not found",

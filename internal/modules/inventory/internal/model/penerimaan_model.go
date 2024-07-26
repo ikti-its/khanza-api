@@ -29,6 +29,7 @@ type DetailPenerimaanRequest struct {
 	IdSatuan        int     `json:"id_satuan"`
 	UbahMaster      string  `json:"ubah_master"`
 	Jumlah          int     `json:"jumlah"`
+	HPesan          float64 `json:"h_pesan"`
 	SubtotalPerItem float64 `json:"subtotal_per_item"`
 	DiskonPersen    float64 `json:"diskon_persen"`
 	DiskonJumlah    float64 `json:"diskon_jumlah"`
@@ -44,6 +45,7 @@ type DetailPenerimaanResponse struct {
 	IdSatuan        int     `json:"id_satuan"`
 	UbahMaster      string  `json:"ubah_master"`
 	Jumlah          int     `json:"jumlah"`
+	HPesan          float64 `json:"h_pesan"`
 	SubtotalPerItem float64 `json:"subtotal_per_item"`
 	DiskonPersen    float64 `json:"diskon_persen"`
 	DiskonJumlah    float64 `json:"diskon_jumlah"`

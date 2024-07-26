@@ -25,6 +25,6 @@ type Batch struct {
 	HBeliLuar     float64      `db:"h_beliluar"`
 	HJualBebas    float64      `db:"h_jualbebas"`
 	HKaryawan     float64      `db:"h_karyawan"`
-	JumlahBeli    int          `db:"jumlah_beli"`
+	JumlahBeli    int          `db:"jumlahbeli"`
 	Sisa          int          `db:"sisa"`
 }
