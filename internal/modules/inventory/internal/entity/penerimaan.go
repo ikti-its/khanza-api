@@ -16,6 +16,10 @@ type Penerimaan struct {
 	TanggalJatuhTempo time.Time `db:"tanggal_jthtempo"`
 	IdPegawai         uuid.UUID `db:"id_pegawai"`
 	IdRuangan         int       `db:"id_ruangan"`
+	PajakPersen       float64   `db:"pajak_persen"`
+	PajakJumlah       float64   `db:"pajak_jumlah"`
+	Tagihan           float64   `db:"tagihan"`
+	Materai           float64   `db:"materai"`
 }
 
 type DetailPenerimaan struct {

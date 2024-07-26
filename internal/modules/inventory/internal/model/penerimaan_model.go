@@ -1,26 +1,34 @@
 package model
 
 type PenerimaanRequest struct {
-	NoFaktur          string `json:"no_faktur"`
-	NoPemesanan       string `json:"no_pemesanan"`
-	IdSupplier        int    `json:"id_supplier"`
-	TanggalDatang     string `json:"tanggal_datang"`
-	TanggalFaktur     string `json:"tanggal_faktur"`
-	TanggalJatuhTempo string `json:"tanggal_jthtempo"`
-	IdPegawai         string `json:"id_pegawai"`
-	IdRuangan         int    `json:"id_ruangan"`
+	NoFaktur          string  `json:"no_faktur"`
+	NoPemesanan       string  `json:"no_pemesanan"`
+	IdSupplier        int     `json:"id_supplier"`
+	TanggalDatang     string  `json:"tanggal_datang"`
+	TanggalFaktur     string  `json:"tanggal_faktur"`
+	TanggalJatuhTempo string  `json:"tanggal_jthtempo"`
+	IdPegawai         string  `json:"id_pegawai"`
+	IdRuangan         int     `json:"id_ruangan"`
+	PajakPersen       float64 `json:"pajak_persen"`
+	PajakJumlah       float64 `json:"pajak_jumlah"`
+	Tagihan           float64 `json:"tagihan"`
+	Materai           float64 `json:"materai"`
 }
 
 type PenerimaanResponse struct {
-	Id                string `json:"id"`
-	NoFaktur          string `json:"no_faktur"`
-	NoPemesanan       string `json:"no_pemesanan"`
-	IdSupplier        int    `json:"id_supplier"`
-	TanggalDatang     string `json:"tanggal_datang"`
-	TanggalFaktur     string `json:"tanggal_faktur"`
-	TanggalJatuhTempo string `json:"tanggal_jthtempo"`
-	IdPegawai         string `json:"id_pegawai"`
-	IdRuangan         int    `json:"id_ruangan"`
+	Id                string  `json:"id"`
+	NoFaktur          string  `json:"no_faktur"`
+	NoPemesanan       string  `json:"no_pemesanan"`
+	IdSupplier        int     `json:"id_supplier"`
+	TanggalDatang     string  `json:"tanggal_datang"`
+	TanggalFaktur     string  `json:"tanggal_faktur"`
+	TanggalJatuhTempo string  `json:"tanggal_jthtempo"`
+	IdPegawai         string  `json:"id_pegawai"`
+	IdRuangan         int     `json:"id_ruangan"`
+	PajakPersen       float64 `json:"pajak_persen"`
+	PajakJumlah       float64 `json:"pajak_jumlah"`
+	Tagihan           float64 `json:"tagihan"`
+	Materai           float64 `json:"materai"`
 }
 
 type DetailPenerimaanRequest struct {

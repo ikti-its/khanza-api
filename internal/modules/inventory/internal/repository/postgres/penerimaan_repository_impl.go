@@ -16,9 +16,9 @@ func NewPenerimaanRepository(db *sqlx.DB) repository.PenerimaanRepository {
 }
 
 func (r *penerimaanRepositoryImpl) Insert(penerimaan *entity.Penerimaan) error {
-	query := "INSERT INTO penerimaan_barang_medis VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	query := "INSERT INTO penerimaan_barang_medis VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)"
 
-	_, err := r.DB.Exec(query, penerimaan.Id, penerimaan.NoFaktur, penerimaan.NoPemesanan, penerimaan.IdSupplier, penerimaan.TanggalDatang, penerimaan.TanggalFaktur, penerimaan.TanggalJatuhTempo, penerimaan.IdPegawai, penerimaan.IdRuangan)
+	_, err := r.DB.Exec(query, penerimaan.Id, penerimaan.NoFaktur, penerimaan.NoPemesanan, penerimaan.IdSupplier, penerimaan.TanggalDatang, penerimaan.TanggalFaktur, penerimaan.TanggalJatuhTempo, penerimaan.IdPegawai, penerimaan.IdRuangan, penerimaan.PajakPersen, penerimaan.PajakJumlah, penerimaan.Tagihan, penerimaan.Materai)
 
 	return err
 }
@@ -42,9 +42,9 @@ func (r *penerimaanRepositoryImpl) FindById(id uuid.UUID) (entity.Penerimaan, er
 }
 
 func (r *penerimaanRepositoryImpl) Update(penerimaan *entity.Penerimaan) error {
-	query := "UPDATE penerimaan_barang_medis SET no_faktur = $2, no_pemesanan = $3, id_supplier = $4, tanggal_datang = $5, tanggal_faktur = $6, tanggal_jthtempo = $7, id_pegawai = $8, id_ruangan = $9 WHERE id = $1"
+	query := "UPDATE penerimaan_barang_medis SET no_faktur = $2, no_pemesanan = $3, id_supplier = $4, tanggal_datang = $5, tanggal_faktur = $6, tanggal_jthtempo = $7, id_pegawai = $8, id_ruangan = $9, pajak_persen = $10, pajak_jumlah = $11, tagihan = $12, materai = $13 WHERE id = $1"
 
-	_, err := r.DB.Exec(query, penerimaan.Id, penerimaan.NoFaktur, penerimaan.NoPemesanan, penerimaan.IdSupplier, penerimaan.TanggalDatang, penerimaan.TanggalFaktur, penerimaan.TanggalJatuhTempo, penerimaan.IdPegawai, penerimaan.IdRuangan)
+	_, err := r.DB.Exec(query, penerimaan.Id, penerimaan.NoFaktur, penerimaan.NoPemesanan, penerimaan.IdSupplier, penerimaan.TanggalDatang, penerimaan.TanggalFaktur, penerimaan.TanggalJatuhTempo, penerimaan.IdPegawai, penerimaan.IdRuangan, penerimaan.PajakPersen, penerimaan.PajakJumlah, penerimaan.Tagihan, penerimaan.Materai)
 
 	return err
 }

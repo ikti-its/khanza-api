@@ -30,6 +30,10 @@ func (u *PenerimaanUseCase) Create(request *model.PenerimaanRequest) model.Pener
 		TanggalJatuhTempo: helper.ParseTime(request.TanggalJatuhTempo, "2006-01-02"),
 		IdPegawai:         helper.MustParse(request.IdPegawai),
 		IdRuangan:         request.IdRuangan,
+		PajakPersen:       request.PajakPersen,
+		PajakJumlah:       request.PajakJumlah,
+		Tagihan:           request.Tagihan,
+		Materai:           request.Materai,
 	}
 
 	if err := u.Repository.Insert(&penerimaan); err != nil {
@@ -46,6 +50,10 @@ func (u *PenerimaanUseCase) Create(request *model.PenerimaanRequest) model.Pener
 		TanggalJatuhTempo: helper.FormatTime(penerimaan.TanggalJatuhTempo, "2006-01-02"),
 		IdPegawai:         penerimaan.IdPegawai.String(),
 		IdRuangan:         penerimaan.IdRuangan,
+		PajakPersen:       penerimaan.PajakPersen,
+		PajakJumlah:       penerimaan.PajakJumlah,
+		Tagihan:           penerimaan.Tagihan,
+		Materai:           penerimaan.Materai,
 	}
 
 	return response
@@ -67,6 +75,10 @@ func (u *PenerimaanUseCase) Get() []model.PenerimaanResponse {
 			TanggalJatuhTempo: helper.FormatTime(penerimaan.TanggalJatuhTempo, "2006-01-02"),
 			IdPegawai:         penerimaan.IdPegawai.String(),
 			IdRuangan:         penerimaan.IdRuangan,
+			PajakPersen:       penerimaan.PajakPersen,
+			PajakJumlah:       penerimaan.PajakJumlah,
+			Tagihan:           penerimaan.Tagihan,
+			Materai:           penerimaan.Materai,
 		}
 	}
 
@@ -91,6 +103,10 @@ func (u *PenerimaanUseCase) GetById(id string) model.PenerimaanResponse {
 		TanggalJatuhTempo: helper.FormatTime(penerimaan.TanggalJatuhTempo, "2006-01-02"),
 		IdPegawai:         penerimaan.IdPegawai.String(),
 		IdRuangan:         penerimaan.IdRuangan,
+		PajakPersen:       penerimaan.PajakPersen,
+		PajakJumlah:       penerimaan.PajakJumlah,
+		Tagihan:           penerimaan.Tagihan,
+		Materai:           penerimaan.Materai,
 	}
 
 	return response
@@ -112,6 +128,10 @@ func (u *PenerimaanUseCase) Update(request *model.PenerimaanRequest, id string) 
 	penerimaan.TanggalJatuhTempo = helper.ParseTime(request.TanggalJatuhTempo, "2006-01-02")
 	penerimaan.IdPegawai = helper.MustParse(request.IdPegawai)
 	penerimaan.IdRuangan = request.IdRuangan
+	penerimaan.PajakPersen = request.PajakPersen
+	penerimaan.PajakJumlah = request.PajakJumlah
+	penerimaan.Tagihan = request.Tagihan
+	penerimaan.Materai = request.Materai
 
 	if err := u.Repository.Update(&penerimaan); err != nil {
 		exception.PanicIfError(err, "Failed to update penerimaan")
@@ -127,6 +147,10 @@ func (u *PenerimaanUseCase) Update(request *model.PenerimaanRequest, id string) 
 		TanggalJatuhTempo: helper.FormatTime(penerimaan.TanggalJatuhTempo, "2006-01-02"),
 		IdPegawai:         penerimaan.IdPegawai.String(),
 		IdRuangan:         penerimaan.IdRuangan,
+		PajakPersen:       penerimaan.PajakPersen,
+		PajakJumlah:       penerimaan.PajakJumlah,
+		Tagihan:           penerimaan.Tagihan,
+		Materai:           penerimaan.Materai,
 	}
 
 	return response
