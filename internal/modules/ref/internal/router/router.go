@@ -34,6 +34,7 @@ func Route(
 	{
 		shift.Post("/", middleware.Authenticate([]int{1337, 1}), refController.CreateShift)
 		shift.Get("/", middleware.Authenticate([]int{0}), refController.GetShift)
+		shift.Get("/:id", middleware.Authenticate([]int{0}), refController.GetShiftById)
 		shift.Put("/:id", middleware.Authenticate([]int{1337, 1}), refController.UpdateShift)
 		shift.Delete("/:id", middleware.Authenticate([]int{1337, 1}), refController.DeleteShift)
 	}

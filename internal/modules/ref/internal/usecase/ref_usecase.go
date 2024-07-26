@@ -117,6 +117,24 @@ func (u *RefUseCase) GetShift() []model.ShiftResponse {
 	return response
 }
 
+func (u *RefUseCase) GetShiftById(id string) model.ShiftResponse {
+	shift, err := u.Repository.FindShiftById(id)
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Shift not found",
+		})
+	}
+
+	response := model.ShiftResponse{
+		Id:        shift.Id,
+		Nama:      shift.Nama,
+		JamMasuk:  helper.FormatTime(shift.JamMasuk, "15:04:05"),
+		JamPulang: helper.FormatTime(shift.JamPulang, "15:04:05"),
+	}
+
+	return response
+}
+
 func (u *RefUseCase) UpdateShift(request *model.ShiftRequest, id string) model.ShiftResponse {
 	shift, err := u.Repository.FindShiftById(id)
 	if err != nil {

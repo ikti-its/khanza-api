@@ -86,6 +86,18 @@ func (c *RefController) GetShift(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *RefController) GetShiftById(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+
+	response := c.UseCase.GetShiftById(id)
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+
 func (c *RefController) UpdateShift(ctx *fiber.Ctx) error {
 	var request model.ShiftRequest
 	id := ctx.Params("id")
