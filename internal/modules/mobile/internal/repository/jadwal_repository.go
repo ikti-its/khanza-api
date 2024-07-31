@@ -6,5 +6,6 @@ import (
 )
 
 type JadwalRepository interface {
+	Find(hari int) ([]entity.Jadwal, error)
 	FindByPegawaiId(id uuid.UUID, hari int) (entity.Jadwal, error)
 }

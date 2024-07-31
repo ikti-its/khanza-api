@@ -15,6 +15,20 @@ func NewJadwalRepository(db *sqlx.DB) repository.JadwalRepository {
 	return &jadwalRepositoryImpl{db}
 }
 
+func (r *jadwalRepositoryImpl) Find(hari int) ([]entity.Jadwal, error) {
+	query := `
+		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang
+		FROM jadwal_pegawai jp
+		JOIN ref.shift s ON jp.id_shift = s.id
+		WHERE jp.id_hari = $1 AND deleted_at IS NULL
+	`
+
+	var records []entity.Jadwal
+	err := r.DB.Select(&records, query, hari)
+
+	return records, err
+}
+
 func (r *jadwalRepositoryImpl) FindByPegawaiId(id uuid.UUID, hari int) (entity.Jadwal, error) {
 	query := `
 		SELECT jp.id, jp.id_pegawai, jp.id_hari, jp.id_shift, s.jam_masuk, s.jam_pulang

@@ -16,6 +16,18 @@ func NewJadwalController(useCase *usecase.JadwalUseCase) *JadwalController {
 	}
 }
 
+func (c *JadwalController) Get(ctx *fiber.Ctx) error {
+	hari := ctx.QueryInt("hari")
+
+	response := c.UseCase.Get(hari)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
 func (c *JadwalController) GetByPegawaiId(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	hari := ctx.QueryInt("hari")

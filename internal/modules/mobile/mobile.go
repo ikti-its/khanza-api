@@ -35,6 +35,10 @@ func ProvideMobile(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
 	jadwalUseCase := usecase.NewJadwalUseCase(&jadwalRepository)
 	jadwalController := controller.NewJadwalController(jadwalUseCase)
 
+	tukarRepository := postgres.NewTukarRepository(db)
+	tukarUseCase := usecase.NewTukarUseCase(&tukarRepository)
+	tukarController := controller.NewTukarController(tukarUseCase)
+
 	router.Route(
 		app,
 		homeController,
@@ -43,5 +47,6 @@ func ProvideMobile(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
 		ketersediaanController,
 		kehadiranController,
 		jadwalController,
+		tukarController,
 	)
 }

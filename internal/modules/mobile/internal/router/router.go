@@ -14,6 +14,7 @@ func Route(
 	ketersediaanController *controller.KetersediaanController,
 	kehadiranController *controller.KehadiranController,
 	jadwalController *controller.JadwalController,
+	tukarController *controller.TukarController,
 ) {
 	mobile := app.Group("/v1/m")
 
@@ -39,7 +40,18 @@ func Route(
 
 	kehadiran := mobile.Group("/kehadiran")
 	{
+		kehadiran.Get("/jadwal", middleware.Authenticate([]int{0}), jadwalController.Get)
 		kehadiran.Get("/jadwal/:id", middleware.Authenticate([]int{0}), jadwalController.GetByPegawaiId)
 		kehadiran.Get("/:id", middleware.Authenticate([]int{0}), kehadiranController.GetByPegawaiId)
+	}
+
+	tukar := mobile.Group("/tukar")
+	{
+		tukar.Post("/", middleware.Authenticate([]int{1337, 1, 2}), tukarController.Create)
+		tukar.Get("/sender/:id", middleware.Authenticate([]int{1337, 1, 2}), tukarController.GetSender)
+		tukar.Get("/recipient/:id", middleware.Authenticate([]int{1337, 1, 2}), tukarController.GetRecipient)
+		tukar.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), tukarController.GetById)
+		tukar.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), tukarController.Update)
+		tukar.Put("/:id", middleware.Authenticate([]int{1337, 1}), tukarController.Delete)
 	}
 }
