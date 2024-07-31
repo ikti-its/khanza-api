@@ -52,7 +52,7 @@ func (r *opnameRepositoryImpl) Update(opname *entity.Opname) error {
 func (r *opnameRepositoryImpl) Delete(opname *entity.Opname) error {
 	query := "DELETE FROM opname WHERE id = $1"
 
-	_, err := r.DB.Exec(query, opname.IdBarangMedis)
+	_, err := r.DB.Exec(query, opname.Id)
 
 	return err
 }

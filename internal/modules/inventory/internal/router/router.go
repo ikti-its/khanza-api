@@ -98,7 +98,8 @@ func Route(
 	{
 		batch.Post("/", middleware.Authenticate([]int{1337, 1, 2}), batchController.Create)
 		batch.Get("/", middleware.Authenticate([]int{1337, 1, 2}), batchController.Get)
-		batch.Get("/:batch", middleware.Authenticate([]int{1337, 1, 2}), batchController.GetById)
+		batch.Get("/:batch", middleware.Authenticate([]int{1337, 1, 2}), batchController.GetByBatch)
+		batch.Get("/:batch/:faktur/:barang", middleware.Authenticate([]int{1337, 1, 2}), batchController.GetById)
 		batch.Put("/:batch/:faktur/:barang", middleware.Authenticate([]int{1337, 1, 2}), batchController.Update)
 		batch.Delete("/:batch/:faktur/:barang", middleware.Authenticate([]int{1337, 1, 2}), batchController.Delete)
 	}

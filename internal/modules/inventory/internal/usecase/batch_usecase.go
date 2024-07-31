@@ -151,6 +151,40 @@ func (u *BatchUseCase) GetByBatch(id string) []model.BatchResponse {
 	return response
 }
 
+func (u *BatchUseCase) GetById(id, faktur, barang string) model.BatchResponse {
+	batch, err := u.Repository.FindById(id, faktur, helper.MustParse(barang))
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Batch not found",
+		})
+	}
+
+	response := model.BatchResponse{
+		NoBatch:       batch.NoBatch,
+		NoFaktur:      batch.NoFaktur,
+		IdBarangMedis: batch.IdBarangMedis.String(),
+		TanggalDatang: helper.FormatTime(batch.TanggalDatang, "2006-01-02"),
+		Kadaluwarsa:   helper.FormatTime(batch.Kadaluwarsa.Time, "2006-01-02"),
+		Asal:          batch.Asal,
+		HDasar:        batch.HDasar,
+		HBeli:         batch.HBeli,
+		HRalan:        batch.HRalan,
+		HKelasI:       batch.HKelasI,
+		HKelasII:      batch.HKelasII,
+		HKelasIII:     batch.HKelasIII,
+		HUtama:        batch.HUtama,
+		HVIP:          batch.HVIP,
+		HVVIP:         batch.HVVIP,
+		HBeliLuar:     batch.HBeliLuar,
+		HJualBebas:    batch.HJualBebas,
+		HKaryawan:     batch.HKaryawan,
+		JumlahBeli:    batch.JumlahBeli,
+		Sisa:          batch.Sisa,
+	}
+
+	return response
+}
+
 func (u *BatchUseCase) Update(request *model.BatchRequest, id, faktur, barang string) model.BatchResponse {
 	batch, err := u.Repository.FindById(id, faktur, helper.MustParse(barang))
 	if err != nil {

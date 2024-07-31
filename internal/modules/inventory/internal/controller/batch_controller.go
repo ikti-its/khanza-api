@@ -44,10 +44,24 @@ func (c *BatchController) Get(ctx *fiber.Ctx) error {
 	})
 }
 
-func (c *BatchController) GetById(ctx *fiber.Ctx) error {
+func (c *BatchController) GetByBatch(ctx *fiber.Ctx) error {
 	batch := ctx.Params("batch")
 
 	response := c.UseCase.GetByBatch(batch)
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *BatchController) GetById(ctx *fiber.Ctx) error {
+	batch := ctx.Params("batch")
+	faktur := ctx.Params("faktur")
+	barang := ctx.Params("barang")
+
+	response := c.UseCase.GetById(batch, faktur, barang)
 
 	return ctx.Status(fiber.StatusOK).JSON(web.Response{
 		Code:   fiber.StatusOK,
