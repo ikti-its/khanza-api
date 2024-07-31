@@ -190,6 +190,17 @@ func (u *RefUseCase) GetAlasanCuti() []model.AlasanCutiResponse {
 	return response
 }
 
+func (u *RefUseCase) GetKodePresensi(tanggal string) model.KodePresensiResponse {
+	kode, err := u.Repository.FindKodePresensi(tanggal)
+	exception.PanicIfError(err, "Failed to get kode presensi")
+
+	response := model.KodePresensiResponse{
+		Kode: kode.Kode,
+	}
+
+	return response
+}
+
 func (u *RefUseCase) GetIndustriFarmasi() []model.IndustriFarmasiResponse {
 	industri, err := u.Repository.FindIndustriFarmasi()
 	exception.PanicIfError(err, "Failed to get all industri farmasi")

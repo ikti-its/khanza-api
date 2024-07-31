@@ -15,6 +15,7 @@ type RefRepository interface {
 	DeleteShift(shift *entity.Shift) error
 
 	FindAlasanCuti() ([]entity.AlasanCuti, error)
+	FindKodePresensi(tanggal string) (entity.KodePresensi, error)
 	FindIndustriFarmasi() ([]entity.IndustriFarmasi, error)
 	FindSatuanBarangMedis() ([]entity.SatuanBarangMedis, error)
 	FindJenisBarangMedis() ([]entity.JenisBarangMedis, error)

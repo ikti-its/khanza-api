@@ -135,6 +135,18 @@ func (c *RefController) GetAlasanCuti(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *RefController) GetKodePresensi(ctx *fiber.Ctx) error {
+	tanggal := ctx.Query("tanggal")
+
+	response := c.UseCase.GetKodePresensi(tanggal)
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "Created",
+		Data:   response,
+	})
+}
+
 func (c *RefController) GetIndustriFarmasi(ctx *fiber.Ctx) error {
 	response := c.UseCase.GetIndustriFarmasi()
 

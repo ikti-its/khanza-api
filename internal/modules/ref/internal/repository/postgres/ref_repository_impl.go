@@ -133,6 +133,19 @@ func (r refRepositoryImpl) FindAlasanCuti() ([]entity.AlasanCuti, error) {
 	return records, err
 }
 
+func (r refRepositoryImpl) FindKodePresensi(tanggal string) (entity.KodePresensi, error) {
+	query := `
+		SELECT kode
+		FROM ref.kode_presensi
+		WHERE tanggal = $1
+	`
+
+	var record entity.KodePresensi
+	err := r.DB.Get(&record, query, tanggal)
+
+	return record, err
+}
+
 func (r refRepositoryImpl) FindIndustriFarmasi() ([]entity.IndustriFarmasi, error) {
 	query := `
 		SELECT id, kode, nama, alamat, kota, telepon

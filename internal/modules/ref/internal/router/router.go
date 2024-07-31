@@ -17,6 +17,7 @@ func Route(
 		ref.Get("/departemen", middleware.Authenticate([]int{0}), refController.GetDepartemen)
 		ref.Get("/status-aktif", middleware.Authenticate([]int{0}), refController.GetStatusAktif)
 		ref.Get("/alasan-cuti", middleware.Authenticate([]int{0}), refController.GetAlasanCuti)
+		ref.Get("/kode", middleware.Authenticate([]int{0}), refController.GetKodePresensi)
 	}
 
 	inventory := ref.Group("/inventory")

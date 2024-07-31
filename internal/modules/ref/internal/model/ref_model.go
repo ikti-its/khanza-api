@@ -39,6 +39,10 @@ type AlasanCutiResponse struct {
 	Nama string `json:"nama"`
 }
 
+type KodePresensiResponse struct {
+	Kode string `json:"kode"`
+}
+
 type IndustriFarmasiResponse struct {
 	Id      int    `json:"id"`
 	Kode    string `json:"kode"`

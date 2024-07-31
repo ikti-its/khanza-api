@@ -34,6 +34,11 @@ type AlasanCuti struct {
 	Nama string `db:"nama"`
 }
 
+type KodePresensi struct {
+	Tanggal time.Time `db:"tanggal"`
+	Kode    string    `db:"kode"`
+}
+
 type IndustriFarmasi struct {
 	Id      int    `db:"id"`
 	Kode    string `db:"kode"`
