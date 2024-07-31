@@ -94,6 +94,19 @@ func (r *kehadiranRepositoryImpl) FindByTanggal(tanggal string) ([]entity.Kehadi
 	return records, err
 }
 
+func (r *kehadiranRepositoryImpl) FindByPegawaiTanggal(id uuid.UUID, tanggal string) (int, error) {
+	query := `
+		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
+		FROM presensi
+		WHERE id_pegawai = $1 AND tanggal = $2 AND deleted_at IS NULL
+	`
+
+	var records []entity.Kehadiran
+	err := r.DB.Select(&records, query, id, tanggal)
+
+	return len(records), err
+}
+
 func (r *kehadiranRepositoryImpl) FindById(id uuid.UUID) (entity.Kehadiran, error) {
 	query := `
 		SELECT id, id_pegawai, id_jadwal_pegawai, tanggal, jam_masuk, jam_pulang, keterangan, foto
@@ -103,6 +116,19 @@ func (r *kehadiranRepositoryImpl) FindById(id uuid.UUID) (entity.Kehadiran, erro
 
 	var record entity.Kehadiran
 	err := r.DB.Get(&record, query, id)
+
+	return record, err
+}
+
+func (r *kehadiranRepositoryImpl) FindKode(tanggal string) (entity.KodePresensi, error) {
+	query := `
+		SELECT kode
+		FROM ref.kode_presensi
+		WHERE tanggal = $1
+	`
+
+	var record entity.KodePresensi
+	err := r.DB.Get(&record, query, tanggal)
 
 	return record, err
 }

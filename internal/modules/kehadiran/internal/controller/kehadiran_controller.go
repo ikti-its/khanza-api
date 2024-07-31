@@ -24,6 +24,7 @@ func NewKehadiranController(useCase *usecase.KehadiranUseCase, validator *config
 
 func (c *KehadiranController) Attend(ctx *fiber.Ctx) error {
 	var request model.AttendKehadiranRequest
+	kode := ctx.Query("kode")
 
 	if err := ctx.BodyParser(&request); err != nil {
 		panic(&exception.BadRequestError{
@@ -39,13 +40,23 @@ func (c *KehadiranController) Attend(ctx *fiber.Ctx) error {
 	}
 
 	updater := ctx.Locals("user").(string)
-	response := c.UseCase.Attend(&request, updater)
+	if kode != "" {
+		response := c.UseCase.AttendByKode(&request, kode, updater)
 
-	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
-		Code:   fiber.StatusCreated,
-		Status: "OK",
-		Data:   response,
-	})
+		return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+			Code:   fiber.StatusCreated,
+			Status: "OK",
+			Data:   response,
+		})
+	} else {
+		response := c.UseCase.Attend(&request, updater)
+
+		return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+			Code:   fiber.StatusCreated,
+			Status: "OK",
+			Data:   response,
+		})
+	}
 }
 
 func (c *KehadiranController) Leave(ctx *fiber.Ctx) error {

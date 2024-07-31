@@ -17,3 +17,7 @@ type Kehadiran struct {
 	Foto            string       `db:"foto"`
 	Updater         uuid.UUID    `db:"updater"`
 }
+
+type KodePresensi struct {
+	Kode string `db:"kode"`
+}

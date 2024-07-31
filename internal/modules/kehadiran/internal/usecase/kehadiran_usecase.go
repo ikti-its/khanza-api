@@ -19,6 +19,17 @@ func NewKehadiranUseCase(repository *repository.KehadiranRepository) *KehadiranU
 }
 
 func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater string) model.KehadiranResponse {
+	limit, err := u.Repository.FindByPegawaiTanggal(helper.MustParse(request.IdPegawai), request.Tanggal)
+	if err != nil {
+		exception.PanicIfError(err, "Failed to get kehadiran")
+	}
+
+	if limit >= 3 {
+		panic(&exception.ForbiddenError{
+			Message: "Reached maximum allowed attendance",
+		})
+	}
+
 	kehadiran := entity.Kehadiran{
 		Id:              helper.MustNew(),
 		IdPegawai:       helper.MustParse(request.IdPegawai),
@@ -30,7 +41,59 @@ func (u *KehadiranUseCase) Attend(request *model.AttendKehadiranRequest, updater
 		Updater:         helper.MustParse(updater),
 	}
 
-	err := u.Repository.Insert(&kehadiran)
+	err = u.Repository.Insert(&kehadiran)
+	if err != nil {
+		exception.PanicIfError(err, "Failed to attend kehadiran")
+	}
+
+	response := model.KehadiranResponse{
+		Id:        kehadiran.Id.String(),
+		IdPegawai: kehadiran.IdPegawai.String(),
+		Tanggal:   kehadiran.Tanggal.Format("2006-01-02"),
+		JamMasuk:  helper.FormatTime(kehadiran.JamMasuk, "15:04:05 +07:00"),
+		Foto:      kehadiran.Foto,
+	}
+
+	return response
+}
+
+func (u *KehadiranUseCase) AttendByKode(request *model.AttendKehadiranRequest, kode, updater string) model.KehadiranResponse {
+	pin, err := u.Repository.FindKode(request.Tanggal)
+	if err != nil {
+		panic(&exception.NotFoundError{
+			Message: "Kode presensi not found",
+		})
+	}
+
+	if kode != pin.Kode {
+		panic(&exception.UnauthorizedError{
+			Message: "Invalid pin",
+		})
+	}
+
+	limit, err := u.Repository.FindByPegawaiTanggal(helper.MustParse(request.IdPegawai), request.Tanggal)
+	if err != nil {
+		exception.PanicIfError(err, "Failed to get kehadiran")
+	}
+
+	if limit >= 3 {
+		panic(&exception.ForbiddenError{
+			Message: "Reached maximum allowed attendance",
+		})
+	}
+
+	kehadiran := entity.Kehadiran{
+		Id:              helper.MustNew(),
+		IdPegawai:       helper.MustParse(request.IdPegawai),
+		IdJadwalPegawai: helper.MustParse(request.IdJadwalPegawai),
+		Tanggal:         helper.ParseTime(request.Tanggal, "2006-01-02"),
+		JamMasuk:        helper.ParseNow(),
+		Keterangan:      request.Keterangan,
+		Foto:            request.Foto,
+		Updater:         helper.MustParse(updater),
+	}
+
+	err = u.Repository.Insert(&kehadiran)
 	if err != nil {
 		exception.PanicIfError(err, "Failed to attend kehadiran")
 	}
