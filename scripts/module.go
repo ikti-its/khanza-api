@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/ikti-its/khanza-api/scripts/templates"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 	"os"
 	"path"
 	"text/template"
+
+	"github.com/ikti-its/khanza-api/scripts/templates"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func main() {
-	// Ensure module name is provided
 	if len(os.Args) < 2 {
 		println("Usage: go run scripts/module.go <module name>")
 		return
@@ -20,7 +20,6 @@ func main() {
 	module := os.Args[1]
 	modulePath := fmt.Sprintf("internal/modules/%s", module)
 
-	// Initialize module directory
 	directories := []string{
 		modulePath,
 		path.Join(modulePath, "internal/entity"),
@@ -40,7 +39,6 @@ func main() {
 		}
 	}
 
-	// Initialize module files
 	files := map[string]string{
 		path.Join(modulePath, "internal/router", "router.go"): templates.RouterTmpl,
 		path.Join(modulePath, fmt.Sprintf("%s.go", module)):   templates.ProviderTmpl,

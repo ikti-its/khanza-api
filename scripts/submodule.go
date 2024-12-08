@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/ikti-its/khanza-api/scripts/templates"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 	"os"
 	"path"
 	"text/template"
+
+	"github.com/ikti-its/khanza-api/scripts/templates"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func main() {
-	// Ensure module and submodule name is provided
 	if len(os.Args) < 3 {
 		println("Usage: go run scripts/submodule.go <module name> <submodule name>")
 		return
@@ -21,7 +21,6 @@ func main() {
 	submodule := os.Args[2]
 	modulePath := fmt.Sprintf("internal/modules/%s", module)
 
-	// Initialize submodule files
 	files := map[string]string{
 		path.Join(modulePath, "internal/entity", fmt.Sprintf("%s.go", submodule)):                              templates.EntityTmpl,
 		path.Join(modulePath, "internal/model", fmt.Sprintf("%s_model.go", submodule)):                         templates.ModelTmpl,
