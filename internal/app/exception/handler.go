@@ -2,6 +2,7 @@ package exception
 
 import (
 	"errors"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/model"
 )

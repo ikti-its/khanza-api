@@ -1,10 +1,11 @@
 package helper
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/app/config"
-	"time"
 )
 
 func GenerateJWT(userId uuid.UUID, role int, cfg *config.Config) (string, error) {

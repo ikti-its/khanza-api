@@ -1,6 +1,8 @@
 package config
 
 import (
+	"net/http"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -8,7 +10,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
-	"net/http"
 )
 
 func NewFiber(cfg *Config) *fiber.App {
@@ -18,23 +19,23 @@ func NewFiber(cfg *Config) *fiber.App {
 		JSONDecoder:  json.Unmarshal,
 	}
 	app := fiber.New(config)
-	app.Use(cors.New())    // Enable CORS
-	app.Use(recover.New()) // Recover panics outside fiber
+	app.Use(cors.New())
+	app.Use(recover.New())
 
-	app.Get("/", func(ctx *fiber.Ctx) error { // Home Route
-		return ctx.Status(http.StatusOK).SendString("Endpoint `/` is not set. Please refer to the API documentation at https://documenter.getpostman.com/view/23649536/2sA2rDy1iF")
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.Status(http.StatusOK).SendString("Endpoint `/` is not set.")
 	})
 
-	app.Use(healthcheck.New(healthcheck.Config{ // Health Check
+	app.Use(healthcheck.New(healthcheck.Config{
 		LivenessProbe: func(ctx *fiber.Ctx) bool {
 			return true
 		},
 		LivenessEndpoint: "/healthz",
 	}))
 
-	if cfg.GetBool("APP_DEBUG", false) { // Log requests [Only for development, remove in production]
+	if cfg.GetBool("APP_DEBUG", false) {
 		log := logger.Config{
-			Format:     "[${time}] ${status} - ${method} ${path}\n", // e.g. [2006-01-02 15:04:05] 200 - GET /
+			Format:     "[${time}] ${status} - ${method} ${path}\n",
 			TimeFormat: "2006-01-02 15:04:05",
 			TimeZone:   "Asia/Jakarta",
 		}
