@@ -6,7 +6,6 @@ import (
 	"github.com/ikti-its/khanza-api/internal/app/helper"
 	"github.com/ikti-its/khanza-api/internal/modules/web/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/web/internal/repository"
-	"log"
 )
 
 type HomeUseCase struct {
@@ -33,7 +32,6 @@ func (u *HomeUseCase) GetHomePegawai(id string, tanggal string) model.HomeRespon
 
 	home, err := u.Repository.HomePegawai(helper.MustParse(id), int(hari))
 	if err != nil {
-		log.Printf(err.Error())
 		panic(&exception.NotFoundError{
 			Message: "Akun not found",
 		})

@@ -1,11 +1,12 @@
 package postgres
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"time"
 )
 
 type organisasiRepositoryImpl struct {

@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type akunRepositoryImpl struct {
@@ -19,7 +20,7 @@ func NewAkunRepository(db *sqlx.DB) repository.AkunRepository {
 
 func (r *akunRepositoryImpl) Insert(akun *entity.Akun) error {
 	query := `
-		INSERT INTO akun (id, email, password, foto, role) 
+		INSERT INTO akun (id, email, password, foto, role)
 		VALUES ($1, $2, $3, $4, $5)
 	`
 
@@ -30,8 +31,8 @@ func (r *akunRepositoryImpl) Insert(akun *entity.Akun) error {
 
 func (r *akunRepositoryImpl) Find() ([]entity.Akun, error) {
 	query := `
-		SELECT id, email, foto, role 
-		FROM akun 
+		SELECT id, email, foto, role
+		FROM akun
 		WHERE deleted_at IS NULL
 	`
 
@@ -43,9 +44,9 @@ func (r *akunRepositoryImpl) Find() ([]entity.Akun, error) {
 
 func (r *akunRepositoryImpl) FindPage(page, size int) ([]entity.Akun, int, error) {
 	query := `
-		SELECT id, email, foto, role 
-		FROM akun 
-		WHERE deleted_at IS NULL 
+		SELECT id, email, foto, role
+		FROM akun
+		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
 	`
 	totalQuery := "SELECT COUNT(*) FROM akun WHERE deleted_at IS NULL"
@@ -66,8 +67,8 @@ func (r *akunRepositoryImpl) FindPage(page, size int) ([]entity.Akun, int, error
 
 func (r *akunRepositoryImpl) FindById(id uuid.UUID) (entity.Akun, error) {
 	query := `
-		SELECT id, email, foto, role 
-		FROM akun 
+		SELECT id, email, foto, role
+		FROM akun
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
@@ -79,8 +80,8 @@ func (r *akunRepositoryImpl) FindById(id uuid.UUID) (entity.Akun, error) {
 
 func (r *akunRepositoryImpl) Update(akun *entity.Akun) error {
 	query := `
-		UPDATE akun 
-		SET email = $1, password = $2, foto = $3, role = $4, updated_at = $5, updater = $6 
+		UPDATE akun
+		SET email = $1, password = $2, foto = $3, role = $4, updated_at = $5, updater = $6
 		WHERE id = $7 AND deleted_at IS NULL
 	`
 
@@ -91,7 +92,7 @@ func (r *akunRepositoryImpl) Update(akun *entity.Akun) error {
 
 func (r *akunRepositoryImpl) Delete(akun *entity.Akun) error {
 	query := `
-		UPDATE akun 
+		UPDATE akun
 		SET deleted_at = $1, updater = $2
 		WHERE id = $3
 	`

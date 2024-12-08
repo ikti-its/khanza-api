@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type kehadiranRepositoryImpl struct {
@@ -136,7 +137,7 @@ func (r *kehadiranRepositoryImpl) FindKode(tanggal string) (entity.KodePresensi,
 func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran, emergency bool) error {
 	query := `
 		UPDATE presensi
-		SET id_pegawai = $1, id_jadwal_pegawai = $2, tanggal = $3, jam_masuk = $4, jam_pulang = $5, 
+		SET id_pegawai = $1, id_jadwal_pegawai = $2, tanggal = $3, jam_masuk = $4, jam_pulang = $5,
 		    keterangan = (
 		        CASE WHEN $10 THEN 'Darurat'
 		        WHEN $4 > (
@@ -145,7 +146,7 @@ func (r *kehadiranRepositoryImpl) Update(kehadiran *entity.Kehadiran, emergency 
 		            JOIN jadwal_pegawai jp ON s.id = jp.id_shift
 		            WHERE jp.id = $2
 		        ) THEN 'Terlambat' ELSE 'Hadir' END
-		    ), 
+		    ),
 		    foto = $6, updated_at = $7, updater = $8
 		WHERE id = $9 AND deleted_at IS NULL
 	`

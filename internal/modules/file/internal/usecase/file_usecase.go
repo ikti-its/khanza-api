@@ -2,11 +2,12 @@ package usecase
 
 import (
 	"fmt"
+	"path"
+
 	"github.com/ikti-its/khanza-api/internal/app/config"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"github.com/ikti-its/khanza-api/internal/app/helper"
 	"github.com/ikti-its/khanza-api/internal/modules/file/internal/model"
-	"path"
 )
 
 type FileUseCase struct {

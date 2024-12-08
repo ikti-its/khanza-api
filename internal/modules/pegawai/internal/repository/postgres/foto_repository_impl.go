@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type fotoRepositoryImpl struct {
@@ -19,7 +20,7 @@ func NewFotoRepository(db *sqlx.DB) repository.FotoRepository {
 
 func (r *fotoRepositoryImpl) Insert(foto *entity.Foto) error {
 	query := `
-		INSERT INTO foto_pegawai (id_pegawai, foto) 
+		INSERT INTO foto_pegawai (id_pegawai, foto)
 		VALUES ($1, $2)
 	`
 
@@ -30,8 +31,8 @@ func (r *fotoRepositoryImpl) Insert(foto *entity.Foto) error {
 
 func (r *fotoRepositoryImpl) Find() ([]entity.Foto, error) {
 	query := `
-		SELECT id_pegawai, foto 
-		FROM foto_pegawai 
+		SELECT id_pegawai, foto
+		FROM foto_pegawai
 		WHERE deleted_at IS NULL
 	`
 
@@ -43,8 +44,8 @@ func (r *fotoRepositoryImpl) Find() ([]entity.Foto, error) {
 
 func (r *fotoRepositoryImpl) FindPage(page, size int) ([]entity.Foto, int, error) {
 	query := `
-		SELECT id_pegawai, foto 
-		FROM foto_pegawai 
+		SELECT id_pegawai, foto
+		FROM foto_pegawai
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
 	`
@@ -66,8 +67,8 @@ func (r *fotoRepositoryImpl) FindPage(page, size int) ([]entity.Foto, int, error
 
 func (r *fotoRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {
 	query := `
-		SELECT id_akun 
-		FROM pegawai 
+		SELECT id_akun
+		FROM pegawai
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
@@ -81,8 +82,8 @@ func (r *fotoRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {
 
 func (r *fotoRepositoryImpl) FindById(id uuid.UUID) (entity.Foto, error) {
 	query := `
-		SELECT id_pegawai, foto 
-		FROM foto_pegawai 
+		SELECT id_pegawai, foto
+		FROM foto_pegawai
 		WHERE id_pegawai = $1 AND deleted_at IS NULL
 	`
 
@@ -94,7 +95,7 @@ func (r *fotoRepositoryImpl) FindById(id uuid.UUID) (entity.Foto, error) {
 
 func (r *fotoRepositoryImpl) Update(foto *entity.Foto) error {
 	query := `
-		UPDATE foto_pegawai 
+		UPDATE foto_pegawai
 		SET id_pegawai = $1, foto = $2, updated_at = $3, updater = $4
 		WHERE id_pegawai = $5 AND deleted_at IS NULL
 	`
@@ -106,7 +107,7 @@ func (r *fotoRepositoryImpl) Update(foto *entity.Foto) error {
 
 func (r *fotoRepositoryImpl) Delete(foto *entity.Foto) error {
 	query := `
-		UPDATE foto_pegawai 
+		UPDATE foto_pegawai
 		SET deleted_at = $1, updater = $2
 		WHERE id_pegawai = $3
 	`
