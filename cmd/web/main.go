@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/ikti-its/khanza-api/internal/app/config"
 	"github.com/ikti-its/khanza-api/internal/app/provider"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
-	"log"
 )
 
 func main() {
