@@ -1,10 +1,11 @@
 package config
 
 import (
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 	"log"
 	"time"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 func NewPostgres(cfg *Config) *sqlx.DB {

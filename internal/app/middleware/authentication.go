@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"os"
+
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
-	"os"
 )
 
 func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
@@ -18,8 +19,6 @@ func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 			ctx.Locals("user", claims["sub"])
 			ctx.Locals("role", int(claims["role"].(float64)))
 
-			// Roles
-			// 0: Public, 1337: Developer, 1: Admin, 2: Pegawai, ... (ask developer)
 			role := int(claims["role"].(float64))
 			pegawai := []int{2, 4001, 4002, 4003, 4004, 5001}
 
@@ -42,8 +41,6 @@ func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 			panic(&exception.ForbiddenError{
 				Message: "You don't have permission to access this resource",
 			})
-
-			return nil
 		},
 
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {

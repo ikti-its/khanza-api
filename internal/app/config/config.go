@@ -9,6 +9,10 @@ import (
 type Config struct {
 }
 
+func NewConfig() *Config {
+	return &Config{}
+}
+
 func (c *Config) Get(key, def string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
@@ -36,8 +40,4 @@ func (c *Config) GetBool(key string, def bool) bool {
 	}
 
 	return value
-}
-
-func NewConfig() *Config {
-	return &Config{}
 }
