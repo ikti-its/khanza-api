@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type tagihanRepositoryImpl struct {
@@ -19,7 +20,7 @@ func NewTagihanRepository(db *sqlx.DB) repository.TagihanRepository {
 
 func (r *tagihanRepositoryImpl) Insert(tagihan *entity.Tagihan) error {
 	query := `
-		INSERT INTO tagihan_barang_medis (id, id_pengajuan, id_pemesanan, id_penerimaan, tanggal_bayar, jumlah_bayar, id_pegawai, keterangan, no_bukti, id_akun_bayar, updater) 
+		INSERT INTO tagihan_barang_medis (id, id_pengajuan, id_pemesanan, id_penerimaan, tanggal_bayar, jumlah_bayar, id_pegawai, keterangan, no_bukti, id_akun_bayar, updater)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`
 

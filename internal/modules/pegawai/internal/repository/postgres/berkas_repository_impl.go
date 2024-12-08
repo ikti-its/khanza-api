@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type berkasRepositoryImpl struct {
@@ -19,7 +20,7 @@ func NewBerkasRepository(db *sqlx.DB) repository.BerkasRepository {
 
 func (r *berkasRepositoryImpl) Insert(berkas *entity.Berkas) error {
 	query := `
-		INSERT INTO berkas_pegawai (id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom) 
+		INSERT INTO berkas_pegawai (id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
 	`
 
@@ -30,8 +31,8 @@ func (r *berkasRepositoryImpl) Insert(berkas *entity.Berkas) error {
 
 func (r *berkasRepositoryImpl) Find() ([]entity.Berkas, error) {
 	query := `
-		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom 
-		FROM berkas_pegawai 
+		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom
+		FROM berkas_pegawai
 		WHERE deleted_at IS NULL
 	`
 
@@ -43,8 +44,8 @@ func (r *berkasRepositoryImpl) Find() ([]entity.Berkas, error) {
 
 func (r *berkasRepositoryImpl) FindPage(page, size int) ([]entity.Berkas, int, error) {
 	query := `
-		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom 
-		FROM berkas_pegawai 
+		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom
+		FROM berkas_pegawai
 		WHERE deleted_at IS NULL
 		LIMIT $1 OFFSET $2
 	`
@@ -66,8 +67,8 @@ func (r *berkasRepositoryImpl) FindPage(page, size int) ([]entity.Berkas, int, e
 
 func (r *berkasRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {
 	query := `
-		SELECT id_akun 
-		FROM pegawai 
+		SELECT id_akun
+		FROM pegawai
 		WHERE id = $1 AND deleted_at IS NULL
 	`
 
@@ -81,8 +82,8 @@ func (r *berkasRepositoryImpl) FindAkunIdById(id uuid.UUID) (uuid.UUID, error) {
 
 func (r *berkasRepositoryImpl) FindById(id uuid.UUID) (entity.Berkas, error) {
 	query := `
-		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom 
-		FROM berkas_pegawai 
+		SELECT id_pegawai, nik, tempat_lahir, tanggal_lahir, agama, pendidikan, ktp, kk, npwp, bpjs, ijazah, skck, str, serkom
+		FROM berkas_pegawai
 		WHERE id_pegawai = $1 AND deleted_at IS NULL
 	`
 
@@ -94,8 +95,8 @@ func (r *berkasRepositoryImpl) FindById(id uuid.UUID) (entity.Berkas, error) {
 
 func (r *berkasRepositoryImpl) Update(berkas *entity.Berkas) error {
 	query := `
-		UPDATE berkas_pegawai 
-		SET nik = $1, tempat_lahir = $2, tanggal_lahir = $3, agama = $4, pendidikan = $5, ktp = $6, kk = $7, npwp = $8, bpjs = $9, ijazah = $10, skck = $11, str = $12, serkom = $13, updated_at = $14, updater = $15 
+		UPDATE berkas_pegawai
+		SET nik = $1, tempat_lahir = $2, tanggal_lahir = $3, agama = $4, pendidikan = $5, ktp = $6, kk = $7, npwp = $8, bpjs = $9, ijazah = $10, skck = $11, str = $12, serkom = $13, updated_at = $14, updater = $15
 		WHERE id_pegawai = $16 AND deleted_at IS NULL
 	`
 
@@ -106,7 +107,7 @@ func (r *berkasRepositoryImpl) Update(berkas *entity.Berkas) error {
 
 func (r *berkasRepositoryImpl) Delete(berkas *entity.Berkas) error {
 	query := `
-		UPDATE berkas_pegawai 
+		UPDATE berkas_pegawai
 		SET deleted_at = $1, updater = $2
 		WHERE id_pegawai = $3
 	`

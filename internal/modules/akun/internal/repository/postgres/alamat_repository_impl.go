@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/akun/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type alamatRepositoryImpl struct {
@@ -19,7 +20,7 @@ func NewAlamatRepository(db *sqlx.DB) repository.AlamatRepository {
 
 func (r *alamatRepositoryImpl) Insert(alamat *entity.Alamat) error {
 	query := `
-		INSERT INTO alamat (id_akun, alamat, alamat_lat, alamat_lon) 
+		INSERT INTO alamat (id_akun, alamat, alamat_lat, alamat_lon)
 		VALUES ($1, $2, $3, $4)
 	`
 
@@ -66,8 +67,8 @@ func (r *alamatRepositoryImpl) FindPage(page, size int) ([]entity.Alamat, int, e
 
 func (r *alamatRepositoryImpl) FindById(id uuid.UUID) (entity.Alamat, error) {
 	query := `
-		SELECT id_akun, alamat, alamat_lat, alamat_lon 
-		FROM alamat 
+		SELECT id_akun, alamat, alamat_lat, alamat_lon
+		FROM alamat
 		WHERE id_akun = $1 AND deleted_at IS NULL
 	`
 
@@ -79,8 +80,8 @@ func (r *alamatRepositoryImpl) FindById(id uuid.UUID) (entity.Alamat, error) {
 
 func (r *alamatRepositoryImpl) Update(alamat *entity.Alamat) error {
 	query := `
-		UPDATE alamat 
-		SET alamat = $2, alamat_lat = $3, alamat_lon = $4, updated_at = $5, updater = $6 
+		UPDATE alamat
+		SET alamat = $2, alamat_lat = $3, alamat_lon = $4, updated_at = $5, updater = $6
 		WHERE id_akun = $1 AND deleted_at IS NULL
 	`
 
@@ -91,7 +92,7 @@ func (r *alamatRepositoryImpl) Update(alamat *entity.Alamat) error {
 
 func (r *alamatRepositoryImpl) Delete(alamat *entity.Alamat) error {
 	query := `
-		UPDATE alamat 
+		UPDATE alamat
 		SET deleted_at = $2, updater = $3
 		WHERE id_akun = $1
 	`

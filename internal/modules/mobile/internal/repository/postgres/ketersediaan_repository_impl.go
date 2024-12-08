@@ -3,11 +3,12 @@ package postgres
 import (
 	"database/sql"
 	"errors"
+	"math"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/mobile/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/mobile/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
 )
 
 type ketersediaanRepositoryImpl struct {

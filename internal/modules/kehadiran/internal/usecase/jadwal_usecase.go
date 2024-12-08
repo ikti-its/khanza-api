@@ -5,7 +5,6 @@ import (
 	"github.com/ikti-its/khanza-api/internal/app/helper"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran/internal/repository"
-	"log"
 )
 
 type JadwalUseCase struct {
@@ -136,7 +135,6 @@ func (u *JadwalUseCase) GetById(id string) model.JadwalResponse {
 func (u *JadwalUseCase) Update(request *model.UpdateJadwalRequest, id, user string) model.JadwalResponse {
 	jadwal, err := u.Repository.FindById(helper.MustParse(id))
 	if err != nil {
-		log.Printf("Failed to find jadwal: %v", err)
 		panic(&exception.NotFoundError{
 			Message: "Jadwal not found",
 		})

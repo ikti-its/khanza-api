@@ -2,6 +2,7 @@ package entity
 
 import (
 	"database/sql"
+
 	"github.com/google/uuid"
 )
 

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"database/sql"
+
 	"github.com/ikti-its/khanza-api/internal/app/exception"
 	"github.com/ikti-its/khanza-api/internal/app/helper"
 	"github.com/ikti-its/khanza-api/internal/modules/inventory/internal/entity"

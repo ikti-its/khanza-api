@@ -2,8 +2,9 @@ package entity
 
 import (
 	"database/sql"
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Kehadiran struct {

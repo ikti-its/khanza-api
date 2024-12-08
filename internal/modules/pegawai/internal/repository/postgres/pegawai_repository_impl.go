@@ -1,12 +1,13 @@
 package postgres
 
 import (
+	"math"
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai/internal/repository"
 	"github.com/jmoiron/sqlx"
-	"math"
-	"time"
 )
 
 type pegawaiRepositoryImpl struct {
@@ -19,7 +20,7 @@ func NewPegawaiRepository(db *sqlx.DB) repository.PegawaiRepository {
 
 func (r *pegawaiRepositoryImpl) Insert(pegawai *entity.Pegawai) error {
 	query := `
-		INSERT INTO pegawai (id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk) 
+		INSERT INTO pegawai (id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`
 
@@ -30,8 +31,8 @@ func (r *pegawaiRepositoryImpl) Insert(pegawai *entity.Pegawai) error {
 
 func (r *pegawaiRepositoryImpl) Find() ([]entity.Pegawai, error) {
 	query := `
-		SELECT id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk 
-		FROM pegawai 
+		SELECT id, id_akun, nip, nama, jenis_kelamin, id_jabatan, id_departemen, id_status_aktif, jenis_pegawai, telepon, tanggal_masuk
+		FROM pegawai
 		WHERE deleted_at IS NULL
 	`
 
