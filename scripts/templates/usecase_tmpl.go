@@ -24,7 +24,6 @@ func (u *{{.Name}}UseCase) Create(request *model.{{.Name}}Request, user string) 
 	updater := helper.MustParse(user)
 	{{.ModuleName}} := entity.{{.Name}}{
 		Id:      helper.MustNew(),
-		...
 		Updater: updater,
 	}
 
@@ -34,7 +33,6 @@ func (u *{{.Name}}UseCase) Create(request *model.{{.Name}}Request, user string) 
 
 	response := model.{{.Name}}Response{
 		Id:    {{.ModuleName}}.Id.String(),
-		...
 	}
 
 	return response
@@ -48,7 +46,6 @@ func (u *{{.Name}}UseCase) Get() []model.{{.Name}}Response {
 	for i, {{.ModuleName}} := range {{.ModuleName}} {
 		response[i] = model.{{.Name}}Response{
 			Id:    {{.ModuleName}}.Id.String(),
-			...
 		}
 	}
 
@@ -63,7 +60,6 @@ func (u *{{.Name}}UseCase) GetPage(page, size int) model.{{.Name}}PageResponse {
 	for i, {{.ModuleName}} := range {{.ModuleName}} {
 		response[i] = model.{{.Name}}Response{
 			Id:    {{.ModuleName}}.Id.String(),
-			...
 		}
 	}
 
@@ -87,7 +83,6 @@ func (u *{{.Name}}UseCase) GetById(id string) model.{{.Name}}Response {
 
 	response := model.{{.Name}}Response{
 		Id:    {{.ModuleName}}.Id.String(),
-		...
 	}
 
 	return response
@@ -101,7 +96,6 @@ func (u *{{.Name}}UseCase) Update(request *model.{{.Name}}Request, id, user stri
 		})
 	}
 
-	...
 	{{.ModuleName}}.Updater = helper.MustParse(user)
 
 	if err := u.Repository.Update(&{{.ModuleName}}); err != nil {
@@ -110,7 +104,6 @@ func (u *{{.Name}}UseCase) Update(request *model.{{.Name}}Request, id, user stri
 
 	response := model.{{.Name}}Response{
 		Id:    {{.ModuleName}}.Id.String(),
-		...
 	}
 
 	return response
