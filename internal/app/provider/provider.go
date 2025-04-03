@@ -7,12 +7,15 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/auth"
 	"github.com/ikti-its/khanza-api/internal/modules/file"
 	"github.com/ikti-its/khanza-api/internal/modules/inventory"
+	"github.com/ikti-its/khanza-api/internal/modules/kamar"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran"
 	"github.com/ikti-its/khanza-api/internal/modules/mobile"
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan"
 	"github.com/ikti-its/khanza-api/internal/modules/ref"
+	"github.com/ikti-its/khanza-api/internal/modules/registrasi"
+	"github.com/ikti-its/khanza-api/internal/modules/rujukan"
 	"github.com/ikti-its/khanza-api/internal/modules/web"
 	"github.com/jmoiron/sqlx"
 )
@@ -36,4 +39,7 @@ func (p *Provider) Provide() {
 	ref.ProvideRef(p.App, p.PG)
 	mobile.ProvideMobile(p.App, p.PG, p.Validator)
 	web.ProvideWeb(p.App, p.PG, p.Validator)
+	registrasi.ProvideRegistrasi(p.App, p.PG, p.Validator)
+	kamar.ProvideKamar(p.App, p.PG, p.Validator)
+	rujukan.ProvideRujukan(p.App, p.PG, p.Validator)
 }
