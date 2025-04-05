@@ -12,6 +12,8 @@ type RegistrasiRepository interface {
 	FindByNomorRM(nomorRM string) (entity.Registrasi, error)
 	Update(registrasi *entity.Registrasi) error
 	Delete(nomorReg string) error
+	UpdateStatusKamar(nomorReg string, status bool) error
+	FindPendingRoomRequests() ([]entity.Registrasi, error)
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }

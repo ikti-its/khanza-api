@@ -61,6 +61,7 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		StatusRawat:      request.StatusRawat,
 		StatusPoli:       request.StatusPoli,
 		StatusBayar:      request.StatusBayar,
+		StatusKamar:      false,
 	}
 
 	// Insert into database
@@ -92,7 +93,6 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		StatusPoli:       registrasiEntity.StatusPoli,
 		StatusBayar:      registrasiEntity.StatusBayar,
 	}, nil
-
 }
 
 // Retrieve all registrasi records from PostgreSQL
@@ -221,4 +221,52 @@ func (u *RegistrasiUseCase) Delete(nomorReg string) error {
 		return fmt.Errorf("failed to delete registrasi: %v", err)
 	}
 	return nil
+}
+
+func (u *RegistrasiUseCase) AssignRoom(nomorReg string) error {
+	return u.Repository.UpdateStatusKamar(nomorReg, true)
+}
+
+func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse, error) {
+	list, err := u.Repository.FindPendingRoomRequests()
+	fmt.Printf("🧠 Usecase received %d pending room requests\n", len(list))
+	if err != nil {
+		return nil, err
+	}
+	if len(list) == 0 {
+		fmt.Println("⚠️ No pending rooms found in usecase")
+	}
+
+	var responses []model.RegistrasiResponse
+	for _, r := range list {
+		responses = append(responses, model.RegistrasiResponse{
+			NomorReg:         r.NomorReg,
+			NomorRawat:       r.NomorRawat,
+			Tanggal:          r.Tanggal.Format("2006-01-02"),
+			Jam:              r.Jam.Format("15:04:05"),
+			KodeDokter:       r.KodeDokter,
+			NamaDokter:       r.NamaDokter,
+			NomorRM:          r.NomorRM,
+			Nama:             r.Nama,
+			JenisKelamin:     r.JenisKelamin,
+			Umur:             r.Umur,
+			Poliklinik:       r.Poliklinik,
+			JenisBayar:       r.JenisBayar,
+			PenanggungJawab:  r.PenanggungJawab,
+			Alamat:           r.Alamat,
+			HubunganPJ:       r.HubunganPJ,
+			BiayaRegistrasi:  r.BiayaRegistrasi,
+			StatusRegistrasi: r.StatusRegistrasi,
+			NoTelepon:        r.NoTelepon,
+			StatusRawat:      r.StatusRawat,
+			StatusPoli:       r.StatusPoli,
+			StatusBayar:      r.StatusBayar,
+			StatusKamar:      r.StatusKamar,
+		})
+	}
+	return responses, nil
+}
+
+func (u *RegistrasiUseCase) UpdateStatusKamar(nomorReg string, status bool) error {
+	return u.Repository.UpdateStatusKamar(nomorReg, status)
 }

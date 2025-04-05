@@ -13,6 +13,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan"
+	"github.com/ikti-its/khanza-api/internal/modules/rawatinap"
 	"github.com/ikti-its/khanza-api/internal/modules/ref"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan"
@@ -42,4 +43,5 @@ func (p *Provider) Provide() {
 	registrasi.ProvideRegistrasi(p.App, p.PG, p.Validator)
 	kamar.ProvideKamar(p.App, p.PG, p.Validator)
 	rujukan.ProvideRujukan(p.App, p.PG, p.Validator)
+	rawatinap.ProvideRawatInap(p.App, p.PG)
 }
