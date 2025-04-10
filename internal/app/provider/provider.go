@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/config"
 	"github.com/ikti-its/khanza-api/internal/modules/akun"
+	"github.com/ikti-its/khanza-api/internal/modules/ambulans"
 	"github.com/ikti-its/khanza-api/internal/modules/auth"
 	"github.com/ikti-its/khanza-api/internal/modules/file"
 	"github.com/ikti-its/khanza-api/internal/modules/inventory"
@@ -44,4 +45,5 @@ func (p *Provider) Provide() {
 	kamar.ProvideKamar(p.App, p.PG, p.Validator)
 	rujukan.ProvideRujukan(p.App, p.PG, p.Validator)
 	rawatinap.ProvideRawatInap(p.App, p.PG)
+	ambulans.ProvideAmbulans(p.App, p.PG, p.Validator)
 }
