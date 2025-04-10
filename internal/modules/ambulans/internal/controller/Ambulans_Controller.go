@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
@@ -155,5 +156,43 @@ func (c *AmbulansController) RequestAmbulans(ctx *fiber.Ctx) error {
 		Status:     req.Status,
 		Supir:      req.Supir,
 		Data:       "Permintaan ambulans berhasil dikirim",
+	})
+}
+
+func (c *AmbulansController) GetPendingRequests(ctx *fiber.Ctx) error {
+	data, err := c.UseCase.GetPendingRequests()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":   fiber.StatusInternalServerError,
+			"status": "Failed",
+			"data":   err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   fiber.StatusOK,
+		"status": "OK",
+		"data":   data,
+	})
+
+}
+
+func (c *AmbulansController) AcceptAmbulansRequest(ctx *fiber.Ctx) error {
+	noAmbulans := ctx.Params("no_ambulans")
+
+	err := c.UseCase.MarkRequestAccepted(noAmbulans)
+	if err != nil {
+		log.Println("[AcceptAmbulansRequest] DB error:", err) // add this
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":   500,
+			"status": "Error",
+			"data":   err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "OK",
+		"data":   "Ambulans request marked as accepted",
 	})
 }

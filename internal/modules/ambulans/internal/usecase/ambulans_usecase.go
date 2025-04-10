@@ -107,3 +107,11 @@ func (u *AmbulansUseCase) Notify(req *entity.Ambulans) error {
 	}
 	return nil
 }
+
+func (u *AmbulansUseCase) GetPendingRequests() ([]entity.Ambulans, error) {
+	return u.Repository.FindPendingRequests()
+}
+
+func (u *AmbulansUseCase) MarkRequestAccepted(noAmbulans string) error {
+	return u.Repository.UpdateAmbulansStatus(noAmbulans, "accepted")
+}

@@ -11,4 +11,6 @@ type AmbulansRepository interface {
 	Update(ambulans *entity.Ambulans) error
 	Delete(noAmbulans string) error
 	InsertAmbulansRequest(noAmbulans string) error
+	FindPendingRequests() ([]entity.Ambulans, error)
+	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
 }
