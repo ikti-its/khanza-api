@@ -115,3 +115,7 @@ func (u *AmbulansUseCase) GetPendingRequests() ([]entity.Ambulans, error) {
 func (u *AmbulansUseCase) MarkRequestAccepted(noAmbulans string) error {
 	return u.Repository.UpdateAmbulansStatus(noAmbulans, "accepted")
 }
+
+func (u *AmbulansUseCase) UpdateStatus(noAmbulans, status string) error {
+	return u.Repository.UpdateAmbulansStatus(noAmbulans, status)
+}

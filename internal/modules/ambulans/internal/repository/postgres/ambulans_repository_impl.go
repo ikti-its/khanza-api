@@ -90,7 +90,7 @@ func (r *ambulansRepositoryImpl) InsertAmbulansRequest(noAmbulans string) error 
 }
 
 func (r *ambulansRepositoryImpl) FindPendingRequests() ([]entity.Ambulans, error) {
-	query := `SELECT * FROM ambulans WHERE status = 'pending'`
+	query := `SELECT * FROM ambulans`
 	var records []entity.Ambulans
 	err := r.DB.Select(&records, query)
 	return records, err
@@ -106,4 +106,12 @@ func (r *ambulansRepositoryImpl) SetPending(noAmbulans string) error {
 	query := `UPDATE ambulans SET status = 'pending' WHERE no_ambulans = $1`
 	_, err := r.DB.Exec(query, noAmbulans)
 	return err
+}
+
+func (r *ambulansRepositoryImpl) UpdateStatus(noAmbulans string, status string) (int64, error) {
+	result, err := r.DB.Exec(`UPDATE ambulans SET status = $1 WHERE no_ambulans = $2`, status, noAmbulans)
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
 }

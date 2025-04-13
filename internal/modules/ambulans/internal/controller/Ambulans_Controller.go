@@ -196,3 +196,30 @@ func (c *AmbulansController) AcceptAmbulansRequest(ctx *fiber.Ctx) error {
 		"data":   "Ambulans request marked as accepted",
 	})
 }
+
+func (c *AmbulansController) UpdateStatus(ctx *fiber.Ctx) error {
+	type Payload struct {
+		NoAmbulans string `json:"no_ambulans"`
+		Status     string `json:"status"`
+		NomorRujuk string `json:"nomor_rujuk"` // optional, for logging
+	}
+
+	var body Payload
+	if err := ctx.BodyParser(&body); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid payload",
+		})
+	}
+
+	// update in DB
+	err := c.UseCase.UpdateStatus(body.NoAmbulans, body.Status)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to update status",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"message": "Status updated successfully",
+	})
+}
