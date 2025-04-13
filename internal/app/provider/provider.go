@@ -18,6 +18,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/ref"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan"
+	"github.com/ikti-its/khanza-api/internal/modules/ugd"
 	"github.com/ikti-its/khanza-api/internal/modules/web"
 	"github.com/jmoiron/sqlx"
 )
@@ -46,4 +47,5 @@ func (p *Provider) Provide() {
 	rujukan.ProvideRujukan(p.App, p.PG, p.Validator)
 	rawatinap.ProvideRawatInap(p.App, p.PG)
 	ambulans.ProvideAmbulans(p.App, p.PG, p.Validator)
+	ugd.ProvideUGD(p.App, p.PG, p.Validator)
 }

@@ -15,6 +15,7 @@ type AmbulansRepository interface {
 	InsertAmbulansRequest(noAmbulans string) error
 	FindPendingRequests() ([]entity.Ambulans, error)
 	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
+	SetPending(noAmbulans string) error
 }
 
 type ambulansRepositoryImpl struct {
@@ -83,7 +84,7 @@ func (r *ambulansRepositoryImpl) Delete(noAmbulans string) error {
 }
 
 func (r *ambulansRepositoryImpl) InsertAmbulansRequest(noAmbulans string) error {
-	query := `INSERT INTO ambulans (no_ambulans, status) VALUES ($1, 'pending')`
+	query := `INSERT INTO ambulans (no_ambulans, status) VALUES ($1, 'available')`
 	_, err := r.DB.Exec(query, noAmbulans)
 	return err
 }
@@ -98,5 +99,11 @@ func (r *ambulansRepositoryImpl) FindPendingRequests() ([]entity.Ambulans, error
 func (r *ambulansRepositoryImpl) UpdateAmbulansStatus(noAmbulans string, newStatus string) error {
 	query := `UPDATE ambulans SET status = $1 WHERE no_ambulans = $2`
 	_, err := r.DB.Exec(query, newStatus, noAmbulans)
+	return err
+}
+
+func (r *ambulansRepositoryImpl) SetPending(noAmbulans string) error {
+	query := `UPDATE ambulans SET status = 'pending' WHERE no_ambulans = $1`
+	_, err := r.DB.Exec(query, noAmbulans)
 	return err
 }

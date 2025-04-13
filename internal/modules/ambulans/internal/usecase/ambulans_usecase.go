@@ -101,9 +101,9 @@ func (u *AmbulansUseCase) Delete(noAmbulans string) error {
 }
 
 func (u *AmbulansUseCase) Notify(req *entity.Ambulans) error {
-	err := u.Repository.InsertAmbulansRequest(req.NoAmbulans)
+	err := u.Repository.SetPending(req.NoAmbulans)
 	if err != nil {
-		return fmt.Errorf("failed to insert ambulance request: %v", err)
+		return fmt.Errorf("failed to update ambulance status: %v", err)
 	}
 	return nil
 }
