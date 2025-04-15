@@ -9,7 +9,7 @@ type TindakanRepository interface {
 	FindAll() ([]entity.Tindakan, error)
 	FindByNomorRawat(nomorRawat string) ([]entity.Tindakan, error)
 	Update(tindakan *entity.Tindakan) error
-	Delete(nomorRawat string) error
+	Delete(nomorRawat string, jamRawat string) error
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }

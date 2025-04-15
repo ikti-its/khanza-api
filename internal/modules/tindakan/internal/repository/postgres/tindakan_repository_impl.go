@@ -11,7 +11,7 @@ type TindakanRepository interface {
 	FindAll() ([]entity.Tindakan, error)
 	FindByNomorRawat(nomorRawat string) ([]entity.Tindakan, error)
 	Update(t *entity.Tindakan) error
-	Delete(nomorRawat string) error
+	Delete(nomorRawat string, jamRawat string) error
 	CheckDokterExists(kodeDokter string) (bool, error)
 }
 
@@ -69,9 +69,9 @@ func (r *tindakanRepositoryImpl) Update(t *entity.Tindakan) error {
 	return err
 }
 
-func (r *tindakanRepositoryImpl) Delete(nomorRawat string) error {
-	query := `DELETE FROM tindakan WHERE nomor_rawat = $1`
-	_, err := r.DB.Exec(query, nomorRawat)
+func (r *tindakanRepositoryImpl) Delete(nomorRawat, jamRawat string) error {
+	query := `DELETE FROM tindakan WHERE nomor_rawat = $1 AND jam_rawat = $2`
+	_, err := r.DB.Exec(query, nomorRawat, jamRawat)
 	return err
 }
 

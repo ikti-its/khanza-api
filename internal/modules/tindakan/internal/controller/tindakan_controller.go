@@ -110,17 +110,28 @@ func (c *TindakanController) Update(ctx *fiber.Ctx) error {
 
 func (c *TindakanController) Delete(ctx *fiber.Ctx) error {
 	nomorRawat := ctx.Params("nomor_rawat")
+	jamRawat := ctx.Params("jam_rawat")
 
-	err := c.UseCase.Delete(nomorRawat)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
-			Code:   fiber.StatusInternalServerError,
-			Status: "Error",
-			Data:   err.Error(),
+	if nomorRawat == "" || jamRawat == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":   400,
+			"status": "Bad Request",
+			"data":   "nomor_rawat and jam_rawat are required",
 		})
 	}
-	return ctx.Status(fiber.StatusNoContent).JSON(web.Response{
-		Code:   fiber.StatusNoContent,
-		Status: "Deleted",
+
+	err := c.UseCase.Delete(nomorRawat, jamRawat)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":   500,
+			"status": "Error",
+			"data":   err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "Success",
+		"data":   "Tindakan deleted successfully",
 	})
 }
