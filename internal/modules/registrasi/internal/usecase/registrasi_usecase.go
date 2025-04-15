@@ -97,8 +97,11 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 
 // Retrieve all registrasi records from PostgreSQL
 func (u *RegistrasiUseCase) GetAll() ([]model.RegistrasiResponse, error) {
+	fmt.Println("📥 Fetching all registrasi...")
+
 	registrasiList, err := u.Repository.FindAll()
 	if err != nil {
+		fmt.Println("❌ DB error:", err)
 		return nil, fmt.Errorf("failed to retrieve registrasi: %v", err)
 	}
 

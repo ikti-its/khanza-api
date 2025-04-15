@@ -14,6 +14,7 @@ type KamarRepository interface {
 	Update(kamar *entity.Kamar) error
 	Delete(nomorReg string) error
 	GetAvailableRooms() ([]entity.Kamar, error)
+	UpdateStatusKamar(nomorBed string, status string) error
 }
 
 type kamarRepositoryImpl struct {
@@ -104,9 +105,14 @@ func (r *kamarRepositoryImpl) Delete(nomorReg string) error {
 }
 
 func (r *kamarRepositoryImpl) GetAvailableRooms() ([]entity.Kamar, error) {
-	var result []entity.Kamar
-	query := `SELECT * FROM kamar WHERE status_kamar != 'penuh'`
+	query := `SELECT * FROM kamar WHERE status_kamar = 'available'`
+	var results []entity.Kamar
+	err := r.DB.Select(&results, query)
+	return results, err
+}
 
-	err := r.DB.Select(&result, query)
-	return result, err
+func (r *kamarRepositoryImpl) UpdateStatusKamar(nomorBed, status string) error {
+	query := `UPDATE kamar SET status_kamar = $1 WHERE nomor_bed = $2`
+	_, err := r.DB.Exec(query, status, nomorBed)
+	return err
 }

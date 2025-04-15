@@ -1,0 +1,184 @@
+package controller
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
+	web "github.com/ikti-its/khanza-api/internal/app/model"
+	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/usecase"
+)
+
+type DokterJagaController struct {
+	UseCase *usecase.DokterJagaUseCase
+}
+
+func NewDokterJagaController(useCase *usecase.DokterJagaUseCase) *DokterJagaController {
+	return &DokterJagaController{
+		UseCase: useCase,
+	}
+}
+
+func (c *DokterJagaController) Create(ctx *fiber.Ctx) error {
+	var request model.DokterJagaRequest
+	fmt.Println("Received a POST request to /dokterjaga") // Debug log
+
+	if err := ctx.BodyParser(&request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "Invalid request body",
+		})
+	}
+
+	response, err := c.UseCase.Create(&request)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
+			Data:   err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
+		Code:   fiber.StatusCreated,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *DokterJagaController) GetAll(ctx *fiber.Ctx) error {
+	response, err := c.UseCase.GetAll()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
+			Data:   err.Error(),
+		})
+	}
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *DokterJagaController) GetByKodeDokter(ctx *fiber.Ctx) error {
+	kode := ctx.Params("kode_dokter")
+	response, err := c.UseCase.GetByKodeDokter(kode)
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
+			Code:   fiber.StatusNotFound,
+			Status: "Not Found",
+			Data:   err.Error(),
+		})
+	}
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *DokterJagaController) Update(ctx *fiber.Ctx) error {
+	var request model.DokterJagaRequest
+	if err := ctx.BodyParser(&request); err != nil {
+		panic(&exception.BadRequestError{Message: "Invalid request body"})
+	}
+
+	response, err := c.UseCase.Update(&request)
+	if err != nil {
+		log.Println("[Update DokterJaga ERROR]", err.Error()) // log it to console
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
+			Data:   err.Error(),
+		})
+	}
+
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   response,
+	})
+}
+
+func (c *DokterJagaController) Delete(ctx *fiber.Ctx) error {
+	kode := ctx.Params("kode_dokter")
+	hari := ctx.Query("hari_kerja")
+	if kode == "" || hari == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "kode_dokter and hari_kerja are required",
+		})
+	}
+
+	err := c.UseCase.Delete(kode, hari)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
+			Data:   err.Error(),
+		})
+	}
+	return ctx.Status(fiber.StatusNoContent).JSON(web.Response{
+		Code:   fiber.StatusNoContent,
+		Status: "Deleted",
+	})
+}
+
+func (c *DokterJagaController) GetByStatus(ctx *fiber.Ctx) error {
+	status := ctx.Params("status")
+	if status == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "status is required",
+		})
+	}
+
+	data, err := c.UseCase.GetByStatus(status)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
+			Data:   err.Error(),
+		})
+	}
+
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   data,
+	})
+}
+
+func (c *DokterJagaController) UpdateStatus(ctx *fiber.Ctx) error {
+	type Payload struct {
+		KodeDokter string `json:"kode_dokter"`
+		HariKerja  string `json:"hari_kerja"`
+		Status     string `json:"status"`
+	}
+
+	var body Payload
+	if err := ctx.BodyParser(&body); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid payload",
+		})
+	}
+
+	err := c.UseCase.UpdateStatus(body.KodeDokter, body.HariKerja, body.Status)
+	if err != nil {
+		log.Println("[UpdateStatus] DB error:", err)
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to update status",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"message": "Status updated successfully",
+	})
+}

@@ -125,3 +125,7 @@ func (u *KamarUseCase) Delete(nomorBed string) error {
 func (u *KamarUseCase) GetAvailableRooms() ([]entity.Kamar, error) {
 	return u.Repository.GetAvailableRooms()
 }
+
+func (u *KamarUseCase) UpdateStatusKamar(nomorBed, status string) error {
+	return u.Repository.UpdateStatusKamar(nomorBed, status)
+}

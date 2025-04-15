@@ -168,8 +168,28 @@ func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registras
 	return results, err
 }
 
-func (r *registrasiRepositoryImpl) AssignKamar(nomorReg string, kamarID string) error {
-	query := `UPDATE registrasi SET nomor_bed = $1, status_kamar = 'diterima' WHERE nomor_reg = $2`
-	_, err := r.DB.Exec(query, kamarID, nomorReg)
+func (r *registrasiRepositoryImpl) AssignKamar(nomorReg string, nomorBed string) error {
+	// 1. Update registrasi
+	updateQuery := `UPDATE registrasi SET nomor_bed = $1, status_kamar = 'diterima' WHERE nomor_reg = $2`
+	_, err := r.DB.Exec(updateQuery, nomorBed, nomorReg)
+	if err != nil {
+		return err
+	}
+
+	// 2. Insert into rawatinap
+	insertQuery := `
+	INSERT INTO rawat_inap (
+		nomor_rawat, nomor_rm, nama_pasien, alamat_pasien, penanggung_jawab, hubungan_pj,
+		jenis_bayar, kamar, tarif_kamar, tanggal_masuk, jam_masuk, dokter_pj, diagnosa_awal, status_pulang
+	)
+	SELECT 
+		r.nomor_rawat, r.nomor_rm, r.nama_pasien, r.alamat_pj, r.penanggung_jawab, r.hubungan_pj,
+		r.jenis_bayar, k.nomor_bed, k.tarif_kamar, CURRENT_DATE, CURRENT_TIME,
+		r.nama_dokter, '', 'Belum'
+	FROM registrasi r
+	JOIN kamar k ON k.nomor_bed = $1
+	WHERE r.nomor_reg = $2
+	`
+	_, err = r.DB.Exec(insertQuery, nomorBed, nomorReg)
 	return err
 }

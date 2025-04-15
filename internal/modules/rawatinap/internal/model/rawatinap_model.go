@@ -87,23 +87,28 @@ func FromEntity(e entity.RawatInap) RawatInapResponse {
 		NomorRawat:      e.NomorRawat,
 		NomorRM:         e.NomorRM,
 		NamaPasien:      e.NamaPasien,
-		AlamatPasien:    e.AlamatPasien,
-		PenanggungJawab: e.PenanggungJawab,
-		HubunganPJ:      e.HubunganPJ,
-		JenisBayar:      e.JenisBayar,
-		Kamar:           e.Kamar,
-		TarifKamar:      e.TarifKamar,
-		DiagnosaAwal:    e.DiagnosaAwal,
-		DiagnosaAkhir:   e.DiagnosaAkhir,
+		AlamatPasien:    e.AlamatPasien.String,
+		PenanggungJawab: e.PenanggungJawab.String,
+		HubunganPJ:      e.HubunganPJ.String,
+		JenisBayar:      e.JenisBayar.String,
+		Kamar:           e.Kamar.String,
+		TarifKamar:      e.TarifKamar.Float64,
+		DiagnosaAwal:    e.DiagnosaAwal.String,
+		DiagnosaAkhir:   e.DiagnosaAkhir.String,
 		TanggalMasuk:    e.TanggalMasuk.Format("2006-01-02"),
-		JamMasuk:        e.JamMasuk.Format("15:04:05"),
-		TanggalKeluar:   formatTimeOrEmpty(e.TanggalKeluar),
-		JamKeluar:       formatTimeOrEmpty(e.JamKeluar),
-		TotalBiaya:      e.TotalBiaya,
-		StatusPulang:    e.StatusPulang,
-		LamaRanap:       e.LamaRanap,
-		DokterPJ:        e.DokterPJ,
-		StatusBayar:     e.StatusBayar,
+		JamMasuk: func() string {
+			if e.JamMasuk.Valid {
+				return e.JamMasuk.Time.Format("15:04:05")
+			}
+			return ""
+		}(),
+		TanggalKeluar: e.TanggalKeluar.Time.Format("2006-01-02"),
+		JamKeluar:     e.JamKeluar.Time.Format("15:04:05"),
+		TotalBiaya:    e.TotalBiaya.Float64,
+		StatusPulang:  e.StatusPulang.String,
+		LamaRanap:     e.LamaRanap.Float64,
+		DokterPJ:      e.DokterPJ.String,
+		StatusBayar:   e.StatusBayar.String,
 	}
 }
 

@@ -121,17 +121,44 @@ func (c *KamarController) Delete(ctx *fiber.Ctx) error {
 	})
 }
 
-func (c *KamarController) GetAvailable(ctx *fiber.Ctx) error {
-	data, err := c.UseCase.GetAvailableRooms()
+func (c *KamarController) GetAvailableRooms(ctx *fiber.Ctx) error {
+	rooms, err := c.UseCase.GetAvailableRooms()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status": "error",
+			"data":   "failed to fetch rooms",
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status": "success",
+		"data":   rooms,
+	})
+}
+
+func (c *KamarController) UpdateStatusKamar(ctx *fiber.Ctx) error {
+	nomorBed := ctx.Params("nomor_bed")
+	var req struct {
+		Status string `json:"status_kamar"`
+	}
+
+	if err := ctx.BodyParser(&req); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "fail",
+			"message": "invalid request body",
+		})
+	}
+
+	err := c.UseCase.UpdateStatusKamar(nomorBed, req.Status)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Failed to get available rooms",
+			"message": "failed to update status_kamar",
 		})
 	}
 
 	return ctx.JSON(fiber.Map{
-		"status": "success",
-		"data":   data,
+		"status":  "success",
+		"message": "status_kamar updated",
 	})
 }
