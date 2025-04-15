@@ -22,7 +22,8 @@ type Registrasi struct {
 	StatusRawat      string  `json:"status_rawat"`
 	StatusPoli       string  `json:"status_poli"`
 	StatusBayar      string  `json:"status_bayar"`
-	StatusKamar      bool    `json:"status_kamar"`
+	StatusKamar      string  `json:"status_kamar"`
+	// Kelas            string  `json:"kelas"`
 }
 
 type RegistrasiRequest struct {
@@ -47,7 +48,8 @@ type RegistrasiRequest struct {
 	StatusRawat      string  `json:"status_rawat"`
 	StatusPoli       string  `json:"status_poli"`
 	StatusBayar      string  `json:"status_bayar"`
-	StatusKamar      bool    `json:"status_kamar"`
+	StatusKamar      string  `json:"status_kamar"`
+	// Kelas            string  `json:"kelas"`
 }
 
 type RegistrasiResponse struct {
@@ -72,7 +74,8 @@ type RegistrasiResponse struct {
 	StatusRawat      string  `json:"status_rawat"`
 	StatusPoli       string  `json:"status_poli"`
 	StatusBayar      string  `json:"status_bayar"`
-	StatusKamar      bool    `json:"status_kamar"`
+	StatusKamar      string  `json:"status_kamar"`
+	// Kelas            string  `json:"kelas"`
 }
 
 type RegistrasiPageResponse struct {

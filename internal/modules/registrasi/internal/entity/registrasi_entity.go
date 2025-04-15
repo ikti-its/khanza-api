@@ -24,5 +24,5 @@ type Registrasi struct {
 	StatusRawat      string    `json:"status_rawat" db:"status_rawat"`
 	StatusPoli       string    `json:"status_poli" db:"status_poli"`
 	StatusBayar      string    `json:"status_bayar" db:"status_bayar"`
-	StatusKamar      bool      `db:"status_kamar" json:"status_kamar"`
+	StatusKamar      string    `db:"status_kamar" json:"status_kamar"`
 }

@@ -61,7 +61,7 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		StatusRawat:      request.StatusRawat,
 		StatusPoli:       request.StatusPoli,
 		StatusBayar:      request.StatusBayar,
-		StatusKamar:      false,
+		StatusKamar:      request.StatusKamar,
 	}
 
 	// Insert into database
@@ -223,10 +223,6 @@ func (u *RegistrasiUseCase) Delete(nomorReg string) error {
 	return nil
 }
 
-func (u *RegistrasiUseCase) AssignRoom(nomorReg string) error {
-	return u.Repository.UpdateStatusKamar(nomorReg, true)
-}
-
 func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse, error) {
 	list, err := u.Repository.FindPendingRoomRequests()
 	fmt.Printf("🧠 Usecase received %d pending room requests\n", len(list))
@@ -267,6 +263,6 @@ func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse
 	return responses, nil
 }
 
-func (u *RegistrasiUseCase) UpdateStatusKamar(nomorReg string, status bool) error {
-	return u.Repository.UpdateStatusKamar(nomorReg, status)
+func (uc *RegistrasiUseCase) UpdateStatusKamar(nomorReg, status string) error {
+	return uc.Repository.UpdateStatusKamar(nomorReg, status)
 }

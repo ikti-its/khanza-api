@@ -26,7 +26,7 @@ type registrasiRepositoryImpl struct {
 	DB *sqlx.DB
 }
 
-func (r *registrasiRepositoryImpl) UpdateStatusKamar(nomorReg string, status bool) error {
+func (r *registrasiRepositoryImpl) UpdateStatusKamar(nomorReg, status string) error {
 	query := `UPDATE registrasi SET status_kamar = $1 WHERE nomor_reg = $2`
 	_, err := r.DB.Exec(query, status, nomorReg)
 	return err
@@ -150,7 +150,7 @@ func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registras
 	query := `
 		SELECT nomor_reg, nama_pasien, nomor_rm, status_kamar
 		FROM registrasi
-		WHERE status_kamar = false
+		WHERE status_kamar = 'menunggu'
 		`
 	var results []entity.Registrasi
 
@@ -161,7 +161,7 @@ func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registras
 	if err != nil {
 		fmt.Println("❌ DB error:", err)
 		for _, r := range results {
-			fmt.Printf("➡️ %s | %s | %s | %t\n", r.NomorReg, r.Nama, r.NomorRM, r.StatusKamar)
+			fmt.Printf("🔹 %s | %s | %s | %s\n", r.NomorReg, r.Nama, r.NomorRM, r.StatusKamar)
 		}
 	}
 	return results, err

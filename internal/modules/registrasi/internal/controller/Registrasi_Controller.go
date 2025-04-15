@@ -125,6 +125,8 @@ func (c *RegistrasiController) Delete(ctx *fiber.Ctx) error {
 
 func (r *RegistrasiController) GetPendingRoomRequests(c *fiber.Ctx) error {
 	results, err := r.UseCase.GetPendingRoomRequests()
+	fmt.Println("📥 Received GET /pending-room")
+
 	if err != nil {
 		fmt.Println("❌ Usecase returned error:", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -134,7 +136,6 @@ func (r *RegistrasiController) GetPendingRoomRequests(c *fiber.Ctx) error {
 		})
 	}
 
-	// ✅ Fix: check length separately
 	if len(results) == 0 {
 		fmt.Println("⚠️ No results found")
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -152,37 +153,49 @@ func (r *RegistrasiController) GetPendingRoomRequests(c *fiber.Ctx) error {
 	})
 }
 
-func (r *RegistrasiController) AssignRoom(c *fiber.Ctx) error {
-	nomorReg := c.Params("nomor_reg")
+func (c *RegistrasiController) UpdateStatusKamar(ctx *fiber.Ctx) error {
+	nomorReg := ctx.Params("nomor_reg")
 
-	err := r.UseCase.AssignRoom(nomorReg) // ✅ Use the injected usecase from the struct
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "❌ Failed to assign room",
-			"error":   err.Error(),
+	type StatusUpdate struct {
+		StatusKamar string `json:"status_kamar"`
+	}
+
+	var req StatusUpdate
+	if err := ctx.BodyParser(&req); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "fail",
+			"error":  err.Error(),
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "✅ Room assigned successfully",
+	err := c.UseCase.UpdateStatusKamar(nomorReg, req.StatusKamar)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to update status kamar",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Status kamar updated successfully",
 	})
 }
 
-func (r *RegistrasiController) AssignRoomFalse(c *fiber.Ctx) error {
-	nomorReg := c.Params("nomor_reg")
+func (c *RegistrasiController) AssignRoomStatus(ctx *fiber.Ctx) error {
+	nomorReg := ctx.Params("nomor_reg")
+	status := ctx.Params("status") // "menunggu", "selesai", etc.
 
-	err := r.UseCase.UpdateStatusKamar(nomorReg, false)
+	err := c.UseCase.UpdateStatusKamar(nomorReg, status)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code":   500,
-			"status": "error",
-			"data":   "Failed to update status_kamar",
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to update status kamar",
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"code":   200,
-		"status": "success",
-		"data":   "Status kamar updated to false",
+	return ctx.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Status kamar updated successfully",
 	})
 }
