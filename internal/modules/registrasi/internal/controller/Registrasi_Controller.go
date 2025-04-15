@@ -199,3 +199,38 @@ func (c *RegistrasiController) AssignRoomStatus(ctx *fiber.Ctx) error {
 		"message": "Status kamar updated successfully",
 	})
 }
+
+type AssignKamarRequest struct {
+	KamarID string `json:"kamar_id"`
+}
+
+func (c *RegistrasiController) AssignKamar(ctx *fiber.Ctx) error {
+	nomorReg := ctx.Params("nomor_reg")
+	var req AssignKamarRequest
+
+	fmt.Println("📥 Assigning kamar to:", nomorReg)
+
+	if err := ctx.BodyParser(&req); err != nil {
+		fmt.Println("❌ Failed to parse body:", err)
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Invalid request body",
+		})
+	}
+
+	fmt.Println("➡️ Kamar to assign:", req.KamarID)
+
+	err := c.UseCase.AssignKamar(nomorReg, req.KamarID)
+	if err != nil {
+		fmt.Println("❌ Error assigning kamar:", err)
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to assign room",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Room assigned successfully",
+	})
+}

@@ -16,5 +16,6 @@ func RegistrasiRoute(app *fiber.App, registrasiController *controller.Registrasi
 	registrasi.Get("/:nomor_reg", registrasiController.GetByNomorReg)
 	registrasi.Put("/:nomor_reg", registrasiController.Update)
 	registrasi.Delete("/:nomor_reg", registrasiController.Delete)
+	registrasi.Put("/:nomor_reg/assign-kamar", registrasiController.AssignKamar)
 
 }

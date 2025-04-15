@@ -11,4 +11,5 @@ type KamarRepository interface {
 	FindByKodeKamar(nomorRM string) (entity.Kamar, error)
 	Update(kamar *entity.Kamar) error
 	Delete(nomorReg string) error
+	GetAvailableRooms() ([]entity.Kamar, error)
 }

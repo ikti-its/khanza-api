@@ -18,6 +18,7 @@ type RegistrasiRepository interface {
 	Update(registrasi *entity.Registrasi) error
 	Delete(nomorReg string) error
 	UpdateStatusKamar(nomorReg string, status string) error
+	AssignKamar(nomorReg string, kamarID string) error
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }
@@ -165,4 +166,10 @@ func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registras
 		}
 	}
 	return results, err
+}
+
+func (r *registrasiRepositoryImpl) AssignKamar(nomorReg string, kamarID string) error {
+	query := `UPDATE registrasi SET nomor_bed = $1, status_kamar = 'diterima' WHERE nomor_reg = $2`
+	_, err := r.DB.Exec(query, kamarID, nomorReg)
+	return err
 }

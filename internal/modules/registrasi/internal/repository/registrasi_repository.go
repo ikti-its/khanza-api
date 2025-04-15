@@ -14,6 +14,7 @@ type RegistrasiRepository interface {
 	Delete(nomorReg string) error
 	UpdateStatusKamar(nomorReg string, status string) error
 	FindPendingRoomRequests() ([]entity.Registrasi, error)
+	AssignKamar(nomorReg string, kamarID string) error
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }

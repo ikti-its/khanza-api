@@ -13,6 +13,7 @@ type KamarRepository interface {
 	FindByKodeKamar(nomorReg string) (entity.Kamar, error)
 	Update(kamar *entity.Kamar) error
 	Delete(nomorReg string) error
+	GetAvailableRooms() ([]entity.Kamar, error)
 }
 
 type kamarRepositoryImpl struct {
@@ -100,4 +101,12 @@ func (r *kamarRepositoryImpl) Delete(nomorReg string) error {
 	`
 	_, err := r.DB.Exec(query, nomorReg)
 	return err
+}
+
+func (r *kamarRepositoryImpl) GetAvailableRooms() ([]entity.Kamar, error) {
+	var result []entity.Kamar
+	query := `SELECT * FROM kamar WHERE status_kamar != 'penuh'`
+
+	err := r.DB.Select(&result, query)
+	return result, err
 }

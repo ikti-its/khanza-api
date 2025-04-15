@@ -25,4 +25,5 @@ type Registrasi struct {
 	StatusPoli       string    `json:"status_poli" db:"status_poli"`
 	StatusBayar      string    `json:"status_bayar" db:"status_bayar"`
 	StatusKamar      string    `db:"status_kamar" json:"status_kamar"`
+	NomorBed         string    `db:"nomor_bed" json:"nomor_bed"`
 }

@@ -120,3 +120,18 @@ func (c *KamarController) Delete(ctx *fiber.Ctx) error {
 		Status: "Deleted",
 	})
 }
+
+func (c *KamarController) GetAvailable(ctx *fiber.Ctx) error {
+	data, err := c.UseCase.GetAvailableRooms()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to get available rooms",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status": "success",
+		"data":   data,
+	})
+}

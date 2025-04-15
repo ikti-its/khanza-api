@@ -266,3 +266,7 @@ func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse
 func (uc *RegistrasiUseCase) UpdateStatusKamar(nomorReg, status string) error {
 	return uc.Repository.UpdateStatusKamar(nomorReg, status)
 }
+
+func (u *RegistrasiUseCase) AssignKamar(nomorReg string, kamarID string) error {
+	return u.Repository.AssignKamar(nomorReg, kamarID)
+}
