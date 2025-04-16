@@ -8,6 +8,7 @@ import (
 func TindakanRoute(app *fiber.App, tindakanController *controller.TindakanController) {
 	tindakan := app.Group("/v1/tindakan")
 
+	tindakan.Get("/jenis", tindakanController.GetAllJenis)
 	tindakan.Post("/", tindakanController.Create)
 	tindakan.Get("/", tindakanController.GetAll)
 	tindakan.Get("/:nomor_rawat", tindakanController.GetByNomorRawat)

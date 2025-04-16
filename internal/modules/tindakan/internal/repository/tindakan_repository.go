@@ -10,6 +10,7 @@ type TindakanRepository interface {
 	FindByNomorRawat(nomorRawat string) ([]entity.Tindakan, error)
 	Update(tindakan *entity.Tindakan) error
 	Delete(nomorRawat string, jamRawat string) error
+	GetAllJenisTindakan() ([]entity.JenisTindakan, error)
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }

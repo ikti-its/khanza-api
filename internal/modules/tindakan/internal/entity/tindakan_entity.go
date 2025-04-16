@@ -15,3 +15,9 @@ type Tindakan struct {
 	JamRawat     time.Time `db:"jam_rawat"`
 	Biaya        *int64    `db:"biaya"`
 }
+
+type JenisTindakan struct {
+	Kode         string  `db:"kode" json:"kode"`
+	NamaTindakan string  `db:"nama_tindakan" json:"nama_tindakan"`
+	Tarif        float64 `db:"total_bayar_dokter_perawat" json:"tarif"`
+}

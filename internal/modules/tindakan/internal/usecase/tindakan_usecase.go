@@ -203,3 +203,7 @@ func (u *TindakanUseCase) Update(nomorRawat string, request *model.TindakanReque
 func (u *TindakanUseCase) Delete(nomorRawat, jamRawat string) error {
 	return u.Repository.Delete(nomorRawat, jamRawat)
 }
+
+func (u *TindakanUseCase) GetAllJenisTindakan() ([]entity.JenisTindakan, error) {
+	return u.Repository.GetAllJenisTindakan()
+}

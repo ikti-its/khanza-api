@@ -135,3 +135,16 @@ func (c *TindakanController) Delete(ctx *fiber.Ctx) error {
 		"data":   "Tindakan deleted successfully",
 	})
 }
+
+func (c *TindakanController) GetAllJenis(ctx *fiber.Ctx) error {
+	tindakanList, err := c.UseCase.GetAllJenisTindakan()
+	if err != nil {
+		return ctx.Status(500).JSON(fiber.Map{"error": "Failed to fetch jenis tindakan"})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "OK",
+		"data":   tindakanList, // ← must return the actual slice
+	})
+}

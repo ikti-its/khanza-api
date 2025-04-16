@@ -1,6 +1,8 @@
 package postgres
 
 import (
+	"log"
+
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/repository"
 	"github.com/jmoiron/sqlx"
@@ -13,6 +15,7 @@ type TindakanRepository interface {
 	Update(t *entity.Tindakan) error
 	Delete(nomorRawat string, jamRawat string) error
 	CheckDokterExists(kodeDokter string) (bool, error)
+	GetAllJenisTindakan() ([]entity.JenisTindakan, error)
 }
 
 type tindakanRepositoryImpl struct {
@@ -80,4 +83,23 @@ func (r *tindakanRepositoryImpl) CheckDokterExists(kodeDokter string) (bool, err
 	query := `SELECT EXISTS (SELECT 1 FROM dokter WHERE kode_dokter = $1)`
 	err := r.DB.QueryRow(query, kodeDokter).Scan(&exists)
 	return exists, err
+}
+
+func (r *tindakanRepositoryImpl) GetAllJenisTindakan() ([]entity.JenisTindakan, error) {
+	var result []entity.JenisTindakan
+	query := `SELECT 
+        kode, 
+        nama_tindakan, 
+        total_bayar_dokter_perawat 
+    FROM jenis_tindakan
+    ORDER BY nama_tindakan ASC`
+
+	err := r.DB.Select(&result, query)
+	log.Printf("[QUERY] %s", query)
+	log.Printf("[RESULT] fetched %d rows", len(result))
+
+	if err != nil {
+		log.Printf("[ERROR] Select failed: %v", err)
+	}
+	return result, err
 }
