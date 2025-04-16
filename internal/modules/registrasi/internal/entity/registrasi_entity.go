@@ -29,4 +29,5 @@ type Registrasi struct {
 	StatusBayar      string         `json:"status_bayar" db:"status_bayar"`
 	StatusKamar      string         `db:"status_kamar" json:"status_kamar"`
 	NomorBed         sql.NullString `db:"nomor_bed" json:"nomor_bed"`
+	Kelas            string         `db:"kelas" json:"kelas"`
 }

@@ -261,8 +261,10 @@ func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse
 			StatusPoli:       r.StatusPoli,
 			StatusBayar:      r.StatusBayar,
 			StatusKamar:      r.StatusKamar,
+			Kelas:            r.Kelas, // 👈 Add this line
 		})
 	}
+
 	return responses, nil
 }
 

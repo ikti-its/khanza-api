@@ -15,6 +15,7 @@ type KamarRepository interface {
 	Delete(nomorReg string) error
 	GetAvailableRooms() ([]entity.Kamar, error)
 	UpdateStatusKamar(nomorBed string, status string) error
+	GetDistinctKelas() ([]string, error)
 }
 
 type kamarRepositoryImpl struct {
@@ -115,4 +116,16 @@ func (r *kamarRepositoryImpl) UpdateStatusKamar(nomorBed, status string) error {
 	query := `UPDATE kamar SET status_kamar = $1 WHERE nomor_bed = $2`
 	_, err := r.DB.Exec(query, status, nomorBed)
 	return err
+}
+
+func (r *kamarRepositoryImpl) GetDistinctKelas() ([]string, error) {
+	var kelasList []string
+	query := "SELECT DISTINCT kelas FROM kamar"
+
+	err := r.DB.Select(&kelasList, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return kelasList, nil
 }

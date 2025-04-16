@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/repository"
 	"github.com/jmoiron/sqlx"
 )
@@ -149,22 +150,37 @@ func (r *registrasiRepositoryImpl) Delete(nomorReg string) error {
 
 func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registrasi, error) {
 	query := `
-		SELECT nomor_reg, nama_pasien, nomor_rm, status_kamar
-		FROM registrasi
-		WHERE status_kamar = 'menunggu'
-		`
+		SELECT 
+			r.nomor_reg,
+			r.nomor_rm,
+			r.nama_pasien,
+			r.status_kamar,
+			k.kelas  -- 👈 Get class from kamar
+		FROM 
+			registrasi r
+		JOIN 
+			kamar b ON r.nomor_bed = b.nomor_bed
+		JOIN 
+			kamar k ON b.kode_kamar = k.kode_kamar
+		WHERE 
+			r.status_kamar = 'menunggu'
+	`
+
 	var results []entity.Registrasi
 
 	fmt.Println("✅ Running pending-room query...")
 
 	err := r.DB.Select(&results, query)
-	fmt.Printf("🔍 Query returned %d rows\n", len(results))
+
 	if err != nil {
 		fmt.Println("❌ DB error:", err)
+	} else {
+		fmt.Printf("🔍 Query returned %d rows\n", len(results))
 		for _, r := range results {
-			fmt.Printf("🔹 %s | %s | %s | %s\n", r.NomorReg, r.Nama, r.NomorRM, r.StatusKamar)
+			fmt.Printf("🔹 %s | %s | %s | %s | %s\n", r.NomorReg, r.Nama, r.NomorRM, r.StatusKamar, r.Kelas)
 		}
 	}
+
 	return results, err
 }
 
@@ -192,4 +208,16 @@ func (r *registrasiRepositoryImpl) AssignKamar(nomorReg string, nomorBed string)
 	`
 	_, err = r.DB.Exec(insertQuery, nomorBed, nomorReg)
 	return err
+}
+
+func (r *registrasiRepositoryImpl) GetPendingRoomRequests() ([]model.PendingRoomRequest, error) {
+	var pending []model.PendingRoomRequest
+	query := `
+        SELECT r.nomor_reg, r.nama_pasien, k.kelas
+        FROM registrasi r
+        JOIN kamar k ON r.kode_kamar = k.kode_kamar
+        WHERE r.status_kamar = 'menunggu'
+    `
+	err := r.DB.Select(&pending, query)
+	return pending, err
 }

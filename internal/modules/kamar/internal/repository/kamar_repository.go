@@ -13,4 +13,5 @@ type KamarRepository interface {
 	Delete(nomorReg string) error
 	GetAvailableRooms() ([]entity.Kamar, error)
 	UpdateStatusKamar(nomorBed string, status string) error
+	GetDistinctKelas() ([]string, error)
 }

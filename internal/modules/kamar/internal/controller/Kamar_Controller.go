@@ -162,3 +162,20 @@ func (c *KamarController) UpdateStatusKamar(ctx *fiber.Ctx) error {
 		"message": "status_kamar updated",
 	})
 }
+
+func (c *KamarController) GetKelasOptions(ctx *fiber.Ctx) error {
+	kelasList, err := c.UseCase.GetDistinctKelas()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    500,
+			"status":  "Error",
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "Success",
+		"data":   kelasList,
+	})
+}

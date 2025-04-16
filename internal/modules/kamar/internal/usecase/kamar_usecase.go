@@ -129,3 +129,7 @@ func (u *KamarUseCase) GetAvailableRooms() ([]entity.Kamar, error) {
 func (u *KamarUseCase) UpdateStatusKamar(nomorBed, status string) error {
 	return u.Repository.UpdateStatusKamar(nomorBed, status)
 }
+
+func (uc *KamarUseCase) GetDistinctKelas() ([]string, error) {
+	return uc.Repository.GetDistinctKelas()
+}

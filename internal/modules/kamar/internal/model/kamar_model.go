@@ -27,6 +27,12 @@ type KamarResponse struct {
 	StatusKamar string  `json:"status_kamar" db:"status_kamar"` // VARCHAR(20)
 }
 
+type PendingRoomRequest struct {
+	NomorReg   string `db:"nomor_reg" json:"nomor_reg"`
+	NamaPasien string `db:"nama_pasien" json:"nama_pasien"`
+	Kelas      string `db:"kelas" json:"kelas"`
+}
+
 type KamarPageResponse struct {
 	Page       int             `json:"page"`
 	Size       int             `json:"size"`
