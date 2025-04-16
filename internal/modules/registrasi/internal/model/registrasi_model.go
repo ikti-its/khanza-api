@@ -84,6 +84,11 @@ type PendingRoomRequest struct {
 	Kelas      string `db:"kelas" json:"kelas"`
 }
 
+type DokterResponse struct {
+	KodeDokter string `db:"kode_dokter" json:"kode_dokter"`
+	NamaDokter string `db:"nama_dokter" json:"nama_dokter"`
+}
+
 type RegistrasiPageResponse struct {
 	Page       int                  `json:"page"`
 	Size       int                  `json:"size"`

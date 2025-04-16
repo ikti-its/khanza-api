@@ -23,6 +23,7 @@ func NewRegistrasiController(useCase *usecase.RegistrasiUseCase) *RegistrasiCont
 func (c *RegistrasiController) Create(ctx *fiber.Ctx) error {
 	var request model.RegistrasiRequest
 	fmt.Println("Received a POST request to /registrasi") // Debugging log
+	fmt.Printf("📨 Parsed request: %+v\n", request)
 
 	if err := ctx.BodyParser(&request); err != nil {
 		fmt.Println("Failed to parse request body:", err) // Debugging log
@@ -232,5 +233,22 @@ func (c *RegistrasiController) AssignKamar(ctx *fiber.Ctx) error {
 	return ctx.JSON(fiber.Map{
 		"status":  "success",
 		"message": "Room assigned successfully",
+	})
+}
+
+func (c *RegistrasiController) GetAllDokter(ctx *fiber.Ctx) error {
+	dokters, err := c.UseCase.GetAllDokter()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    500,
+			"status":  "error",
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "success",
+		"data":   dokters,
 	})
 }

@@ -19,7 +19,7 @@ func NewRegistrasiUseCase(repo repository.RegistrasiRepository) *RegistrasiUseCa
 
 // Create a new registrasi entry
 func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.RegistrasiResponse, error) {
-	// Validate if kode_dokter exists
+	// ✅ Validate if kode_dokter exists
 	exists, err := u.Repository.CheckDokterExists(request.KodeDokter)
 	if err != nil {
 		return model.RegistrasiResponse{}, fmt.Errorf("database error: %v", err)
@@ -28,7 +28,13 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		return model.RegistrasiResponse{}, fmt.Errorf("dokter with kode_dokter '%s' does not exist", request.KodeDokter)
 	}
 
-	// Parse or set the default date
+	// ✅ Fetch nama_dokter from database
+	namaDokter, err := u.Repository.GetNamaDokter(request.KodeDokter)
+	if err != nil {
+		return model.RegistrasiResponse{}, fmt.Errorf("failed to retrieve nama_dokter: %v", err)
+	}
+
+	// ✅ Parse or set the default date
 	var parsedDate time.Time
 	if request.Tanggal == "" {
 		parsedDate = time.Now()
@@ -39,13 +45,13 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		}
 	}
 
-	// Convert request model to entity model
+	// ✅ Convert request model to entity model
 	registrasiEntity := entity.Registrasi{
 		NomorReg:         request.NomorReg,
 		NomorRawat:       request.NomorRawat,
 		Tanggal:          parsedDate,
 		KodeDokter:       request.KodeDokter,
-		NamaDokter:       request.NamaDokter,
+		NamaDokter:       namaDokter, // ✅ auto-filled here
 		NomorRM:          request.NomorRM,
 		Nama:             request.Nama,
 		JenisKelamin:     request.JenisKelamin,
@@ -64,13 +70,13 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		StatusKamar:      request.StatusKamar,
 	}
 
-	// Insert into database
+	// ✅ Insert into database
 	err = u.Repository.Insert(&registrasiEntity)
 	if err != nil {
 		return model.RegistrasiResponse{}, fmt.Errorf("failed to create registrasi: %v", err)
 	}
 
-	// Return response
+	// ✅ Return response
 	return model.RegistrasiResponse{
 		NomorReg:         registrasiEntity.NomorReg,
 		NomorRawat:       registrasiEntity.NomorRawat,
@@ -92,6 +98,7 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		StatusRawat:      registrasiEntity.StatusRawat,
 		StatusPoli:       registrasiEntity.StatusPoli,
 		StatusBayar:      registrasiEntity.StatusBayar,
+		StatusKamar:      registrasiEntity.StatusKamar,
 	}, nil
 }
 
@@ -274,4 +281,8 @@ func (uc *RegistrasiUseCase) UpdateStatusKamar(nomorReg, status string) error {
 
 func (u *RegistrasiUseCase) AssignKamar(nomorReg string, kamarID string) error {
 	return u.Repository.AssignKamar(nomorReg, kamarID)
+}
+
+func (u *RegistrasiUseCase) GetAllDokter() ([]model.DokterResponse, error) {
+	return u.Repository.GetAllDokter()
 }

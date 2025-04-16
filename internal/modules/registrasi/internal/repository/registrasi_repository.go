@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/model"
 )
 
 type RegistrasiRepository interface {
@@ -15,6 +16,8 @@ type RegistrasiRepository interface {
 	UpdateStatusKamar(nomorReg string, status string) error
 	FindPendingRoomRequests() ([]entity.Registrasi, error)
 	AssignKamar(nomorReg string, kamarID string) error
+	GetAllDokter() ([]model.DokterResponse, error)
+	GetNamaDokter(kode string) (string, error)
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }

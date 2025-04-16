@@ -20,6 +20,8 @@ type RegistrasiRepository interface {
 	Delete(nomorReg string) error
 	UpdateStatusKamar(nomorReg string, status string) error
 	AssignKamar(nomorReg string, kamarID string) error
+	GetAllDokter() ([]model.DokterResponse, error)
+	GetNamaDokter(kode string) (string, error)
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }
@@ -220,4 +222,20 @@ func (r *registrasiRepositoryImpl) GetPendingRoomRequests() ([]model.PendingRoom
     `
 	err := r.DB.Select(&pending, query)
 	return pending, err
+}
+
+func (r *registrasiRepositoryImpl) GetAllDokter() ([]model.DokterResponse, error) {
+	var dokters []model.DokterResponse
+
+	query := `SELECT kode_dokter, nama_dokter FROM dokter`
+
+	err := r.DB.Select(&dokters, query)
+	return dokters, err
+}
+
+func (r *registrasiRepositoryImpl) GetNamaDokter(kode string) (string, error) {
+	var nama string
+	query := "SELECT nama_dokter FROM dokter WHERE kode_dokter = $1"
+	err := r.DB.Get(&nama, query, kode)
+	return nama, err
 }
