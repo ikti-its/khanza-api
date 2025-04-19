@@ -135,3 +135,19 @@ func (c *PemberianObatController) Delete(ctx *fiber.Ctx) error {
 		"data":   "Pemberian obat deleted successfully",
 	})
 }
+
+func (c *PemberianObatController) GetAllDataBarang(ctx *fiber.Ctx) error {
+	result, err := c.UseCase.GetAllDataBarang()
+	if err != nil {
+		return ctx.Status(500).JSON(fiber.Map{
+			"code":   500,
+			"status": "Error",
+			"data":   err.Error(),
+		})
+	}
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "OK",
+		"data":   result,
+	})
+}

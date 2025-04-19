@@ -15,6 +15,7 @@ type PemberianObat struct {
 	Gudang      string  `json:"gudang"`
 	NoBatch     string  `json:"no_batch"`
 	NoFaktur    string  `json:"no_faktur"`
+	Kelas       string  `json:"kelas"`
 }
 
 type PemberianObatRequest struct {
@@ -32,6 +33,7 @@ type PemberianObatRequest struct {
 	Gudang      string  `json:"gudang"`
 	NoBatch     string  `json:"no_batch"`
 	NoFaktur    string  `json:"no_faktur"`
+	Kelas       string  `json:"kelas"`
 }
 
 type PemberianObatResponse struct {
@@ -49,6 +51,7 @@ type PemberianObatResponse struct {
 	Gudang      string  `json:"gudang"`
 	NoBatch     string  `json:"no_batch"`
 	NoFaktur    string  `json:"no_faktur"`
+	Kelas       string  `json:"kelas"`
 }
 
 type PemberianObatPageResponse struct {

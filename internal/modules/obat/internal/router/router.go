@@ -8,6 +8,7 @@ import (
 func PemberianObatRoute(app *fiber.App, pemberianObatController *controller.PemberianObatController) {
 	obat := app.Group("/v1/pemberian-obat")
 
+	obat.Get("/databarang", pemberianObatController.GetAllDataBarang)
 	obat.Post("/", pemberianObatController.Create)
 	obat.Get("/", pemberianObatController.GetAll)
 	obat.Get("/:nomor_rawat", pemberianObatController.GetByNomorRawat)

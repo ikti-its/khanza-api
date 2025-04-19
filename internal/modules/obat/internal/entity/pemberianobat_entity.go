@@ -17,4 +17,11 @@ type PemberianObat struct {
 	Gudang      *string   `db:"gudang"`
 	NoBatch     *string   `db:"no_batch"`
 	NoFaktur    *string   `db:"no_faktur"`
+	Kelas       *string   `db:"kelas"`
+}
+
+type DataBarang struct {
+	KodeObat  string  `db:"kode_brng" json:"kode_obat"`
+	NamaObat  string  `db:"nama_brng" json:"nama_obat"`
+	BiayaObat float64 `db:"dasar" json:"biaya_obat"`
 }

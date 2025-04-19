@@ -117,6 +117,7 @@ func (u *PemberianObatUseCase) GetAll() ([]model.PemberianObatResponse, error) {
 			Gudang:      derefStr(p.Gudang),
 			NoBatch:     derefStr(p.NoBatch),
 			NoFaktur:    derefStr(p.NoFaktur),
+			Kelas:       derefStr(p.Kelas),
 		})
 	}
 	return result, nil
@@ -145,6 +146,7 @@ func (u *PemberianObatUseCase) GetByNomorRawat(nomorRawat string) ([]model.Pembe
 			Gudang:      derefStr(p.Gudang),
 			NoBatch:     derefStr(p.NoBatch),
 			NoFaktur:    derefStr(p.NoFaktur),
+			Kelas:       derefStr(p.Kelas),
 		})
 	}
 	return result, nil
@@ -204,4 +206,8 @@ func (u *PemberianObatUseCase) Update(nomorRawat string, request *model.Pemberia
 
 func (u *PemberianObatUseCase) Delete(nomorRawat string, jamBeri string) error {
 	return u.Repository.Delete(nomorRawat, jamBeri)
+}
+
+func (u *PemberianObatUseCase) GetAllDataBarang() ([]entity.DataBarang, error) {
+	return u.Repository.GetAllDataBarang()
 }

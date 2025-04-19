@@ -10,4 +10,5 @@ type PemberianObatRepository interface {
 	FindByNomorRawat(nomorRawat string) ([]entity.PemberianObat, error)
 	Update(obat *entity.PemberianObat) error
 	Delete(nomorRawat string, jamBeri string) error
+	GetAllDataBarang() ([]entity.DataBarang, error)
 }
