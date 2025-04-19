@@ -12,6 +12,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/kamar"
 	"github.com/ikti-its/khanza-api/internal/modules/kehadiran"
 	"github.com/ikti-its/khanza-api/internal/modules/mobile"
+	"github.com/ikti-its/khanza-api/internal/modules/obat"
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan"
@@ -52,4 +53,5 @@ func (p *Provider) Provide() {
 	ugd.ProvideUGD(p.App, p.PG, p.Validator)
 	tindakan.ProvideTindakan(p.App, p.PG)
 	dokterjaga.ProvideDokterJaga(p.App, p.PG, p.Validator)
+	obat.ProvidePemberianObat(p.App, p.PG)
 }

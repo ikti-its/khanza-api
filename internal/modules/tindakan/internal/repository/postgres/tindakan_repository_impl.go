@@ -87,11 +87,26 @@ func (r *tindakanRepositoryImpl) CheckDokterExists(kodeDokter string) (bool, err
 
 func (r *tindakanRepositoryImpl) GetAllJenisTindakan() ([]entity.JenisTindakan, error) {
 	var result []entity.JenisTindakan
-	query := `SELECT 
-        kode, 
-        nama_tindakan, 
-        total_bayar_dokter_perawat 
-    FROM jenis_tindakan
+	query := `
+	SELECT 
+		kode,
+		nama_tindakan,
+		kode_kategori,
+		material,
+		bhp,
+		tarif_tindakan_dokter,
+		tarif_tindakan_perawat,
+		kso,
+		manajemen,
+		total_bayar_dokter,
+		total_bayar_perawat,
+		(material + bhp + kso + manajemen + total_bayar_dokter + total_bayar_perawat) AS tarif,
+		total_bayar_dokter_perawat,
+		kode_pj,
+		kode_bangsal,
+		status,
+		kelas
+	FROM jenis_tindakan
     ORDER BY nama_tindakan ASC`
 
 	err := r.DB.Select(&result, query)

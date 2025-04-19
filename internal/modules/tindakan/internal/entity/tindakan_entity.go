@@ -17,7 +17,21 @@ type Tindakan struct {
 }
 
 type JenisTindakan struct {
-	Kode         string  `db:"kode" json:"kode"`
-	NamaTindakan string  `db:"nama_tindakan" json:"nama_tindakan"`
-	Tarif        float64 `db:"total_bayar_dokter_perawat" json:"tarif"`
+	Kode                    string  `db:"kode" json:"kode"`
+	NamaTindakan            string  `db:"nama_tindakan" json:"nama_tindakan"`
+	KodeKategori            string  `db:"kode_kategori" json:"kode_kategori"`
+	Material                float64 `db:"material" json:"material"`
+	BHP                     float64 `db:"bhp" json:"bhp"`
+	TarifTindakanDokter     float64 `db:"tarif_tindakan_dokter" json:"tarif_tindakan_dokter"`
+	TarifTindakanPerawat    float64 `db:"tarif_tindakan_perawat" json:"tarif_tindakan_perawat"`
+	KSO                     float64 `db:"kso" json:"kso"`
+	Manajemen               float64 `db:"manajemen" json:"manajemen"`
+	TotalBayarDokter        float64 `db:"total_bayar_dokter" json:"total_bayar_dokter"`
+	TotalBayarPerawat       float64 `db:"total_bayar_perawat" json:"total_bayar_perawat"`
+	TotalBayarDokterPerawat float64 `db:"total_bayar_dokter_perawat" json:"total_bayar_dokter_perawat"`
+	KodePJ                  string  `db:"kode_pj" json:"kode_pj"`
+	KodeBangsal             string  `db:"kode_bangsal" json:"kode_bangsal"`
+	Status                  string  `db:"status" json:"status"`
+	Kelas                   string  `db:"kelas" json:"kelas"`
+	Tarif                   float64 `db:"tarif" json:"tarif"`
 }
