@@ -6,6 +6,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/akun"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans"
 	"github.com/ikti-its/khanza-api/internal/modules/auth"
+	"github.com/ikti-its/khanza-api/internal/modules/dokter"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga"
 	"github.com/ikti-its/khanza-api/internal/modules/file"
 	"github.com/ikti-its/khanza-api/internal/modules/inventory"
@@ -56,4 +57,5 @@ func (p *Provider) Provide() {
 	dokterjaga.ProvideDokterJaga(p.App, p.PG, p.Validator)
 	obat.ProvidePemberianObat(p.App, p.PG)
 	resep.ProvideResep(p.App, p.PG)
+	dokter.ProvideDokter(p.App, p.PG)
 }
