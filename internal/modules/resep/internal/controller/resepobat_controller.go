@@ -133,3 +133,20 @@ func (c *ResepObatController) Delete(ctx *fiber.Ctx) error {
 		"data":   "Resep obat deleted successfully",
 	})
 }
+
+func (c *ResepObatController) GetByNomorRawat(ctx *fiber.Ctx) error {
+	nomorRawat := ctx.Params("nomor_rawat")
+	reseps, err := c.UseCase.GetByNomorRawat(nomorRawat)
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"code":   404,
+			"status": "Not Found",
+			"data":   fmt.Sprintf("resep_obat not found: %v", err),
+		})
+	}
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "OK",
+		"data":   reseps,
+	})
+}

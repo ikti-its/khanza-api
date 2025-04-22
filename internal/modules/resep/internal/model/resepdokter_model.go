@@ -5,6 +5,8 @@ type ResepDokter struct {
 	KodeBarang  string  `json:"kode_barang"`
 	Jumlah      float64 `json:"jumlah"`
 	AturanPakai string  `json:"aturan_pakai"`
+	Embalase    float64 `json:"embalase"`
+	Tuslah      float64 `json:"tuslah"`
 }
 
 type ResepDokterRequest struct {
@@ -12,6 +14,8 @@ type ResepDokterRequest struct {
 	KodeBarang  string  `json:"kode_barang" validate:"required"`
 	Jumlah      float64 `json:"jumlah" validate:"required"`
 	AturanPakai string  `json:"aturan_pakai" validate:"required"`
+	Embalase    float64 `json:"embalase"`
+	Tuslah      float64 `json:"tuslah"`
 }
 
 type ResepDokterResponse struct {
@@ -19,6 +23,8 @@ type ResepDokterResponse struct {
 	KodeBarang  string  `json:"kode_barang"`
 	Jumlah      float64 `json:"jumlah"`
 	AturanPakai string  `json:"aturan_pakai"`
+	Embalase    float64 `json:"embalase"`
+	Tuslah      float64 `json:"tuslah"`
 }
 
 type ResepDokterPageResponse struct {

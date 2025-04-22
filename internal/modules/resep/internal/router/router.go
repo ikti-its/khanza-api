@@ -9,6 +9,7 @@ import (
 func RegisterResepRoutes(app *fiber.App, resepObatController *obatController.ResepObatController, resepDokterController *dokterController.ResepDokterController) {
 	// 🧾 Master route: Resep Obat
 	resepObat := app.Group("/v1/resep-obat")
+	resepObat.Get("/by-nomor-rawat/:nomor_rawat", resepObatController.GetByNomorRawat)
 	resepObat.Post("/", resepObatController.Create)
 	resepObat.Get("/", resepObatController.GetAll)
 	resepObat.Get("/:no_resep", resepObatController.GetByNoResep)

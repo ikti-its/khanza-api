@@ -74,3 +74,10 @@ func (r *resepObatRepositoryImpl) Delete(noResep string) error {
 	_, err := r.DB.Exec(query, noResep)
 	return err
 }
+
+func (r *resepObatRepositoryImpl) GetByNomorRawat(nomorRawat string) ([]entity.ResepObat, error) {
+	var resepObats []entity.ResepObat
+	query := `SELECT * FROM sik.resep_obat WHERE no_rawat = $1`
+	err := r.DB.Select(&resepObats, query, nomorRawat)
+	return resepObats, err
+}

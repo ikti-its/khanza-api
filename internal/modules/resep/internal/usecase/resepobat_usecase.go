@@ -140,3 +140,7 @@ func (u *ResepObatUseCase) Update(request *model.ResepObatRequest) (*model.Resep
 func (u *ResepObatUseCase) Delete(noResep string) error {
 	return u.Repository.Delete(noResep)
 }
+
+func (u *ResepObatUseCase) GetByNomorRawat(nomorRawat string) ([]entity.ResepObat, error) {
+	return u.Repository.GetByNomorRawat(nomorRawat)
+}
