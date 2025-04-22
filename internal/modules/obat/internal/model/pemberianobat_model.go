@@ -54,6 +54,12 @@ type PemberianObatResponse struct {
 	Kelas       string  `json:"kelas"`
 }
 
+type ObatWithTarif struct {
+	KodeObat  string  `json:"kode_obat"`
+	NamaObat  string  `json:"nama_obat"`
+	BiayaObat float64 `json:"biaya_obat"`
+}
+
 type PemberianObatPageResponse struct {
 	Page          int                     `json:"page"`
 	Size          int                     `json:"size"`

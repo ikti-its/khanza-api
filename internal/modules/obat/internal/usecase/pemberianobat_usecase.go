@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/entity"
@@ -210,4 +211,44 @@ func (u *PemberianObatUseCase) Delete(nomorRawat string, jamBeri string) error {
 
 func (u *PemberianObatUseCase) GetAllDataBarang() ([]entity.DataBarang, error) {
 	return u.Repository.GetAllDataBarang()
+}
+
+func (u *PemberianObatUseCase) GetDataBarangByKelas(kelas string) ([]model.ObatWithTarif, error) {
+	items, err := u.Repository.GetAllDataBarang()
+	if err != nil {
+		return nil, err
+	}
+
+	var result []model.ObatWithTarif
+	for _, item := range items {
+		var tarif float64
+		switch strings.ToLower(kelas) {
+		case "dasar":
+			tarif = item.Dasar
+		case "kelas1":
+			tarif = item.Kelas1
+		case "kelas2":
+			tarif = item.Kelas2
+		case "kelas3":
+			tarif = item.Kelas3
+		case "utama":
+			tarif = item.Utama
+		case "vip":
+			tarif = item.VIP
+		case "vvip":
+			tarif = item.VVIP
+		case "jualbebas":
+			tarif = item.JualBebas
+		default:
+			tarif = item.Dasar
+		}
+
+		result = append(result, model.ObatWithTarif{
+			KodeObat:  item.KodeObat,
+			NamaObat:  item.NamaObat,
+			BiayaObat: tarif,
+		})
+	}
+
+	return result, nil
 }
