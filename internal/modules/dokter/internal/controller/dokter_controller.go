@@ -29,3 +29,18 @@ func (c *DokterController) GetByKodeDokter(ctx *fiber.Ctx) error {
 		"data":   data,
 	})
 }
+
+func (c *DokterController) GetAll(ctx *fiber.Ctx) error {
+	result, err := c.UseCase.GetAll()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status": "error",
+			"data":   err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status": "success",
+		"data":   result,
+	})
+}

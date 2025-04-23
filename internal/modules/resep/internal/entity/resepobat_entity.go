@@ -11,4 +11,5 @@ type ResepObat struct {
 	Status        string `db:"status" json:"status"`                 // expected: "ralan" or "ranap"
 	TglPenyerahan string `db:"tgl_penyerahan" json:"tgl_penyerahan"` // not null
 	JamPenyerahan string `db:"jam_penyerahan" json:"jam_penyerahan"` // not null
+	Validasi      bool   `db:"validasi" json:"validasi"`
 }

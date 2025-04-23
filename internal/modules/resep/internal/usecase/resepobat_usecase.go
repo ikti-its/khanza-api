@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
@@ -28,6 +29,7 @@ func (u *ResepObatUseCase) Create(request *model.ResepObatRequest) (*model.Resep
 		Status:        request.Status,
 		TglPenyerahan: request.TglPenyerahan,
 		JamPenyerahan: request.JamPenyerahan,
+		Validasi:      request.Validasi,
 	}
 
 	if err := u.Repository.Insert(&entity); err != nil {
@@ -48,6 +50,7 @@ func (u *ResepObatUseCase) Create(request *model.ResepObatRequest) (*model.Resep
 			Status:        entity.Status,
 			TglPenyerahan: entity.TglPenyerahan,
 			JamPenyerahan: entity.JamPenyerahan,
+			Validasi:      entity.Validasi,
 		},
 	}, nil
 
@@ -72,6 +75,7 @@ func (u *ResepObatUseCase) GetAll() ([]model.ResepObat, error) {
 			Status:        item.Status,
 			TglPenyerahan: item.TglPenyerahan,
 			JamPenyerahan: item.JamPenyerahan,
+			Validasi:      item.Validasi,
 		})
 	}
 
@@ -95,6 +99,7 @@ func (u *ResepObatUseCase) GetByNoResep(noResep string) (*model.ResepObat, error
 		Status:        data.Status,
 		TglPenyerahan: data.TglPenyerahan,
 		JamPenyerahan: data.JamPenyerahan,
+		Validasi:      data.Validasi,
 	}
 
 	return result, nil
@@ -112,6 +117,7 @@ func (u *ResepObatUseCase) Update(request *model.ResepObatRequest) (*model.Resep
 		Status:        request.Status,
 		TglPenyerahan: request.TglPenyerahan,
 		JamPenyerahan: request.JamPenyerahan,
+		Validasi:      request.Validasi,
 	}
 
 	if err := u.Repository.Update(&entity); err != nil {
@@ -132,6 +138,7 @@ func (u *ResepObatUseCase) Update(request *model.ResepObatRequest) (*model.Resep
 			Status:        entity.Status,
 			TglPenyerahan: entity.TglPenyerahan,
 			JamPenyerahan: entity.JamPenyerahan,
+			Validasi:      entity.Validasi,
 		},
 	}, nil
 
@@ -143,4 +150,8 @@ func (u *ResepObatUseCase) Delete(noResep string) error {
 
 func (u *ResepObatUseCase) GetByNomorRawat(nomorRawat string) ([]entity.ResepObat, error) {
 	return u.Repository.GetByNomorRawat(nomorRawat)
+}
+
+func (u *ResepObatUseCase) UpdateValidasi(ctx context.Context, noResep string, validasi bool) error {
+	return u.Repository.UpdateValidasi(ctx, noResep, validasi)
 }

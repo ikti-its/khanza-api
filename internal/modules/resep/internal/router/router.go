@@ -15,6 +15,7 @@ func RegisterResepRoutes(app *fiber.App, resepObatController *obatController.Res
 	resepObat.Get("/:no_resep", resepObatController.GetByNoResep)
 	resepObat.Put("/", resepObatController.Update)
 	resepObat.Delete("/:no_resep", resepObatController.Delete)
+	resepObat.Put("/:no_resep/validasi", resepObatController.UpdateValidasi)
 
 	// 💊 Detail route: Resep Dokter (resep_obat_detail)
 	resepDokter := app.Group("/v1/resep-dokter")

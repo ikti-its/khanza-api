@@ -11,6 +11,7 @@ type ResepObat struct {
 	Status        string `json:"status"` // should be "ralan" or "ranap"
 	TglPenyerahan string `json:"tgl_penyerahan"`
 	JamPenyerahan string `json:"jam_penyerahan"`
+	Validasi      bool   `json:"validasi"`
 }
 
 type ResepObatRequest struct {
@@ -24,6 +25,7 @@ type ResepObatRequest struct {
 	Status        string `json:"status"` // "ralan" or "ranap"
 	TglPenyerahan string `json:"tgl_penyerahan"`
 	JamPenyerahan string `json:"jam_penyerahan"`
+	Validasi      bool   `json:"validasi"`
 }
 
 type ResepObatResponse struct {

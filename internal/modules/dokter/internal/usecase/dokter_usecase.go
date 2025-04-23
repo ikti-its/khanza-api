@@ -16,3 +16,7 @@ func NewDokterUseCase(r repository.DokterRepository) *DokterUseCase {
 func (u *DokterUseCase) GetByKode(kode string) (*entity.Dokter, error) {
 	return u.Repo.FindByKode(kode)
 }
+
+func (u *DokterUseCase) GetAll() ([]entity.Dokter, error) {
+	return u.Repo.GetAll()
+}

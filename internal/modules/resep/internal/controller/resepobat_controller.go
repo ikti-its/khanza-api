@@ -150,3 +150,28 @@ func (c *ResepObatController) GetByNomorRawat(ctx *fiber.Ctx) error {
 		"data":   reseps,
 	})
 }
+
+func (c *ResepObatController) UpdateValidasi(ctx *fiber.Ctx) error {
+	noResep := ctx.Params("no_resep")
+
+	var payload struct {
+		Validasi bool `json:"validasi"`
+	}
+
+	if err := ctx.BodyParser(&payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status": "error", "message": "invalid JSON",
+		})
+	}
+
+	err := c.UseCase.UpdateValidasi(ctx.Context(), noResep, payload.Validasi)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status": "error", "message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status": "success", "message": "Validasi updated",
+	})
+}

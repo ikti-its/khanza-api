@@ -29,3 +29,10 @@ func (r *dokterRepositoryImpl) FindByKode(kode string) (*entity.Dokter, error) {
 	}
 	return dokter, nil
 }
+
+func (r *dokterRepositoryImpl) GetAll() ([]entity.Dokter, error) {
+	var dokters []entity.Dokter
+	query := `SELECT * FROM dokter`
+	err := r.DB.Select(&dokters, query)
+	return dokters, err
+}
