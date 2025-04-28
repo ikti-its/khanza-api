@@ -286,3 +286,19 @@ func (u *RegistrasiUseCase) AssignKamar(nomorReg string, kamarID string) error {
 func (u *RegistrasiUseCase) GetAllDokter() ([]model.DokterResponse, error) {
 	return u.Repository.GetAllDokter()
 }
+
+func (u *RegistrasiUseCase) GetByNomorRM(nomorRM string) (model.RegistrasiResponse, error) {
+	registrasi, err := u.Repository.FindByNomorRM(nomorRM)
+	if err != nil {
+		return model.RegistrasiResponse{}, fmt.Errorf("pasien tidak ditemukan: %v", err)
+	}
+
+	return model.RegistrasiResponse{
+		NomorReg:     registrasi.NomorReg,
+		NomorRawat:   registrasi.NomorRawat,
+		Tanggal:      registrasi.Tanggal.Format("2006-01-02"),
+		Nama:         registrasi.Nama,
+		JenisKelamin: registrasi.JenisKelamin,
+		Umur:         registrasi.Umur,
+	}, nil
+}

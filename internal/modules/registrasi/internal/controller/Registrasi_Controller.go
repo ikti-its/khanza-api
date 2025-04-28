@@ -251,4 +251,22 @@ func (c *RegistrasiController) GetAllDokter(ctx *fiber.Ctx) error {
 		"status": "success",
 		"data":   dokters,
 	})
+
+}
+
+func (c *RegistrasiController) GetByNomorRM(ctx *fiber.Ctx) error {
+	nomorRM := ctx.Params("nomor_rm")
+
+	data, err := c.UseCase.GetByNomorRM(nomorRM)
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Data tidak ditemukan",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status": "success",
+		"data":   data,
+	})
 }

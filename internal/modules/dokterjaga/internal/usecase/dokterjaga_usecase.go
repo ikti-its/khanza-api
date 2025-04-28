@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/model"
@@ -17,25 +16,18 @@ func NewDokterJagaUseCase(repo repository.DokterJagaRepository) *DokterJagaUseCa
 	return &DokterJagaUseCase{Repository: repo}
 }
 
-// Create a new dokter_jaga entry
 func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.DokterJagaResponse, error) {
-	// Parse the hari_kerja string to time.Time
-	hariKerja, err := time.Parse("2006-01-02", request.HariKerja)
-	if err != nil {
-		return model.DokterJagaResponse{}, fmt.Errorf("invalid date format for hari_kerja, use YYYY-MM-DD: %v", err)
-	}
-
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
-		HariKerja:  hariKerja,
+		HariKerja:  request.HariKerja, // now plain string
 		JamMulai:   request.JamMulai,
 		JamSelesai: request.JamSelesai,
 		Poliklinik: request.Poliklinik,
 		Status:     request.Status,
 	}
 
-	err = u.Repository.Insert(&dokter)
+	err := u.Repository.Insert(&dokter)
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("failed to create dokter jaga: %v", err)
 	}
@@ -43,7 +35,7 @@ func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.Dokt
 	return model.DokterJagaResponse{
 		KodeDokter: dokter.KodeDokter,
 		NamaDokter: dokter.NamaDokter,
-		HariKerja:  request.HariKerja, // still return string here for client
+		HariKerja:  dokter.HariKerja, // plain string
 		JamMulai:   dokter.JamMulai,
 		JamSelesai: dokter.JamSelesai,
 		Poliklinik: dokter.Poliklinik,
@@ -63,7 +55,7 @@ func (u *DokterJagaUseCase) GetAll() ([]model.DokterJagaResponse, error) {
 		response = append(response, model.DokterJagaResponse{
 			KodeDokter: d.KodeDokter,
 			NamaDokter: d.NamaDokter,
-			HariKerja:  d.HariKerja.Format("2006-01-02"),
+			HariKerja:  d.HariKerja,
 			JamMulai:   d.JamMulai,
 			JamSelesai: d.JamSelesai,
 			Poliklinik: d.Poliklinik,
@@ -85,7 +77,7 @@ func (u *DokterJagaUseCase) GetByKodeDokter(kode string) ([]model.DokterJagaResp
 		response = append(response, model.DokterJagaResponse{
 			KodeDokter: d.KodeDokter,
 			NamaDokter: d.NamaDokter,
-			HariKerja:  d.HariKerja.Format("2006-01-02"),
+			HariKerja:  d.HariKerja,
 			JamMulai:   d.JamMulai,
 			JamSelesai: d.JamSelesai,
 			Poliklinik: d.Poliklinik,
@@ -103,17 +95,11 @@ func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.Dokt
 		return model.DokterJagaResponse{}, fmt.Errorf("dokter jaga not found")
 	}
 
-	// 🛠️ Parse the hari_kerja string
-	hariKerja, err := time.Parse("2006-01-02", request.HariKerja)
-	if err != nil {
-		return model.DokterJagaResponse{}, fmt.Errorf("invalid format for hari_kerja: %v", err)
-	}
-
-	// Update the matched one
+	// Directly use the string field for hari_kerja
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
-		HariKerja:  hariKerja,
+		HariKerja:  request.HariKerja, // no parsing needed
 		JamMulai:   request.JamMulai,
 		JamSelesai: request.JamSelesai,
 		Poliklinik: request.Poliklinik,
@@ -128,7 +114,7 @@ func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.Dokt
 	return model.DokterJagaResponse{
 		KodeDokter: dokter.KodeDokter,
 		NamaDokter: dokter.NamaDokter,
-		HariKerja:  request.HariKerja, // returning string as expected by client
+		HariKerja:  dokter.HariKerja,
 		JamMulai:   dokter.JamMulai,
 		JamSelesai: dokter.JamSelesai,
 		Poliklinik: dokter.Poliklinik,
@@ -158,7 +144,7 @@ func (u *DokterJagaUseCase) GetByStatus(status string) ([]model.DokterJagaRespon
 		response = append(response, model.DokterJagaResponse{
 			KodeDokter: d.KodeDokter,
 			NamaDokter: d.NamaDokter,
-			HariKerja:  d.HariKerja.Format("2006-01-02"),
+			HariKerja:  d.HariKerja,
 			JamMulai:   d.JamMulai,
 			JamSelesai: d.JamSelesai,
 			Poliklinik: d.Poliklinik,

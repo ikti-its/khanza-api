@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/model"
@@ -103,12 +104,17 @@ func (r *registrasiRepositoryImpl) FindByNomorReg(nomorReg string) (entity.Regis
 	return record, err
 }
 
-func (r *registrasiRepositoryImpl) FindByNomorRM(nomorReg string) (entity.Registrasi, error) {
+func (r *registrasiRepositoryImpl) FindByNomorRM(nomorRM string) (entity.Registrasi, error) {
+	nomorRM = strings.TrimSpace(nomorRM)
+
 	query := `
-		SELECT * FROM registrasi WHERE nomor_rm = $1
+		SELECT * FROM registrasi 
+		WHERE nomor_rm = $1 
+		ORDER BY tanggal DESC 
+		LIMIT 1
 	`
 	var record entity.Registrasi
-	err := r.DB.Get(&record, query, nomorReg)
+	err := r.DB.Get(&record, query, nomorRM)
 	return record, err
 }
 
