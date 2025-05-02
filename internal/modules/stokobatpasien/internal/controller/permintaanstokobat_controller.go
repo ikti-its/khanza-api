@@ -178,28 +178,10 @@ func (c *PermintaanStokObatController) UpdateValidasi(ctx *fiber.Ctx) error {
 }
 
 func (c *PermintaanStokObatController) CreateWithDetail(ctx *fiber.Ctx) error {
-	// 1. Use your existing model.PermintaanStokObatRequest
-	//    which already has a StokObat []StokObatPasienRequest field
-	var req model.PermintaanStokObatRequest
-	details := make([]model.StokObatPasienRequest, len(req.StokObat))
-	for i, d := range req.StokObat {
-		details[i] = model.StokObatPasienRequest{
-			Tanggal:     req.TglPermintaan,
-			Jam:         req.Jam,
-			NoRawat:     req.NoRawat,
-			KodeBrng:    d.KodeBarang,
-			Jumlah:      float64(d.Jumlah),
-			KdBangsal:   d.KdBangsal, // only if you added this in StokObatRequest
-			NoBatch:     d.NoBatch,
-			NoFaktur:    d.NoFaktur,
-			AturanPakai: d.AturanPakai,
-			// optionally set Jam00~Jam23 based on d.JamObat here
-		}
-	}
-
 	fmt.Println("📥 Received POST /permintaan-stok-obat/detail")
 
-	// 2. Parse the flat JSON directly into it
+	// 1. Parse the flat JSON directly into req
+	var req model.PermintaanStokObatRequest
 	if err := ctx.BodyParser(&req); err != nil {
 		fmt.Println("❌ Error parsing body:", err)
 		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
@@ -209,7 +191,81 @@ func (c *PermintaanStokObatController) CreateWithDetail(ctx *fiber.Ctx) error {
 		})
 	}
 
-	// 3. Now req.TglPermintaan, req.Jam, and req.StokObat are populated
+	fmt.Printf("DEBUG controller - stok_obat count: %d\n", len(req.StokObat))
+
+	// 2. Map StokObatRequest to StokObatPasienRequest
+	details := make([]model.StokObatPasienRequest, len(req.StokObat))
+	for i, d := range req.StokObat {
+		detail := model.StokObatPasienRequest{
+			Tanggal:     req.TglPermintaan,
+			Jam:         req.Jam,
+			NoRawat:     req.NoRawat,
+			KodeBrng:    d.KodeBarang,
+			Jumlah:      float64(d.Jumlah), // assuming both are int now
+			KdBangsal:   d.KdBangsal,
+			NoBatch:     d.NoBatch,
+			NoFaktur:    d.NoFaktur,
+			AturanPakai: d.AturanPakai,
+		}
+
+		// Optionally: map jam_obat → Jam00 to Jam23
+		for _, jam := range d.JamObat {
+			switch jam {
+			case "00":
+				detail.Jam00 = true
+			case "01":
+				detail.Jam01 = true
+			case "02":
+				detail.Jam02 = true
+			case "03":
+				detail.Jam03 = true
+			case "04":
+				detail.Jam04 = true
+			case "05":
+				detail.Jam05 = true
+			case "06":
+				detail.Jam06 = true
+			case "07":
+				detail.Jam07 = true
+			case "08":
+				detail.Jam08 = true
+			case "09":
+				detail.Jam09 = true
+			case "10":
+				detail.Jam10 = true
+			case "11":
+				detail.Jam11 = true
+			case "12":
+				detail.Jam12 = true
+			case "13":
+				detail.Jam13 = true
+			case "14":
+				detail.Jam14 = true
+			case "15":
+				detail.Jam15 = true
+			case "16":
+				detail.Jam16 = true
+			case "17":
+				detail.Jam17 = true
+			case "18":
+				detail.Jam18 = true
+			case "19":
+				detail.Jam19 = true
+			case "20":
+				detail.Jam20 = true
+			case "21":
+				detail.Jam21 = true
+			case "22":
+				detail.Jam22 = true
+			case "23":
+				detail.Jam23 = true
+			}
+		}
+
+		details[i] = detail
+	}
+
+	// 3. Call usecase with header + mapped details
 	if err := c.UseCase.CreateWithDetail(ctx.Context(), c.UseCase.DB, &req, details); err != nil {
 		fmt.Println("❌ Error inserting data:", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{

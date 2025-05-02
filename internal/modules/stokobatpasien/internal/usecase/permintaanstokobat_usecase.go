@@ -156,6 +156,10 @@ func (u *PermintaanStokObatUseCase) CreateWithDetail(
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
 	defer tx.Rollback() // in case of panic or failure
+	fmt.Printf("🧪 DETAILS COUNT: %d\n", len(detailReq))
+	for i, d := range detailReq {
+		fmt.Printf("➡️  detail[%d]: %+v\n", i, d)
+	}
 
 	// 1. Map permintaan
 	permintaan := &entity.PermintaanStokObat{

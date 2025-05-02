@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/ikti-its/khanza-api/internal/modules/stokobatpasien/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/stokobatpasien/internal/repository"
@@ -109,7 +110,7 @@ func (r *permintaanStokObatRepositoryImpl) InsertWithDetail(
 	if err != nil {
 		return err
 	}
-
+	fmt.Printf("🧪 Repository: inserting %d detail(s)\n", len(details))
 	// Insert detail ke stok_obat_pasien
 	for _, d := range details {
 		_, err := tx.NamedExec(`
