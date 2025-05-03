@@ -10,6 +10,8 @@ type DokterJagaRepository interface {
 	FindByKodeDokter(kodeDokter string) ([]entity.DokterJaga, error)
 	Update(dokter *entity.DokterJaga) error
 	Delete(kodeDokter string, hariKerja string) error
+	GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error)
+	GetPoliklinikList() ([]string, error)
 
 	// Optional extensions (depending on use case)
 	FindByStatus(status string) ([]entity.DokterJaga, error)

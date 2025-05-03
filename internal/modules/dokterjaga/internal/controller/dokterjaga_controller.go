@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"log"
+	"net/url"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
@@ -180,5 +181,48 @@ func (c *DokterJagaController) UpdateStatus(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(fiber.Map{
 		"message": "Status updated successfully",
+	})
+}
+
+// GET /v1/dokter-jaga/poliklinik/:nama
+func (h *DokterJagaController) GetByPoliklinik(c *fiber.Ctx) error {
+	rawPoliklinik := c.Params("nama")
+	poliklinik, err := url.QueryUnescape(rawPoliklinik)
+	if err != nil {
+		fmt.Println("❌ Failed to decode poliklinik param:", rawPoliklinik)
+		return c.Status(400).JSON(fiber.Map{
+			"status": "error",
+			"data":   "Invalid poliklinik name",
+		})
+	}
+
+	fmt.Println("📥 Decoded poliklinik:", poliklinik)
+
+	result, err := h.UseCase.GetByPoliklinik(poliklinik)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status": "success",
+		"data":   result,
+	})
+}
+
+func (h *DokterJagaController) GetPoliklinikList(c *fiber.Ctx) error {
+	list, err := h.UseCase.GetPoliklinikList()
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status": "success",
+		"data":   list,
 	})
 }

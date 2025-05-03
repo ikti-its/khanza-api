@@ -8,6 +8,8 @@ import (
 func DokterJagaRoute(app *fiber.App, dokterJagaController *controller.DokterJagaController) {
 	dokter := app.Group("/v1/dokterjaga")
 
+	dokter.Get("/poliklinik/:nama", dokterJagaController.GetByPoliklinik)
+	dokter.Get("/poliklinik-list", dokterJagaController.GetPoliklinikList)
 	dokter.Post("/", dokterJagaController.Create)
 	dokter.Get("/", dokterJagaController.GetAll)
 	dokter.Get("/:kode_dokter", dokterJagaController.GetByKodeDokter)

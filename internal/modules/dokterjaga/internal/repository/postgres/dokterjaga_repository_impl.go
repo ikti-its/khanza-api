@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/entity"
 	"github.com/jmoiron/sqlx"
 )
@@ -13,6 +15,8 @@ type DokterJagaRepository interface {
 	Delete(kodeDokter string, hariKerja string) error
 	FindByStatus(status string) ([]entity.DokterJaga, error)
 	UpdateStatus(kodeDokter string, hariKerja string, status string) error
+	GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error)
+	GetPoliklinikList() ([]string, error)
 }
 
 type dokterJagaRepositoryImpl struct {
@@ -90,4 +94,24 @@ func (r *dokterJagaRepositoryImpl) UpdateStatus(kodeDokter string, hariKerja str
 	query := `UPDATE dokter_jaga SET status = $1 WHERE kode_dokter = $2 AND hari_kerja = $3`
 	_, err := r.DB.Exec(query, status, kodeDokter, hariKerja)
 	return err
+}
+
+func (r *dokterJagaRepositoryImpl) GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error) {
+	fmt.Println("📦 Executing query WHERE poliklinik =:", poliklinik)
+	result := []entity.DokterJaga{} // default to empty slice
+	query := `
+	SELECT kode_dokter, nama_dokter, poliklinik 
+	FROM dokter_jaga 
+	WHERE poliklinik = $1
+	`
+	err := r.DB.Select(&result, query, poliklinik)
+	return result, err
+
+}
+
+func (r *dokterJagaRepositoryImpl) GetPoliklinikList() ([]string, error) {
+	var list []string
+	query := `SELECT DISTINCT poliklinik FROM dokter_jaga ORDER BY poliklinik`
+	err := r.DB.Select(&list, query)
+	return list, err
 }

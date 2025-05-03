@@ -153,3 +153,11 @@ func (u *DokterJagaUseCase) GetByStatus(status string) ([]model.DokterJagaRespon
 	}
 	return response, nil
 }
+
+func (u *DokterJagaUseCase) GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error) {
+	return u.Repository.GetByPoliklinik(poliklinik)
+}
+
+func (u *DokterJagaUseCase) GetPoliklinikList() ([]string, error) {
+	return u.Repository.GetPoliklinikList()
+}
