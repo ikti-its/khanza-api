@@ -14,6 +14,7 @@ type StokObatPasien struct {
 	NoFaktur     string         `db:"no_faktur" json:"no_faktur"`
 	AturanPakai  string         `db:"aturan_pakai" json:"aturan_pakai"`
 	NamaPasien   sql.NullString `db:"nama_pasien" json:"nama_pasien"`
+	NamaBrng     sql.NullString `db:"nama_brng"`
 
 	// Pemakaian per jam
 	Jam00 bool `db:"jam00" json:"jam00"`

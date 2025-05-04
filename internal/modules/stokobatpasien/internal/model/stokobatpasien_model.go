@@ -12,6 +12,7 @@ type StokObatPasien struct {
 	NoFaktur     string  `json:"no_faktur"`
 	AturanPakai  string  `json:"aturan_pakai"`
 	NamaPasien   string  `json:"nama_pasien"`
+	NamaBrng     string  `json:"nama_brng"`
 
 	Jam00 bool `json:"jam00"`
 	Jam01 bool `json:"jam01"`

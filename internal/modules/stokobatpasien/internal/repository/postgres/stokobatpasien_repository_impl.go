@@ -40,28 +40,34 @@ func (r *stokObatPasienRepositoryImpl) FindAll() ([]entity.StokObatPasien, error
 	query := `
 		SELECT 
 			sop.*,
-			ri.nama_pasien
+			ri.nama_pasien,
+			COALESCE(db.nama_brng, 'N/A') AS nama_brng
 		FROM stok_obat_pasien sop
 		LEFT JOIN rawat_inap ri ON sop.no_rawat = ri.nomor_rawat
+		LEFT JOIN databarang db ON sop.kode_brng = db.kode_brng
 		ORDER BY sop.tanggal DESC, sop.jam DESC
 	`
 	log.Println("Running stok_obat_pasien query")
 	var list []entity.StokObatPasien
 	err := r.DB.Select(&list, query)
 	if err != nil {
-		log.Printf("Query failed: %v", err) // ✅ log error
+		log.Printf("Query failed: %v", err)
 		return nil, err
 	}
 
-	return list, err
+	return list, nil
 }
 
 func (r *stokObatPasienRepositoryImpl) FindByNoPermintaan(noPermintaan string) ([]entity.StokObatPasien, error) {
 	query := `
-		SELECT sop.*, ri.nama_pasien
+		SELECT 
+			sop.*,
+			ri.nama_pasien,
+			COALESCE(db.nama_brng, 'N/A') AS nama_brng
 		FROM stok_obat_pasien sop
 		LEFT JOIN rawat_inap ri ON sop.no_rawat = ri.nomor_rawat
-		WHERE sop.no_permintaan = $1
+		LEFT JOIN databarang db ON sop.kode_brng = db.kode_brng
+		ORDER BY sop.tanggal DESC, sop.jam DESC
 	`
 	log.Println("Running stok_obat_pasien query")
 	var result []entity.StokObatPasien
