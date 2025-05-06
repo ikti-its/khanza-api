@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,19 +23,20 @@ func NewPermintaanResepPulangController(useCase *usecase.PermintaanResepPulangUs
 }
 
 func (c *PermintaanResepPulangController) Create(ctx *fiber.Ctx) error {
-	var request model.PermintaanResepPulangRequest
 	fmt.Println("📥 Received POST /permintaan-resep-pulang")
 
-	if err := ctx.BodyParser(&request); err != nil {
-		fmt.Println("❌ Error parsing body:", err)
+	var requests []*model.PermintaanResepPulangRequest
+
+	if err := json.NewDecoder(bytes.NewReader(ctx.Body())).Decode(&requests); err != nil {
+		fmt.Println("❌ Error decoding JSON:", err)
 		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
 			Code:   fiber.StatusBadRequest,
 			Status: "Bad Request",
-			Data:   "Invalid request body",
+			Data:   "Invalid request body format. Must be an array of objects.",
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	responses, err := c.UseCase.Create(requests)
 	if err != nil {
 		fmt.Println("❌ Error in usecase.Create():", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -46,7 +49,7 @@ func (c *PermintaanResepPulangController) Create(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
 		Code:   fiber.StatusCreated,
 		Status: "Created",
-		Data:   response,
+		Data:   responses,
 	})
 }
 
@@ -182,5 +185,22 @@ func (c *PermintaanResepPulangController) UpdateStatus(ctx *fiber.Ctx) error {
 		"code":   200,
 		"status": "OK",
 		"data":   response,
+	})
+}
+
+func (ctrl *PermintaanResepPulangController) GetObatByNoPermintaan(c *fiber.Ctx) error {
+	noPermintaan := c.Params("no_permintaan")
+
+	result, err := ctrl.UseCase.GetObatByNoPermintaanWithHarga(noPermintaan)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status": "success",
+		"data":   result,
 	})
 }

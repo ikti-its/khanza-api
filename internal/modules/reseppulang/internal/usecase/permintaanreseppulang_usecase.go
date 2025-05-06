@@ -17,63 +17,77 @@ func NewPermintaanResepPulangUseCase(repo repository.PermintaanResepPulangReposi
 	return &PermintaanResepPulangUseCase{Repository: repo}
 }
 
-func (u *PermintaanResepPulangUseCase) Create(request *model.PermintaanResepPulangRequest) (model.PermintaanResepPulangResponse, error) {
-	// Parse tgl_permintaan (nullable)
-	var tglPermintaan *time.Time
-	if request.TglPermintaan != "" {
-		t, err := time.Parse("2006-01-02", request.TglPermintaan)
-		if err != nil {
-			return model.PermintaanResepPulangResponse{}, fmt.Errorf("invalid tgl_permintaan format: %v", err)
+func (u *PermintaanResepPulangUseCase) Create(requests []*model.PermintaanResepPulangRequest) ([]model.PermintaanResepPulangResponse, error) {
+	var responses []model.PermintaanResepPulangResponse
+
+	for _, req := range requests {
+		// Parse tanggal dan jam
+		var tglPermintaan *time.Time
+		if req.TglPermintaan != "" {
+			t, err := time.Parse("2006-01-02", req.TglPermintaan)
+			if err != nil {
+				return nil, fmt.Errorf("invalid tgl_permintaan format: %v", err)
+			}
+			tglPermintaan = &t
 		}
-		tglPermintaan = &t
+
+		jam, err := time.Parse("15:04:05", req.Jam)
+		if err != nil {
+			return nil, fmt.Errorf("invalid jam format: %v", err)
+		}
+
+		tglValidasi, err := time.Parse("2006-01-02", req.TglValidasi)
+		if err != nil {
+			return nil, fmt.Errorf("invalid tgl_validasi format: %v", err)
+		}
+
+		jamValidasi, err := time.Parse("15:04:05", req.JamValidasi)
+		if err != nil {
+			return nil, fmt.Errorf("invalid jam_validasi format: %v", err)
+		}
+
+		data := entity.PermintaanResepPulang{
+			NoPermintaan:  req.NoPermintaan,
+			TglPermintaan: tglPermintaan,
+			Jam:           jam,
+			NoRawat:       req.NoRawat,
+			KdDokter:      req.KdDokter,
+			Status:        req.Status,
+			TglValidasi:   tglValidasi,
+			JamValidasi:   jamValidasi,
+			KodeBrng:      req.KodeBrng,
+			Jumlah:        req.Jumlah,
+			AturanPakai:   req.AturanPakai,
+		}
+
+		// Insert ke DB
+		if err := u.Repository.InsertMany([]*entity.PermintaanResepPulang{&data}); err != nil {
+			return nil, fmt.Errorf("failed to insert permintaan resep pulang: %v", err)
+		}
+
+		// Append ke hasil response
+		responses = append(responses, model.PermintaanResepPulangResponse{
+			NoPermintaan:  data.NoPermintaan,
+			TglPermintaan: formatDatePtr(data.TglPermintaan),
+			Jam:           data.Jam.Format("15:04:05"),
+			NoRawat:       data.NoRawat,
+			KdDokter:      data.KdDokter,
+			Status:        data.Status,
+			TglValidasi:   data.TglValidasi.Format("2006-01-02"),
+			JamValidasi:   data.JamValidasi.Format("15:04:05"),
+			KodeBrng:      data.KodeBrng,
+			Jumlah:        data.Jumlah,
+			AturanPakai:   data.AturanPakai,
+		})
 	}
 
-	jam, err := time.Parse("15:04:05", request.Jam)
-	if err != nil {
-		return model.PermintaanResepPulangResponse{}, fmt.Errorf("invalid jam format: %v", err)
-	}
-
-	tglValidasi, err := time.Parse("2006-01-02", request.TglValidasi)
-	if err != nil {
-		return model.PermintaanResepPulangResponse{}, fmt.Errorf("invalid tgl_validasi format: %v", err)
-	}
-
-	jamValidasi, err := time.Parse("15:04:05", request.JamValidasi)
-	if err != nil {
-		return model.PermintaanResepPulangResponse{}, fmt.Errorf("invalid jam_validasi format: %v", err)
-	}
-
-	data := entity.PermintaanResepPulang{
-		NoPermintaan:  request.NoPermintaan,
-		TglPermintaan: tglPermintaan,
-		Jam:           jam,
-		NoRawat:       request.NoRawat,
-		KdDokter:      request.KdDokter,
-		Status:        request.Status,
-		TglValidasi:   tglValidasi,
-		JamValidasi:   jamValidasi,
-	}
-
-	if err := u.Repository.Insert(&data); err != nil {
-		return model.PermintaanResepPulangResponse{}, fmt.Errorf("failed to insert permintaan resep pulang: %v", err)
-	}
-
-	return model.PermintaanResepPulangResponse{
-		NoPermintaan:  data.NoPermintaan,
-		TglPermintaan: formatDatePtr(data.TglPermintaan),
-		Jam:           data.Jam.Format("15:04:05"),
-		NoRawat:       data.NoRawat,
-		KdDokter:      data.KdDokter,
-		Status:        data.Status,
-		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
-		JamValidasi:   data.JamValidasi.Format("15:04:05"),
-	}, nil
+	return responses, nil
 }
 
 func (u *PermintaanResepPulangUseCase) GetAll() ([]model.PermintaanResepPulangResponse, error) {
 	data, err := u.Repository.FindAll()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch permintaan resep pulang: %w", err)
 	}
 
 	var result []model.PermintaanResepPulangResponse
@@ -87,8 +101,12 @@ func (u *PermintaanResepPulangUseCase) GetAll() ([]model.PermintaanResepPulangRe
 			Status:        p.Status,
 			TglValidasi:   p.TglValidasi.Format("2006-01-02"),
 			JamValidasi:   p.JamValidasi.Format("15:04:05"),
+			KodeBrng:      p.KodeBrng,
+			Jumlah:        p.Jumlah,
+			AturanPakai:   p.AturanPakai,
 		})
 	}
+
 	return result, nil
 }
 
@@ -109,6 +127,9 @@ func (u *PermintaanResepPulangUseCase) GetByNoRawat(noRawat string) ([]model.Per
 			Status:        p.Status,
 			TglValidasi:   p.TglValidasi.Format("2006-01-02"),
 			JamValidasi:   p.JamValidasi.Format("15:04:05"),
+			KodeBrng:      p.KodeBrng,
+			Jumlah:        p.Jumlah,
+			AturanPakai:   p.AturanPakai,
 		})
 	}
 	return result, nil
@@ -129,6 +150,9 @@ func (u *PermintaanResepPulangUseCase) GetByNoPermintaan(noPermintaan string) (m
 		Status:        data.Status,
 		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
 		JamValidasi:   data.JamValidasi.Format("15:04:05"),
+		KodeBrng:      data.KodeBrng,
+		Jumlah:        data.Jumlah,
+		AturanPakai:   data.AturanPakai,
 	}, nil
 }
 
@@ -180,6 +204,9 @@ func (u *PermintaanResepPulangUseCase) Update(noPermintaan string, request *mode
 		Status:        data.Status,
 		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
 		JamValidasi:   data.JamValidasi.Format("15:04:05"),
+		KodeBrng:      data.KodeBrng,
+		Jumlah:        data.Jumlah,
+		AturanPakai:   data.AturanPakai,
 	}, nil
 }
 
@@ -229,5 +256,16 @@ func (u *PermintaanResepPulangUseCase) UpdateStatus(noPermintaan string, status 
 		Status:        data.Status,
 		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
 		JamValidasi:   data.JamValidasi.Format("15:04:05"),
+		KodeBrng:      data.KodeBrng,
+		Jumlah:        data.Jumlah,
+		AturanPakai:   data.AturanPakai,
 	}, nil
+}
+
+func (u *PermintaanResepPulangUseCase) GetObatByNoPermintaan(noPermintaan string) ([]entity.PermintaanResepPulang, error) {
+	return u.Repository.GetByNoPermintaan(noPermintaan)
+}
+
+func (u *PermintaanResepPulangUseCase) GetObatByNoPermintaanWithHarga(noPermintaan string) ([]entity.ResepPulangObat, error) {
+	return u.Repository.GetByNoPermintaanWithHarga(noPermintaan)
 }

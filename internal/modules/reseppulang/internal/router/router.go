@@ -9,6 +9,7 @@ func PermintaanResepPulangRoute(app *fiber.App, controller *controller.Permintaa
 	permintaan := app.Group("/v1/permintaan-resep-pulang")
 
 	permintaan.Put("/status/:no_permintaan", controller.UpdateStatus)
+	permintaan.Get("/obat/:no_permintaan", controller.GetObatByNoPermintaan)
 	permintaan.Post("/", controller.Create)
 	permintaan.Get("/", controller.GetAll)
 	permintaan.Get("/rawat/:no_rawat", controller.GetByNoRawat)
