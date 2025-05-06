@@ -44,7 +44,7 @@ func (u *PermintaanResepPulangUseCase) Create(request *model.PermintaanResepPula
 	}
 
 	data := entity.PermintaanResepPulang{
-		NoPermintaan:  generateNoPermintaan(), // You may implement a generator function
+		NoPermintaan:  request.NoPermintaan,
 		TglPermintaan: tglPermintaan,
 		Jam:           jam,
 		NoRawat:       request.NoRawat,

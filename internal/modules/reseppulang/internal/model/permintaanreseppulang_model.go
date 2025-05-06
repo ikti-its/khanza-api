@@ -12,6 +12,7 @@ type PermintaanResepPulang struct {
 }
 
 type PermintaanResepPulangRequest struct {
+	NoPermintaan  string `json:"no_permintaan"`
 	TglPermintaan string `json:"tgl_permintaan" validate:"omitempty,datetime=2006-01-02"`
 	Jam           string `json:"jam" validate:"required,datetime=15:04:05"`
 	NoRawat       string `json:"no_rawat" validate:"required"`
