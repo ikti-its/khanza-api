@@ -20,9 +20,9 @@ func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.Dokt
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
-		HariKerja:  request.HariKerja, // now plain string
-		JamMulai:   request.JamMulai,
-		JamSelesai: request.JamSelesai,
+		HariKerja:  request.HariKerja,
+		JamMulai:   request.JamMulai,   // ✅ directly assign
+		JamSelesai: request.JamSelesai, // ✅ directly assign
 		Poliklinik: request.Poliklinik,
 		Status:     request.Status,
 	}
@@ -36,8 +36,8 @@ func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.Dokt
 		KodeDokter: dokter.KodeDokter,
 		NamaDokter: dokter.NamaDokter,
 		HariKerja:  dokter.HariKerja, // plain string
-		JamMulai:   dokter.JamMulai,
-		JamSelesai: dokter.JamSelesai,
+		JamMulai:   dokter.JamMulai.Format("15:04:05"),
+		JamSelesai: dokter.JamSelesai.Format("15:04:05"),
 		Poliklinik: dokter.Poliklinik,
 		Status:     dokter.Status,
 	}, nil
@@ -56,8 +56,8 @@ func (u *DokterJagaUseCase) GetAll() ([]model.DokterJagaResponse, error) {
 			KodeDokter: d.KodeDokter,
 			NamaDokter: d.NamaDokter,
 			HariKerja:  d.HariKerja,
-			JamMulai:   d.JamMulai,
-			JamSelesai: d.JamSelesai,
+			JamMulai:   d.JamMulai.Format("15:04:05"),
+			JamSelesai: d.JamSelesai.Format("15:04:05"),
 			Poliklinik: d.Poliklinik,
 			Status:     d.Status,
 		})
@@ -78,8 +78,8 @@ func (u *DokterJagaUseCase) GetByKodeDokter(kode string) ([]model.DokterJagaResp
 			KodeDokter: d.KodeDokter,
 			NamaDokter: d.NamaDokter,
 			HariKerja:  d.HariKerja,
-			JamMulai:   d.JamMulai,
-			JamSelesai: d.JamSelesai,
+			JamMulai:   d.JamMulai.Format("15:04:05"),
+			JamSelesai: d.JamSelesai.Format("15:04:05"),
 			Poliklinik: d.Poliklinik,
 			Status:     d.Status,
 		})
@@ -115,8 +115,8 @@ func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.Dokt
 		KodeDokter: dokter.KodeDokter,
 		NamaDokter: dokter.NamaDokter,
 		HariKerja:  dokter.HariKerja,
-		JamMulai:   dokter.JamMulai,
-		JamSelesai: dokter.JamSelesai,
+		JamMulai:   dokter.JamMulai.Format("15:04:05"),
+		JamSelesai: dokter.JamSelesai.Format("15:04:05"),
 		Poliklinik: dokter.Poliklinik,
 		Status:     dokter.Status,
 	}, nil
@@ -145,8 +145,8 @@ func (u *DokterJagaUseCase) GetByStatus(status string) ([]model.DokterJagaRespon
 			KodeDokter: d.KodeDokter,
 			NamaDokter: d.NamaDokter,
 			HariKerja:  d.HariKerja,
-			JamMulai:   d.JamMulai,
-			JamSelesai: d.JamSelesai,
+			JamMulai:   d.JamMulai.Format("15:04:05"),
+			JamSelesai: d.JamSelesai.Format("15:04:05"),
 			Poliklinik: d.Poliklinik,
 			Status:     d.Status,
 		})
@@ -154,8 +154,25 @@ func (u *DokterJagaUseCase) GetByStatus(status string) ([]model.DokterJagaRespon
 	return response, nil
 }
 
-func (u *DokterJagaUseCase) GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error) {
-	return u.Repository.GetByPoliklinik(poliklinik)
+func (u *DokterJagaUseCase) GetByPoliklinik(poliklinik string) ([]model.DokterJagaResponse, error) {
+	list, err := u.Repository.GetByPoliklinik(poliklinik)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get dokter jaga by poliklinik: %v", err)
+	}
+
+	var response []model.DokterJagaResponse
+	for _, d := range list {
+		response = append(response, model.DokterJagaResponse{
+			KodeDokter: d.KodeDokter,
+			NamaDokter: d.NamaDokter,
+			HariKerja:  d.HariKerja,
+			JamMulai:   d.JamMulai.Format("15:04:05"),
+			JamSelesai: d.JamSelesai.Format("15:04:05"),
+			Poliklinik: d.Poliklinik,
+			Status:     d.Status,
+		})
+	}
+	return response, nil
 }
 
 func (u *DokterJagaUseCase) GetPoliklinikList() ([]string, error) {

@@ -98,15 +98,21 @@ func (r *dokterJagaRepositoryImpl) UpdateStatus(kodeDokter string, hariKerja str
 
 func (r *dokterJagaRepositoryImpl) GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error) {
 	fmt.Println("📦 Executing query WHERE poliklinik =:", poliklinik)
-	result := []entity.DokterJaga{} // default to empty slice
+	result := []entity.DokterJaga{}
 	query := `
-	SELECT kode_dokter, nama_dokter, poliklinik 
+	SELECT 
+		kode_dokter, 
+		nama_dokter, 
+		hari_kerja, 
+		jam_mulai, 
+		jam_selesai, 
+		poliklinik, 
+		status
 	FROM dokter_jaga 
 	WHERE poliklinik = $1
 	`
 	err := r.DB.Select(&result, query, poliklinik)
 	return result, err
-
 }
 
 func (r *dokterJagaRepositoryImpl) GetPoliklinikList() ([]string, error) {
