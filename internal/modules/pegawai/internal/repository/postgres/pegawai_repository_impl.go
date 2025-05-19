@@ -101,3 +101,10 @@ func (r *pegawaiRepositoryImpl) Delete(pegawai *entity.Pegawai) error {
 
 	return err
 }
+
+func (r *pegawaiRepositoryImpl) GetByNIP(nip string) (*entity.Pegawai, error) {
+	query := `SELECT nama FROM pegawai WHERE nip = $1 LIMIT 1`
+	var result entity.Pegawai
+	err := r.DB.Get(&result, query, nip)
+	return &result, err
+}

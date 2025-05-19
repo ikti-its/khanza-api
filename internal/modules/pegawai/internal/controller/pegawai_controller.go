@@ -121,3 +121,19 @@ func (c *PegawaiController) Delete(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
+
+func (c *PegawaiController) GetByNIP(ctx *fiber.Ctx) error {
+	nip := ctx.Params("nip")
+	result, err := c.UseCase.GetByNIP(nip)
+	if err != nil {
+		return ctx.Status(404).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Pegawai not found",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status": "success",
+		"data":   result,
+	})
+}

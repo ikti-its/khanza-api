@@ -270,3 +270,19 @@ func (c *RegistrasiController) GetByNomorRM(ctx *fiber.Ctx) error {
 		"data":   data,
 	})
 }
+
+func (c *RegistrasiController) GetByNoRawat(ctx *fiber.Ctx) error {
+	noRawat := ctx.Params("no_rawat")
+	result, err := c.UseCase.GetByNoRawat(noRawat)
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Data not found",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"status": "success",
+		"data":   result,
+	})
+}

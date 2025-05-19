@@ -245,3 +245,16 @@ func (r *registrasiRepositoryImpl) GetNamaDokter(kode string) (string, error) {
 	err := r.DB.Get(&nama, query, kode)
 	return nama, err
 }
+
+func (r *registrasiRepositoryImpl) GetByNoRawat(noRawat string) (model.RegistrasiResponse, error) {
+	query := `
+	SELECT nomor_reg, nomor_rm, nama_pasien, umur, jenis_kelamin, nomor_rawat
+	FROM registrasi
+	WHERE nomor_rawat = $1
+	LIMIT 1
+	`
+
+	var result model.RegistrasiResponse
+	err := r.DB.Get(&result, query, noRawat)
+	return result, err
+}

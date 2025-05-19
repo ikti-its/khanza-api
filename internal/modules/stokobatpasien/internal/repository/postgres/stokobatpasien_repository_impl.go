@@ -115,7 +115,7 @@ func (r *stokObatPasienRepositoryImpl) GetByNomorRawat(nomorRawat string) ([]ent
 	`
 	log.Println("Running stok_obat_pasien query")
 	var list []entity.StokObatPasien
-	err := r.DB.Select(&list, query)
+	err := r.DB.Select(&list, query, nomorRawat)
 	if err != nil {
 		log.Printf("Query failed: %v", err) // ✅ log error
 		return nil, err

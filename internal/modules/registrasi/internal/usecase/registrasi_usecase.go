@@ -302,3 +302,7 @@ func (u *RegistrasiUseCase) GetByNomorRM(nomorRM string) (model.RegistrasiRespon
 		Umur:         registrasi.Umur,
 	}, nil
 }
+
+func (u *RegistrasiUseCase) GetByNoRawat(noRawat string) (model.RegistrasiResponse, error) {
+	return u.Repository.GetByNoRawat(noRawat)
+}

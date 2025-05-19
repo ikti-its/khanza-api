@@ -15,13 +15,13 @@ func Route(
 
 	home := web.Group("/home")
 	{
-		home.Get("/pegawai", middleware.Authenticate([]int{1337, 1, 2}), homeController.GetHomePegawai)
+		home.Get("/pegawai", middleware.Authenticate([]int{1337, 1, 2, 3}), homeController.GetHomePegawai)
 	}
 
 	notification := web.Group("/notification")
 	{
-		notification.Post("/", middleware.Authenticate([]int{1337, 1, 2}), notificationController.Create)
-		notification.Get("/:id", middleware.Authenticate([]int{1337, 1, 2}), notificationController.Get)
-		notification.Put("/:id", middleware.Authenticate([]int{1337, 1, 2}), notificationController.Update)
+		notification.Post("/", middleware.Authenticate([]int{1337, 1, 2, 3}), notificationController.Create)
+		notification.Get("/:id", middleware.Authenticate([]int{1337, 1, 2, 3}), notificationController.Get)
+		notification.Put("/:id", middleware.Authenticate([]int{1337, 1, 2, 3}), notificationController.Update)
 	}
 }

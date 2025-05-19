@@ -18,6 +18,7 @@ type RegistrasiRepository interface {
 	AssignKamar(nomorReg string, kamarID string) error
 	GetAllDokter() ([]model.DokterResponse, error)
 	GetNamaDokter(kode string) (string, error)
+	GetByNoRawat(noRawat string) (model.RegistrasiResponse, error)
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }

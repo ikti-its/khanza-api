@@ -20,7 +20,7 @@ func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 			ctx.Locals("role", int(claims["role"].(float64)))
 
 			role := int(claims["role"].(float64))
-			pegawai := []int{2, 4001, 4002, 4003, 4004, 5001}
+			pegawai := []int{2, 3, 4001, 4002, 4003, 4004, 5001}
 
 			if roles[0] == 0 {
 				return ctx.Next()

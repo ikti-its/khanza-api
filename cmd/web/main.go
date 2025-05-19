@@ -27,10 +27,10 @@ func main() {
 
 	bootstrap.Provide()
 
-	routes := fiber.GetRoutes()
-	for _, route := range routes {
-		log.Printf("METHOD: %s | PATH: %s", route.Method, route.Path)
-	}
+	// routes := fiber.GetRoutes()
+	// for _, route := range routes {
+	// 	log.Printf("METHOD: %s | PATH: %s", route.Method, route.Path)
+	// }
 
 	// if err := fiber.Listen(fmt.Sprintf(":%d", cfg.GetInt("APP_PORT", 8080))); err != nil {
 	if err := fiber.Listen("[::]:8080"); err != nil {

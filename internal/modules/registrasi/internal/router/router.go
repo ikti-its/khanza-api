@@ -9,6 +9,7 @@ func RegistrasiRoute(app *fiber.App, registrasiController *controller.Registrasi
 	registrasi := app.Group("/v1/registrasi")
 
 	registrasi.Get("/by-nomor-rm/:nomor_rm", registrasiController.GetByNomorRM)
+	registrasi.Get("/by-no-rawat/:no_rawat", registrasiController.GetByNoRawat)
 	registrasi.Put("/:nomor_reg/assign-room/:status", registrasiController.AssignRoomStatus)
 	registrasi.Put("/status_kamar/:nomor_reg", registrasiController.UpdateStatusKamar)
 	registrasi.Get("/pending-room", registrasiController.GetPendingRoomRequests)

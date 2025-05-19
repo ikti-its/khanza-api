@@ -207,3 +207,7 @@ func (u *PegawaiUseCase) Delete(id, updater string) {
 		exception.PanicIfError(err, "Failed to delete pegawai")
 	}
 }
+
+func (u *PegawaiUseCase) GetByNIP(nip string) (*entity.Pegawai, error) {
+	return u.Repository.GetByNIP(nip)
+}
