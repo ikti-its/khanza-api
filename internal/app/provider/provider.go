@@ -15,6 +15,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/mobile"
 	"github.com/ikti-its/khanza-api/internal/modules/obat"
 	"github.com/ikti-its/khanza-api/internal/modules/organisasi"
+	"github.com/ikti-its/khanza-api/internal/modules/pasien"
 	"github.com/ikti-its/khanza-api/internal/modules/pegawai"
 	"github.com/ikti-its/khanza-api/internal/modules/pengadaan"
 	"github.com/ikti-its/khanza-api/internal/modules/rawatinap"
@@ -64,4 +65,5 @@ func (p *Provider) Provide() {
 	permintaanreseppulang.ProvidePermintaanResepPulang(p.App, p.PG)
 	stokobatpasien.ProvideStokObatPasien(p.App, p.PG, p.Validator)
 	rekammedis.ProvideRekamMedis(p.App, p.PG, p.Validator)
+	pasien.ProvidePasien(p.App, p.PG, p.Validator)
 }

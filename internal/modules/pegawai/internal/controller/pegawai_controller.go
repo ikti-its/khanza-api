@@ -122,18 +122,25 @@ func (c *PegawaiController) Delete(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
 
-func (c *PegawaiController) GetByNIP(ctx *fiber.Ctx) error {
-	nip := ctx.Params("nip")
-	result, err := c.UseCase.GetByNIP(nip)
+func (h *PegawaiController) GetByNIP(c *fiber.Ctx) error {
+	nip := c.Params("nip")
+	if nip == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "NIP is required",
+		})
+	}
+
+	pegawai, err := h.UseCase.GetByNIP(nip)
 	if err != nil {
-		return ctx.Status(404).JSON(fiber.Map{
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Pegawai not found",
 		})
 	}
 
-	return ctx.JSON(fiber.Map{
-		"status": "success",
-		"data":   result,
+	return c.JSON(fiber.Map{
+		"nip":  pegawai.NIP,
+		"nama": pegawai.Nama,
 	})
 }
