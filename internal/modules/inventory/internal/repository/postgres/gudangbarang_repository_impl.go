@@ -65,3 +65,13 @@ func (r *gudangbarangRepositoryImpl) Delete(gudangbarang *entity.GudangBarang) e
 
 	return err
 }
+
+func (r *gudangbarangRepositoryImpl) FindByKodeBarang(kode string) (*entity.GudangBarang, error) {
+	var barang entity.GudangBarang
+	query := `SELECT * FROM sik.gudang_barang WHERE id_barang_medis = $1 LIMIT 1`
+	err := r.DB.Get(&barang, query, kode)
+	if err != nil {
+		return nil, err
+	}
+	return &barang, nil
+}

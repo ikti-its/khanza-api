@@ -12,15 +12,44 @@ import (
 )
 
 func ProvideRekamMedis(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
-	// Change repository to the PemeriksaanRanapRepository interface
+	// ===== Pemeriksaan Ranap =====
 	var pemeriksaanRanapRepository repository.PemeriksaanRanapRepository = postgres.NewPemeriksaanRanapRepository(db)
-
-	// Use the PemeriksaanRanapUseCase instead of RegistrasiUseCase
 	pemeriksaanRanapUseCase := usecase.NewPemeriksaanRanapUseCase(pemeriksaanRanapRepository)
-
-	// Controller for PemeriksaanRanap
 	pemeriksaanRanapController := controller.NewPemeriksaanRanapController(pemeriksaanRanapUseCase)
 
-	// Ensure the function name matches the one in router.go
-	router.PemeriksaanRanapRoute(app, pemeriksaanRanapController)
+	// ===== Catatan Observasi Ranap Kebidanan =====
+	catatanObservasiRepo := postgres.NewCatatanObservasiRanapKebidananRepository(db)
+	catatanObservasiUseCase := usecase.NewCatatanObservasiRanapKebidananUseCase(catatanObservasiRepo)
+	catatanObservasiController := controller.NewCatatanObservasiRanapKebidananController(catatanObservasiUseCase)
+
+	// ===== Catatan Observasi Ranap Postpartum =====
+	catatanPostpartumRepo := postgres.NewCatatanObservasiRanapPostpartumRepository(db)
+	catatanPostpartumUseCase := usecase.NewCatatanObservasiRanapPostpartumUseCase(catatanPostpartumRepo)
+	catatanPostpartumController := controller.NewCatatanObservasiRanapPostpartumController(catatanPostpartumUseCase)
+
+	// ===== Catatan Observasi Ranap (Umum) =====
+	catatanRanapRepo := postgres.NewCatatanObservasiRanapRepository(db)
+	catatanRanapUseCase := usecase.NewCatatanObservasiRanapUseCase(catatanRanapRepo)
+	catatanRanapController := controller.NewCatatanObservasiRanapController(catatanRanapUseCase)
+
+	// ===== Diagnosa Pasien =====
+	diagnosaPasienRepo := postgres.NewDiagnosaPasienRepository(db)
+	diagnosaPasienUseCase := usecase.NewDiagnosaPasienUseCase(diagnosaPasienRepo)
+	diagnosaPasienController := controller.NewDiagnosaPasienController(diagnosaPasienUseCase)
+
+	// ===== Resume Pasien Ranap =====
+	resumePasienRepo := postgres.NewResumePasienRanapRepository(db)
+	resumePasienUseCase := usecase.NewResumePasienRanapUseCase(resumePasienRepo)
+	resumePasienController := controller.NewResumePasienRanapController(resumePasienUseCase)
+
+	// ===== Register Routes =====
+	router.RekamMedisRoute(
+		app,
+		pemeriksaanRanapController,
+		catatanObservasiController,
+		catatanPostpartumController,
+		catatanRanapController,
+		diagnosaPasienController,
+		resumePasienController,
+	)
 }

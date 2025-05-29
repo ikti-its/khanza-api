@@ -12,4 +12,5 @@ type GudangBarangRepository interface {
 	FindById(id uuid.UUID) (entity.GudangBarang, error)
 	Update(opname *entity.GudangBarang) error
 	Delete(opname *entity.GudangBarang) error
+	FindByKodeBarang(kode string) (*entity.GudangBarang, error)
 }

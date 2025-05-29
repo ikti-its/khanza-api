@@ -22,6 +22,22 @@ func ProvideResep(app *fiber.App, db *sqlx.DB) {
 	resepDokterUseCase := usecase.NewResepDokterUseCase(resepDokterRepo)
 	resepDokterController := controller.NewResepDokterController(resepDokterUseCase)
 
-	// Register both
-	router.RegisterResepRoutes(app, resepObatController, resepDokterController)
+	// 🧪 Resep Dokter Racikan setup
+	var resepDokterRacikanRepo repository.ResepDokterRacikanRepository = postgres.NewResepDokterRacikanRepository(db)
+	resepDokterRacikanUseCase := usecase.NewResepDokterRacikanUseCase(resepDokterRacikanRepo)
+	resepDokterRacikanController := controller.NewResepDokterRacikanController(resepDokterRacikanUseCase)
+
+	// 🧬 Resep Dokter Racikan Detail setup
+	var resepDokterRacikanDetailRepo repository.ResepDokterRacikanDetailRepository = postgres.NewResepDokterRacikanDetailRepository(db)
+	resepDokterRacikanDetailUseCase := usecase.NewResepDokterRacikanDetailUseCase(resepDokterRacikanDetailRepo)
+	resepDokterRacikanDetailController := controller.NewResepDokterRacikanDetailController(resepDokterRacikanDetailUseCase)
+
+	// Register all routes
+	router.RegisterResepRoutes(
+		app,
+		resepObatController,
+		resepDokterController,
+		resepDokterRacikanController,
+		resepDokterRacikanDetailController,
+	)
 }

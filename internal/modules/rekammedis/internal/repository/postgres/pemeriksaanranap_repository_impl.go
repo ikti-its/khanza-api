@@ -18,10 +18,10 @@ func (r *pemeriksaanRanapRepositoryImpl) Insert(p *entity.PemeriksaanRanap) erro
 	query := `
 		INSERT INTO pemeriksaan_ranap (
 			no_rawat, tgl_perawatan, jam_rawat, suhu_tubuh, tensi, nadi, 
-			nafas, tinggi, berat, spo2, gcs, kesadaran, keluhan, 
+			respirasi, tinggi, berat, spo2, gcs, kesadaran, keluhan, 
 			pemeriksaan, alergi, penilaian, rtl, instruksi, evaluasi, nip
 		) VALUES (
-			:nomor_rawat, :tanggal, :jam, :suhu_tubuh, :tensi, :nadi, 
+			:no_rawat, :tgl_perawatan, :jam_rawat, :suhu_tubuh, :tensi, :nadi, 
 			:respirasi, :tinggi, :berat, :spo2, :gcs, :kesadaran, :keluhan, 
 			:pemeriksaan, :alergi, :penilaian, :rtl, :instruksi, :evaluasi, :nip
 		)

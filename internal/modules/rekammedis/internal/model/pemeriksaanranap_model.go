@@ -28,9 +28,9 @@ type PemeriksaanRanap struct {
 }
 
 type PemeriksaanRanapRequest struct {
-	NoRawat string `json:"no_rawat" validate:"required"`
-	Tanggal string `json:"tanggal" validate:"required,datetime=2006-01-02"` // string to receive date input
-	Jam     string `json:"jam" validate:"required,datetime=15:04:05"`       // string to receive time input
+	NoRawat string `json:"nomor_rawat" validate:"required"`
+	Tanggal string `json:"tgl_perawatan" validate:"required,datetime=2006-01-02"` // string to receive date input
+	Jam     string `json:"jam_rawat" validate:"required,datetime=15:04:05"`       // string to receive time input
 
 	SuhuTubuh string `json:"suhu_tubuh,omitempty"`
 	Tensi     string `json:"tensi,omitempty"`
