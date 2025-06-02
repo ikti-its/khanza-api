@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
@@ -134,5 +135,23 @@ func (c *ResepDokterRacikanDetailController) Delete(ctx *fiber.Ctx) error {
 		"code":   200,
 		"status": "Success",
 		"data":   "Racikan detail deleted successfully",
+	})
+}
+
+func (c *ResepDokterRacikanDetailController) GetByNoResep(ctx *fiber.Ctx) error {
+	noResep := ctx.Params("no_resep")
+
+	data, err := c.UseCase.GetByNoResep(noResep)
+	if err != nil {
+		// ✅ Instead of 500, return empty array with 200 OK
+		log.Printf("🔍 No racikan detail found for no_resep: %s. Error: %v", noResep, err)
+		log.Printf("✅ Racikan result: %+v", data)
+		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+			"data": []model.ResepDokterRacikanDetail{},
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"data": data,
 	})
 }

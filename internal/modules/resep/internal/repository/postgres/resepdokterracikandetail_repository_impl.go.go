@@ -1,7 +1,10 @@
 package postgres
 
 import (
+	"log"
+
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/repository"
 	"github.com/jmoiron/sqlx"
 )
@@ -68,4 +71,32 @@ func (r *resepDokterRacikanDetailRepositoryImpl) Delete(noResep, noRacik, kodeBr
 	`
 	_, err := r.DB.Exec(query, noResep, noRacik, kodeBrng)
 	return err
+}
+
+func (r *resepDokterRacikanDetailRepositoryImpl) FindByNoResep(noResep string) ([]model.ResepDokterRacikanDetail, error) {
+	var results []model.ResepDokterRacikanDetail
+
+	query := `
+		SELECT 
+			no_resep, 
+			no_racik, 
+			kode_brng, 
+			p1, 
+			p2, 
+			kandungan, 
+			jml 
+		FROM resep_dokter_racikan_detail
+		WHERE no_resep = $1
+	`
+
+	err := r.DB.Select(&results, query, noResep)
+	if err != nil {
+		// Hanya log dan return kosong jika tidak ditemukan
+		log.Printf("❌ Query failed: %v", err)
+		return nil, err
+	}
+
+	// Log jika hasilnya kosong tapi tidak error
+	log.Printf("✅ Query success. Found %d rows", len(results))
+	return results, nil
 }

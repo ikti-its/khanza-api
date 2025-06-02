@@ -1,7 +1,10 @@
 package usecase
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
+	"log"
 
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
@@ -80,4 +83,17 @@ func (u *ResepDokterRacikanDetailUseCase) Update(request *model.ResepDokterRacik
 
 func (u *ResepDokterRacikanDetailUseCase) Delete(noResep, noRacik, kodeBrng string) error {
 	return u.Repository.Delete(noResep, noRacik, kodeBrng)
+}
+
+func (u *ResepDokterRacikanDetailUseCase) GetByNoResep(noResep string) ([]model.ResepDokterRacikanDetail, error) {
+	result, err := u.Repository.FindByNoResep(noResep)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// Log tidak ada data, tapi bukan error
+			log.Printf("🟡 Tidak ada racikan detail untuk no_resep %s", noResep)
+			return []model.ResepDokterRacikanDetail{}, nil
+		}
+		return nil, err
+	}
+	return result, nil
 }

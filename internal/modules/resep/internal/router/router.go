@@ -44,6 +44,7 @@ func RegisterResepRoutes(
 	racikanDetail := app.Group("/v1/resep-dokter-racikan-detail")
 	racikanDetail.Post("/", resepDokterRacikanDetailController.Create)
 	racikanDetail.Get("/", resepDokterRacikanDetailController.GetAll)
+	racikanDetail.Get("/:no_resep", resepDokterRacikanDetailController.GetByNoResep)
 	racikanDetail.Get("/:no_resep/:no_racik", resepDokterRacikanDetailController.GetByNoResepAndNoRacik)
 	racikanDetail.Put("/", resepDokterRacikanDetailController.Update)
 	racikanDetail.Delete("/:no_resep/:no_racik/:kode_brng", resepDokterRacikanDetailController.Delete)

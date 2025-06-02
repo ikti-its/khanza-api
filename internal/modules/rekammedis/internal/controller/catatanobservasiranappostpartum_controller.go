@@ -89,8 +89,16 @@ func (c *CatatanObservasiRanapPostpartumController) GetByNoRawat(ctx *fiber.Ctx)
 }
 
 func (c *CatatanObservasiRanapPostpartumController) Update(ctx *fiber.Ctx) error {
-	var request model.CatatanObservasiRanapPostpartumRequest
+	noRawat := ctx.Params("no_rawat")
+	if noRawat == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "Nomor rawat is required",
+		})
+	}
 
+	var request model.CatatanObservasiRanapPostpartumRequest
 	if err := ctx.BodyParser(&request); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
 			Code:   fiber.StatusBadRequest,
@@ -98,6 +106,9 @@ func (c *CatatanObservasiRanapPostpartumController) Update(ctx *fiber.Ctx) error
 			Data:   "Invalid request body",
 		})
 	}
+
+	// Set no_rawat from route param
+	request.NoRawat = noRawat
 
 	if err := c.UseCase.Update(&request); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{

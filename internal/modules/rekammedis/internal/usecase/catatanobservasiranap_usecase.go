@@ -18,6 +18,7 @@ func NewCatatanObservasiRanapUseCase(repo repository.CatatanObservasiRanapReposi
 }
 
 func (u *CatatanObservasiRanapUseCase) Create(request *model.CatatanObservasiRanapRequest) (*model.CatatanObservasiRanapResponse, error) {
+	fmt.Println("DEBUG jam_rawat (request.Jam):", request.Jam)
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
 		return nil, fmt.Errorf("format tanggal salah: %v", err)
@@ -26,7 +27,7 @@ func (u *CatatanObservasiRanapUseCase) Create(request *model.CatatanObservasiRan
 
 	data := entity.CatatanObservasiRanap{
 		NoRawat:      request.NoRawat,
-		TglPerawatan: tgl,
+		TglPerawatan: &tgl,
 		JamRawat:     jam,
 		GCS:          toPtr(request.GCS),
 		TD:           request.TD,
@@ -65,7 +66,7 @@ func (u *CatatanObservasiRanapUseCase) GetAll() ([]model.CatatanObservasiRanapRe
 	for _, r := range records {
 		responses = append(responses, model.CatatanObservasiRanapResponse{
 			NoRawat: r.NoRawat,
-			Tanggal: r.TglPerawatan.Format("2006-01-02"),
+			Tanggal: formatDate(r.TglPerawatan),
 			Jam:     r.JamRawat,
 			GCS:     getString(r.GCS),
 			TD:      r.TD,
@@ -89,7 +90,7 @@ func (u *CatatanObservasiRanapUseCase) GetByNoRawat(noRawat string) ([]model.Cat
 	for _, r := range records {
 		responses = append(responses, model.CatatanObservasiRanapResponse{
 			NoRawat: r.NoRawat,
-			Tanggal: r.TglPerawatan.Format("2006-01-02"),
+			Tanggal: formatDate(r.TglPerawatan),
 			Jam:     r.JamRawat,
 			GCS:     getString(r.GCS),
 			TD:      r.TD,
@@ -111,7 +112,7 @@ func (u *CatatanObservasiRanapUseCase) Update(request *model.CatatanObservasiRan
 
 	entity := entity.CatatanObservasiRanap{
 		NoRawat:      request.NoRawat,
-		TglPerawatan: tgl,
+		TglPerawatan: &tgl,
 		JamRawat:     request.Jam,
 		GCS:          toPtr(request.GCS),
 		TD:           request.TD,
@@ -135,4 +136,11 @@ func toPtr(s string) *string {
 		return nil
 	}
 	return &s
+}
+
+func formatDate(t *time.Time) string {
+	if t == nil {
+		return ""
+	}
+	return t.Format("2006-01-02")
 }

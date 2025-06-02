@@ -130,7 +130,7 @@ func (u *PemberianObatUseCase) GetByNomorRawat(nomorRawat string) ([]model.Pembe
 		return nil, err
 	}
 
-	var result []model.PemberianObatResponse
+	result := make([]model.PemberianObatResponse, 0)
 	for _, p := range data {
 		result = append(result, model.PemberianObatResponse{
 			TanggalBeri: p.TanggalBeri.Format("2006-01-02"),

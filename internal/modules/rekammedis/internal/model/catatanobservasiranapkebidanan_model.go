@@ -21,8 +21,8 @@ type CatatanObservasiRanapKebidanan struct {
 
 type CatatanObservasiRanapKebidananRequest struct {
 	NoRawat string `json:"no_rawat" validate:"required"`
-	Tanggal string `json:"tanggal" validate:"required,datetime=2006-01-02"`
-	Jam     string `json:"jam" validate:"required,datetime=15:04:05"`
+	Tanggal string `json:"tgl_perawatan" validate:"required,datetime=2006-01-02"`
+	Jam     string `json:"jam_rawat" validate:"required,datetime=15:04:05"`
 
 	GCS  string `json:"gcs,omitempty"`
 	TD   string `json:"td,omitempty"`

@@ -71,9 +71,9 @@ func (c *PemberianObatController) GetByNomorRawat(ctx *fiber.Ctx) error {
 
 	response, err := c.UseCase.GetByNomorRawat(nomorRawat)
 	if err != nil {
-		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
-			Code:   fiber.StatusNotFound,
-			Status: "Not Found",
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
 			Data:   err.Error(),
 		})
 	}
@@ -81,7 +81,7 @@ func (c *PemberianObatController) GetByNomorRawat(ctx *fiber.Ctx) error {
 	return ctx.JSON(web.Response{
 		Code:   fiber.StatusOK,
 		Status: "OK",
-		Data:   response,
+		Data:   response, // array kosong [] kalau tidak ada data
 	})
 }
 

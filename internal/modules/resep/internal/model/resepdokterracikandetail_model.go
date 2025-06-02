@@ -1,13 +1,13 @@
 package model
 
 type ResepDokterRacikanDetail struct {
-	NoResep   string  `json:"no_resep"`
-	NoRacik   string  `json:"no_racik"`
-	KodeBrng  string  `json:"kode_brng"`
-	P1        float64 `json:"p1"`
-	P2        float64 `json:"p2"`
-	Kandungan string  `json:"kandungan"`
-	Jml       float64 `json:"jml"`
+	NoResep   string  `json:"no_resep" db:"no_resep"`
+	NoRacik   string  `json:"no_racik" db:"no_racik"`
+	KodeBrng  string  `json:"kode_brng" db:"kode_brng"`
+	P1        float64 `json:"p1" db:"p1"`
+	P2        float64 `json:"p2" db:"p2"`
+	Kandungan string  `json:"kandungan" db:"kandungan"`
+	Jml       float64 `json:"jml" db:"jml"`
 }
 
 type ResepDokterRacikanDetailRequest struct {

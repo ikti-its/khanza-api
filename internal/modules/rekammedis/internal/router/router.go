@@ -35,7 +35,7 @@ func RekamMedisRoute(
 	postpartum.Get("/", catatanPostpartumController.GetAll)
 	postpartum.Get("/:no_rawat", catatanPostpartumController.GetByNoRawat)
 	postpartum.Post("/", catatanPostpartumController.Create)
-	postpartum.Put("/", catatanPostpartumController.Update)
+	postpartum.Put("/:no_rawat", catatanPostpartumController.Update)
 	postpartum.Delete("/:no_rawat", catatanPostpartumController.Delete)
 
 	// ===== Catatan Observasi Ranap (Umum) =====
@@ -43,7 +43,7 @@ func RekamMedisRoute(
 	ranap.Get("/", catatanRanapController.GetAll)
 	ranap.Get("/:no_rawat", catatanRanapController.GetByNoRawat)
 	ranap.Post("/", catatanRanapController.Create)
-	ranap.Put("/", catatanRanapController.Update)
+	ranap.Put("/:no_rawat", catatanRanapController.Update)
 	ranap.Delete("/:no_rawat", catatanRanapController.Delete)
 
 	// ===== Diagnosa Pasien =====

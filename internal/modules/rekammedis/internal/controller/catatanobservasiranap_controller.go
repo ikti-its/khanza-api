@@ -88,6 +88,9 @@ func (c *CatatanObservasiRanapController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
+	// ⛔ Important: assign `no_rawat` from URL param
+	request.NoRawat = ctx.Params("no_rawat")
+
 	err := c.UseCase.Update(&request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
