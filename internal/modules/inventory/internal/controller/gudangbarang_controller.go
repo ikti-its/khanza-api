@@ -94,3 +94,23 @@ func (c *GudangBarangController) Delete(ctx *fiber.Ctx) error {
 
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
+
+// GetByKodeBarang handles GET /v1/inventory/gudang/barang/kode/:kode_barang
+func (c *GudangBarangController) GetByKodeBarang(ctx *fiber.Ctx) error {
+	kodeBarang := ctx.Params("kode_barang")
+
+	data, err := c.UseCase.GetByKodeBarang(kodeBarang)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":   500,
+			"status": "Internal Server Error",
+			"data":   err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "OK",
+		"data":   data,
+	})
+}

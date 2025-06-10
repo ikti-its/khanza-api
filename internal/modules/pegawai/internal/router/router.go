@@ -34,6 +34,7 @@ func Route(
 
 	pegawai := base.Group("/")
 	{
+		pegawai.Get("/nip/:nip", middleware.Authenticate([]int{0}), pegawaiController.GetByNIP)
 		pegawai.Post("/", middleware.Authenticate([]int{1337, 1}), pegawaiController.Create)
 		pegawai.Get("/", middleware.Authenticate([]int{0}), pegawaiController.Get)
 		pegawai.Get("/:id", middleware.Authenticate([]int{0}), pegawaiController.GetById)

@@ -12,4 +12,5 @@ type PegawaiRepository interface {
 	FindById(id uuid.UUID) (entity.Pegawai, error)
 	Update(pegawai *entity.Pegawai) error
 	Delete(pegawai *entity.Pegawai) error
+	GetByNIP(nip string) (*entity.Pegawai, error)
 }

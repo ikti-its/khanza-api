@@ -39,6 +39,7 @@ func Route(
 
 	gudangbarang := inventory.Group("/gudang")
 	{
+		gudangbarang.Get("/barang/kode/:kode_barang", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.GetByKodeBarang)
 		gudangbarang.Post("/", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.Create)
 		gudangbarang.Get("/", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.Get)
 		gudangbarang.Get("/barang/:id", middleware.Authenticate([]int{1337, 1, 2}), gudangbarangController.GetByIdMedis)

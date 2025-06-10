@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ikti-its/khanza-api/internal/app/config"
@@ -28,7 +27,14 @@ func main() {
 
 	bootstrap.Provide()
 
-	if err := fiber.Listen(fmt.Sprintf(":%d", cfg.GetInt("APP_PORT", 8080))); err != nil {
+	// routes := fiber.GetRoutes()
+	// for _, route := range routes {
+	// 	log.Printf("METHOD: %s | PATH: %s", route.Method, route.Path)
+	// }
+
+	// if err := fiber.Listen(fmt.Sprintf(":%d", cfg.GetInt("APP_PORT", 8080))); err != nil {
+	if err := fiber.Listen("[::]:8080"); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+
 }

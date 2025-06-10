@@ -34,7 +34,7 @@ func Route(
 
 	cuti := kehadiran.Group("/cuti")
 	{
-		cuti.Post("/", middleware.Authenticate([]int{0}), cutiController.Create)
+		cuti.Post("/", middleware.Authenticate([]int{0, 1, 1337}), cutiController.Create)
 		cuti.Get("/", middleware.Authenticate([]int{1337, 1}), cutiController.Get)
 		cuti.Get("/:id", middleware.Authenticate([]int{0}), cutiController.GetById)
 		cuti.Get("/pegawai/:id", middleware.Authenticate([]int{0}), cutiController.GetByPegawaiId)

@@ -144,3 +144,7 @@ func (u *GudangBarangUseCase) Delete(id string) {
 		exception.PanicIfError(err, "Failed to delete opname")
 	}
 }
+
+func (u *GudangBarangUseCase) GetByKodeBarang(kode string) (*entity.GudangBarang, error) {
+	return u.Repository.FindByKodeBarang(kode)
+}
