@@ -9,6 +9,8 @@ func TindakanRoute(app *fiber.App, tindakanController *controller.TindakanContro
 	tindakan := app.Group("/v1/tindakan")
 
 	tindakan.Get("/jenis", tindakanController.GetAllJenis)
+	tindakan.Get("/jenis2", tindakanController.GetJenisByKodeQuery)
+	tindakan.Get("/jenis/:kode", tindakanController.GetJenisByKode)
 	tindakan.Post("/", tindakanController.Create)
 	tindakan.Get("/", tindakanController.GetAll)
 	tindakan.Get("/:nomor_rawat", tindakanController.GetByNomorRawat)

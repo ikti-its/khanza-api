@@ -24,9 +24,13 @@ func (u *RujukanMasukUseCase) Create(request *model.RujukanMasukRequest) (model.
 		return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_masuk format: %v", err)
 	}
 
-	tanggalKeluar, err := time.Parse("2006-01-02", request.TanggalKeluar)
-	if err != nil {
-		return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_keluar format: %v", err)
+	var tanggalKeluar *time.Time
+	if request.TanggalKeluar != nil && *request.TanggalKeluar != "" {
+		parsed, err := time.Parse("2006-01-02", *request.TanggalKeluar)
+		if err != nil {
+			return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_keluar format: %v", err)
+		}
+		tanggalKeluar = &parsed
 	}
 
 	entityData := entity.RujukanMasuk{
@@ -47,6 +51,12 @@ func (u *RujukanMasukUseCase) Create(request *model.RujukanMasukRequest) (model.
 		return model.RujukanMasukResponse{}, fmt.Errorf("failed to insert: %v", err)
 	}
 
+	var formattedKeluar *string
+	if entityData.TanggalKeluar != nil {
+		str := entityData.TanggalKeluar.Format("2006-01-02")
+		formattedKeluar = &str
+	}
+
 	return model.RujukanMasukResponse{
 		NomorRujuk:    entityData.NomorRujuk,
 		Perujuk:       entityData.Perujuk,
@@ -57,7 +67,7 @@ func (u *RujukanMasukUseCase) Create(request *model.RujukanMasukRequest) (model.
 		Alamat:        entityData.Alamat,
 		Umur:          entityData.Umur,
 		TanggalMasuk:  entityData.TanggalMasuk.Format("2006-01-02"),
-		TanggalKeluar: entityData.TanggalKeluar.Format("2006-01-02"),
+		TanggalKeluar: formattedKeluar,
 		DiagnosaAwal:  entityData.DiagnosaAwal,
 	}, nil
 }
@@ -71,6 +81,12 @@ func (u *RujukanMasukUseCase) GetAll() ([]model.RujukanMasukResponse, error) {
 
 	var response []model.RujukanMasukResponse
 	for _, r := range list {
+		var formattedKeluar *string
+		if r.TanggalKeluar != nil {
+			str := r.TanggalKeluar.Format("2006-01-02")
+			formattedKeluar = &str
+		}
+
 		response = append(response, model.RujukanMasukResponse{
 			NomorRujuk:    r.NomorRujuk,
 			Perujuk:       r.Perujuk,
@@ -81,7 +97,7 @@ func (u *RujukanMasukUseCase) GetAll() ([]model.RujukanMasukResponse, error) {
 			Alamat:        r.Alamat,
 			Umur:          r.Umur,
 			TanggalMasuk:  r.TanggalMasuk.Format("2006-01-02"),
-			TanggalKeluar: r.TanggalKeluar.Format("2006-01-02"),
+			TanggalKeluar: formattedKeluar,
 			DiagnosaAwal:  r.DiagnosaAwal,
 		})
 	}
@@ -95,6 +111,12 @@ func (u *RujukanMasukUseCase) GetByNomorRawat(nomorRawat string) (model.RujukanM
 		return model.RujukanMasukResponse{}, err
 	}
 
+	var formattedKeluar *string
+	if r.TanggalKeluar != nil {
+		str := r.TanggalKeluar.Format("2006-01-02")
+		formattedKeluar = &str
+	}
+
 	return model.RujukanMasukResponse{
 		NomorRujuk:    r.NomorRujuk,
 		Perujuk:       r.Perujuk,
@@ -105,7 +127,7 @@ func (u *RujukanMasukUseCase) GetByNomorRawat(nomorRawat string) (model.RujukanM
 		Alamat:        r.Alamat,
 		Umur:          r.Umur,
 		TanggalMasuk:  r.TanggalMasuk.Format("2006-01-02"),
-		TanggalKeluar: r.TanggalKeluar.Format("2006-01-02"),
+		TanggalKeluar: formattedKeluar,
 		DiagnosaAwal:  r.DiagnosaAwal,
 	}, nil
 }
@@ -131,9 +153,14 @@ func (u *RujukanMasukUseCase) Update(nomorRawat string, request *model.RujukanMa
 		return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_masuk format")
 	}
 
-	r.TanggalKeluar, err = time.Parse("2006-01-02", request.TanggalKeluar)
-	if err != nil {
-		return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_keluar format")
+	if request.TanggalKeluar != nil && *request.TanggalKeluar != "" {
+		parsed, err := time.Parse("2006-01-02", *request.TanggalKeluar)
+		if err != nil {
+			return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_keluar format")
+		}
+		r.TanggalKeluar = &parsed
+	} else {
+		r.TanggalKeluar = nil
 	}
 
 	if err := u.Repository.Update(&r); err != nil {

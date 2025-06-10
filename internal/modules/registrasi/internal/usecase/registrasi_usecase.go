@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
@@ -45,11 +46,18 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		}
 	}
 
+	parsedJam, err := time.Parse("15:04:05", request.Jam)
+	if err != nil {
+		log.Println("❌ Invalid jam format:", request.Jam)
+		return model.RegistrasiResponse{}, fmt.Errorf("invalid date format: %v", err)
+	}
+
 	// ✅ Convert request model to entity model
 	registrasiEntity := entity.Registrasi{
 		NomorReg:         request.NomorReg,
 		NomorRawat:       request.NomorRawat,
 		Tanggal:          parsedDate,
+		Jam:              parsedJam,
 		KodeDokter:       request.KodeDokter,
 		NamaDokter:       namaDokter, // ✅ auto-filled here
 		NomorRM:          request.NomorRM,
@@ -81,6 +89,7 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 		NomorReg:         registrasiEntity.NomorReg,
 		NomorRawat:       registrasiEntity.NomorRawat,
 		Tanggal:          parsedDate.Format("2006-01-02"),
+		Jam:              parsedDate.Format("15:04:05"),
 		KodeDokter:       registrasiEntity.KodeDokter,
 		NamaDokter:       registrasiEntity.NamaDokter,
 		NomorRM:          registrasiEntity.NomorRM,
@@ -118,6 +127,7 @@ func (u *RegistrasiUseCase) GetAll() ([]model.RegistrasiResponse, error) {
 			NomorReg:         registrasi.NomorReg,
 			NomorRawat:       registrasi.NomorRawat,
 			Tanggal:          registrasi.Tanggal.Format("2006-01-02"),
+			Jam:              registrasi.Jam.Format("15:04:05"),
 			KodeDokter:       registrasi.KodeDokter,
 			NamaDokter:       registrasi.NamaDokter,
 			NomorRM:          registrasi.NomorRM,
@@ -152,6 +162,7 @@ func (u *RegistrasiUseCase) GetByNomorReg(nomorReg string) (model.RegistrasiResp
 		NomorReg:         registrasi.NomorReg,
 		NomorRawat:       registrasi.NomorRawat,
 		Tanggal:          registrasi.Tanggal.Format("2006-01-02"),
+		Jam:              registrasi.Jam.Format("15:04:05"),
 		KodeDokter:       registrasi.KodeDokter,
 		NamaDokter:       registrasi.NamaDokter,
 		NomorRM:          registrasi.NomorRM,
@@ -203,6 +214,7 @@ func (u *RegistrasiUseCase) Update(nomorReg string, request *model.RegistrasiReq
 		NomorReg:         registrasi.NomorReg,
 		NomorRawat:       registrasi.NomorRawat,
 		Tanggal:          registrasi.Tanggal.Format("2006-01-02"),
+		Jam:              registrasi.Jam.Format("15:04:05"),
 		KodeDokter:       registrasi.KodeDokter,
 		NamaDokter:       registrasi.NamaDokter,
 		NomorRM:          registrasi.NomorRM,

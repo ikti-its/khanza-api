@@ -148,3 +148,48 @@ func (c *TindakanController) GetAllJenis(ctx *fiber.Ctx) error {
 		"data":   tindakanList, // ← must return the actual slice
 	})
 }
+
+func (c *TindakanController) GetJenisByKode(ctx *fiber.Ctx) error {
+	kode := ctx.Params("kode")
+
+	data, err := c.UseCase.GetJenisByKode(kode)
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
+			Code:   fiber.StatusNotFound,
+			Status: "Not Found",
+			Data:   nil,
+		})
+	}
+
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   data,
+	})
+}
+
+func (c *TindakanController) GetJenisByKodeQuery(ctx *fiber.Ctx) error {
+	kode := ctx.Query("kode") // must be "012"
+	if kode == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "kode query required",
+		})
+	}
+
+	result, err := c.UseCase.GetJenisByKode(kode)
+	if err != nil || result == nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
+			Code:   fiber.StatusNotFound,
+			Status: "Not Found",
+			Data:   nil,
+		})
+	}
+
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   result,
+	})
+}

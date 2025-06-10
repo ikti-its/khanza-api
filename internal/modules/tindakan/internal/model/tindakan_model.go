@@ -42,6 +42,14 @@ type TindakanResponse struct {
 	Biaya        float64 `json:"biaya"`
 }
 
+type JenisTindakan struct {
+	KodeJenis    string  `db:"kode" json:"kode_jenis"`
+	NamaTindakan string  `db:"nama_tindakan" json:"nama_tindakan"`
+	Kategori     string  `db:"kategori" json:"kategori"`
+	Kelas        string  `db:"kelas" json:"kelas"`
+	Biaya        float64 `db:"biaya" json:"biaya"`
+}
+
 type TindakanPageResponse struct {
 	Page     int                `json:"page"`
 	Size     int                `json:"size"`

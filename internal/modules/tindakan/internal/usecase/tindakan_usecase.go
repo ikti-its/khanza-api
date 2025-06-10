@@ -207,3 +207,7 @@ func (u *TindakanUseCase) Delete(nomorRawat, jamRawat string) error {
 func (u *TindakanUseCase) GetAllJenisTindakan() ([]entity.JenisTindakan, error) {
 	return u.Repository.GetAllJenisTindakan()
 }
+
+func (u *TindakanUseCase) GetJenisByKode(kode string) (*model.JenisTindakan, error) {
+	return u.Repository.FindJenisByKode(kode)
+}

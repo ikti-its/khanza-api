@@ -1,9 +1,12 @@
 package postgres
 
 import (
+	"database/sql"
+	"errors"
 	"log"
 
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/repository"
 	"github.com/jmoiron/sqlx"
 )
@@ -117,4 +120,26 @@ func (r *tindakanRepositoryImpl) GetAllJenisTindakan() ([]entity.JenisTindakan, 
 		log.Printf("[ERROR] Select failed: %v", err)
 	}
 	return result, err
+}
+
+func (r *tindakanRepositoryImpl) FindJenisByKode(kode string) (*model.JenisTindakan, error) {
+	var jt model.JenisTindakan
+	query := `
+		SELECT kode, nama_tindakan
+		FROM sik.jenis_tindakan
+		WHERE kode = $1
+		LIMIT 1
+	`
+
+	err := r.DB.Get(&jt, query, kode)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			// No match found
+			return nil, nil
+		}
+		log.Printf("SQL ERROR: %v", err) // Optional: show full DB error
+		return nil, err
+	}
+
+	return &jt, nil
 }

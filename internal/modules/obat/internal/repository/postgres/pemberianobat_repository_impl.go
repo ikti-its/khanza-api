@@ -71,7 +71,23 @@ func (r *pemberianObatRepositoryImpl) Delete(nomorRawat, jamBeri string) error {
 }
 
 func (r *pemberianObatRepositoryImpl) GetAllDataBarang() ([]entity.DataBarang, error) {
-	query := `SELECT kode_brng, nama_brng, dasar, kelas1, kelas2, kelas3, utama, vip, vvip, jualbebas FROM databarang ORDER BY nama_brng ASC`
+	query := `
+		SELECT 
+			kode_brng, 
+			nama_brng, 
+			dasar, 
+			kelas1, 
+			kelas2, 
+			kelas3, 
+			utama, 
+			vip, 
+			vvip, 
+			jualbebas,
+			stokminimal,
+			kapasitas
+		FROM databarang
+		ORDER BY nama_brng ASC
+	`
 
 	var list []entity.DataBarang
 	err := r.DB.Select(&list, query)

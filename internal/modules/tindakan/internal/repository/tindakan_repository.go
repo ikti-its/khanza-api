@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/model"
 )
 
 type TindakanRepository interface {
@@ -11,6 +12,7 @@ type TindakanRepository interface {
 	Update(tindakan *entity.Tindakan) error
 	Delete(nomorRawat string, jamRawat string) error
 	GetAllJenisTindakan() ([]entity.JenisTindakan, error)
+	FindJenisByKode(kode string) (*model.JenisTindakan, error)
 
 	CheckDokterExists(kodeDokter string) (bool, error)
 }
