@@ -4,17 +4,29 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/controller"
-	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository"
-	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository/postgres"
-	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/router"
-	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/usecase"
+	obatController "github.com/ikti-its/khanza-api/internal/modules/obat/internal/controller"
+	obatRepository "github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository"
+	obatPostgres "github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository/postgres"
+	obatRouter "github.com/ikti-its/khanza-api/internal/modules/obat/internal/router"
+	obatUsecase "github.com/ikti-its/khanza-api/internal/modules/obat/internal/usecase"
+
+	gudangController "github.com/ikti-its/khanza-api/internal/modules/obat/internal/controller"
+	gudangRepository "github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository"
+	gudangPostgres "github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository/postgres"
+	gudangRouter "github.com/ikti-its/khanza-api/internal/modules/obat/internal/router"
+	gudangUsecase "github.com/ikti-its/khanza-api/internal/modules/obat/internal/usecase"
 )
 
 func ProvidePemberianObat(app *fiber.App, db *sqlx.DB) {
-	var pemberianObatRepo repository.PemberianObatRepository = postgres.NewPemberianObatRepository(db)
-	pemberianObatUseCase := usecase.NewPemberianObatUseCase(pemberianObatRepo)
-	pemberianObatController := controller.NewPemberianObatController(pemberianObatUseCase)
+	// Pemberian Obat DI
+	var pemberianObatRepo obatRepository.PemberianObatRepository = obatPostgres.NewPemberianObatRepository(db)
+	pemberianObatUseCase := obatUsecase.NewPemberianObatUseCase(pemberianObatRepo)
+	pemberianObatController := obatController.NewPemberianObatController(pemberianObatUseCase)
+	obatRouter.PemberianObatRoute(app, pemberianObatController)
 
-	router.PemberianObatRoute(app, pemberianObatController)
+	// Gudang Barang DI
+	var gudangBarangRepo gudangRepository.GudangBarangRepository = gudangPostgres.NewGudangBarangRepository(db)
+	gudangBarangUseCase := gudangUsecase.NewGudangBarangUseCase(gudangBarangRepo)
+	gudangBarangController := gudangController.NewGudangBarangController(gudangBarangUseCase)
+	gudangRouter.GudangBarangRoute(app, gudangBarangController)
 }

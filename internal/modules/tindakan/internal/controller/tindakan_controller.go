@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/ikti-its/khanza-api/internal/app/exception"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/usecase"
@@ -87,13 +86,19 @@ func (c *TindakanController) GetByNomorRawat(ctx *fiber.Ctx) error {
 
 func (c *TindakanController) Update(ctx *fiber.Ctx) error {
 	nomorRawat := ctx.Params("nomor_rawat")
-	var request model.TindakanRequest
+	jamRawat := ctx.Params("jam_rawat")
 
+	var request model.TindakanRequest
 	if err := ctx.BodyParser(&request); err != nil {
-		panic(&exception.BadRequestError{Message: "Invalid request body"})
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "Invalid request body",
+		})
 	}
 
-	response, err := c.UseCase.Update(nomorRawat, &request)
+	// Pass both nomorRawat and jamRawat to the usecase
+	response, err := c.UseCase.Update(nomorRawat, jamRawat, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -101,7 +106,8 @@ func (c *TindakanController) Update(ctx *fiber.Ctx) error {
 			Data:   err.Error(),
 		})
 	}
-	return ctx.JSON(web.Response{
+
+	return ctx.Status(fiber.StatusOK).JSON(web.Response{
 		Code:   fiber.StatusOK,
 		Status: "OK",
 		Data:   response,

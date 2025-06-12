@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/entity"
@@ -19,6 +20,7 @@ type TindakanRepository interface {
 	Delete(nomorRawat string, jamRawat string) error
 	CheckDokterExists(kodeDokter string) (bool, error)
 	GetAllJenisTindakan() ([]entity.JenisTindakan, error)
+	FindByNomorRawatAndJamRawat(nomorRawat, jamRawat string) (*entity.Tindakan, error)
 }
 
 type tindakanRepositoryImpl struct {
@@ -63,16 +65,22 @@ func (r *tindakanRepositoryImpl) FindByNomorRawat(nomorRawat string) ([]entity.T
 func (r *tindakanRepositoryImpl) Update(t *entity.Tindakan) error {
 	query := `
 		UPDATE tindakan SET 
-			nomor_rm = $2, nama_pasien = $3, tindakan = $4,
-			kode_dokter = $5, nama_dokter = $6, nip = $7, nama_petugas = $8,
-			tanggal_rawat = $9, jam_rawat = $10, biaya = $11
-		WHERE nomor_rawat = $1
+			nama_pasien = :nama_pasien,
+			tindakan = :tindakan,
+			kode_dokter = :kode_dokter,
+			nama_dokter = :nama_dokter,
+			nip = :nip,
+			nama_petugas = :nama_petugas,
+			tanggal_rawat = :tanggal_rawat,
+			jam_rawat = :jam_rawat,
+			biaya = :biaya
+		WHERE nomor_rawat = :nomor_rawat AND jam_rawat = :jam_rawat
 	`
-	_, err := r.DB.Exec(query,
-		t.NomorRawat, t.NomorRM, t.NamaPasien, t.Tindakan, t.KodeDokter, t.NamaDokter,
-		t.NIP, t.NamaPetugas, t.TanggalRawat, t.JamRawat, t.Biaya,
-	)
-	return err
+	_, err := r.DB.NamedExec(query, t)
+	if err != nil {
+		return fmt.Errorf("failed to update tindakan: %v", err)
+	}
+	return nil
 }
 
 func (r *tindakanRepositoryImpl) Delete(nomorRawat, jamRawat string) error {
@@ -142,4 +150,25 @@ func (r *tindakanRepositoryImpl) FindJenisByKode(kode string) (*model.JenisTinda
 	}
 
 	return &jt, nil
+}
+
+func (r *tindakanRepositoryImpl) FindByNomorRawatAndJamRawat(nomorRawat, jamRawat string) (*entity.Tindakan, error) {
+	query := `
+		SELECT 
+			nomor_rawat, nomor_rm, nama_pasien, tindakan, kode_dokter, nama_dokter,
+			nip, nama_petugas, tanggal_rawat, jam_rawat, biaya
+		FROM tindakan
+		WHERE nomor_rawat = $1 AND jam_rawat = $2
+	`
+
+	var result entity.Tindakan
+	err := r.DB.Get(&result, query, nomorRawat, jamRawat)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, fmt.Errorf("tindakan not found")
+		}
+		return nil, fmt.Errorf("failed to query tindakan: %v", err)
+	}
+
+	return &result, nil
 }

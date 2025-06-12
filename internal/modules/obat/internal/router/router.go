@@ -15,3 +15,13 @@ func PemberianObatRoute(app *fiber.App, pemberianObatController *controller.Pemb
 	obat.Put("/:nomor_rawat", pemberianObatController.Update)
 	obat.Delete("/:nomor_rawat/:jam_beri", pemberianObatController.Delete)
 }
+
+func GudangBarangRoute(app *fiber.App, gudangBarangController *controller.GudangBarangController) {
+	gudang := app.Group("/v1/gudang-barang")
+
+	gudang.Post("/", gudangBarangController.Create)
+	gudang.Get("/", gudangBarangController.GetAll)
+	gudang.Get("/:id", gudangBarangController.GetByID)
+	gudang.Put("/:id", gudangBarangController.Update)
+	gudang.Delete("/:id", gudangBarangController.Delete)
+}

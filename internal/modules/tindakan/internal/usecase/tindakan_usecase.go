@@ -149,17 +149,14 @@ func (u *TindakanUseCase) GetByNomorRawat(nomorRawat string) ([]model.TindakanRe
 	return result, nil
 }
 
-func (u *TindakanUseCase) Update(nomorRawat string, request *model.TindakanRequest) (model.TindakanResponse, error) {
-	records, err := u.Repository.FindByNomorRawat(nomorRawat)
-	if err != nil || len(records) == 0 {
-		return model.TindakanResponse{}, fmt.Errorf("tindakan not found")
-	}
-
-	existing := &records[0] // just take the first one if updating one
+func (u *TindakanUseCase) Update(nomorRawat string, jamRawat string, request *model.TindakanRequest) (model.TindakanResponse, error) {
+	// Fetch the exact tindakan record using composite key
+	existing, err := u.Repository.FindByNomorRawatAndJamRawat(nomorRawat, jamRawat)
 	if err != nil {
-		return model.TindakanResponse{}, fmt.Errorf("tindakan not found")
+		return model.TindakanResponse{}, fmt.Errorf("tindakan not found: %v", err)
 	}
 
+	// Parse updated tgl & jam
 	tgl, err := time.Parse("2006-01-02", request.TanggalRawat)
 	if err != nil {
 		return model.TindakanResponse{}, fmt.Errorf("invalid tanggal_rawat format: %v", err)
@@ -169,6 +166,7 @@ func (u *TindakanUseCase) Update(nomorRawat string, request *model.TindakanReque
 		return model.TindakanResponse{}, fmt.Errorf("invalid jam_rawat format: %v", err)
 	}
 
+	// Update the fields
 	existing.NamaPasien = request.NamaPasien
 	existing.Tindakan = ptrStr(request.Tindakan)
 	existing.KodeDokter = ptrStr(request.KodeDokter)
@@ -179,11 +177,13 @@ func (u *TindakanUseCase) Update(nomorRawat string, request *model.TindakanReque
 	existing.JamRawat = jam
 	existing.Biaya = ptrInt(int64(request.Biaya))
 
+	// Persist the update
 	err = u.Repository.Update(existing)
 	if err != nil {
 		return model.TindakanResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
+	// Return updated response
 	return model.TindakanResponse{
 		NomorRawat:   existing.NomorRawat,
 		NomorRM:      existing.NomorRM,

@@ -54,11 +54,11 @@ func (r *pemeriksaanRanapRepositoryImpl) FindByTanggal(tanggal string) ([]entity
 func (r *pemeriksaanRanapRepositoryImpl) Update(p *entity.PemeriksaanRanap) error {
 	query := `
 		UPDATE pemeriksaan_ranap SET 
-			suhu_tubuh = :suhu_tubuh, tensi = :tensi, nadi = :nadi, nafas = :respirasi,
+			suhu_tubuh = :suhu_tubuh, tensi = :tensi, nadi = :nadi, respirasi = :respirasi,
 			tinggi = :tinggi, berat = :berat, spo2 = :spo2, gcs = :gcs, kesadaran = :kesadaran,
 			keluhan = :keluhan, pemeriksaan = :pemeriksaan, alergi = :alergi, penilaian = :penilaian,
 			rtl = :rtl, instruksi = :instruksi, evaluasi = :evaluasi, nip = :nip
-		WHERE no_rawat = :nomor_rawat AND tgl_perawatan = :tanggal AND jam_rawat = :jam
+		WHERE no_rawat = :no_rawat AND tgl_perawatan = :tgl_perawatan AND jam_rawat = :jam_rawat
 	`
 	_, err := r.DB.NamedExec(query, p)
 	return err

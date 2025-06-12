@@ -14,7 +14,7 @@ func TindakanRoute(app *fiber.App, tindakanController *controller.TindakanContro
 	tindakan.Post("/", tindakanController.Create)
 	tindakan.Get("/", tindakanController.GetAll)
 	tindakan.Get("/:nomor_rawat", tindakanController.GetByNomorRawat)
-	tindakan.Put("/:nomor_rawat", tindakanController.Update)
+	tindakan.Put("/:nomor_rawat/:jam_rawat", tindakanController.Update)
 	tindakan.Delete("/:nomor_rawat/:jam_rawat", tindakanController.Delete)
 
 }
