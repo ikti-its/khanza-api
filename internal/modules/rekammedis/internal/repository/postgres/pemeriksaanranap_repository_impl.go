@@ -1,6 +1,9 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
 	"github.com/jmoiron/sqlx"
@@ -58,10 +61,33 @@ func (r *pemeriksaanRanapRepositoryImpl) Update(p *entity.PemeriksaanRanap) erro
 			tinggi = :tinggi, berat = :berat, spo2 = :spo2, gcs = :gcs, kesadaran = :kesadaran,
 			keluhan = :keluhan, pemeriksaan = :pemeriksaan, alergi = :alergi, penilaian = :penilaian,
 			rtl = :rtl, instruksi = :instruksi, evaluasi = :evaluasi, nip = :nip
-		WHERE no_rawat = :no_rawat AND tgl_perawatan = :tgl_perawatan AND jam_rawat = :jam_rawat
+		WHERE no_rawat = :no_rawat
+		AND tgl_perawatan = :tgl_perawatan
+		AND CAST(jam_rawat AS time(0)) = CAST(:jam_rawat AS time(0))
 	`
-	_, err := r.DB.NamedExec(query, p)
-	return err
+
+	log.Printf("[INFO] Attempting update for no_rawat=%s, tgl_perawatan=%s, jam_rawat=%s", p.NoRawat, p.TglPerawatan, p.JamRawat)
+	log.Printf("[DEBUG] suhu: %s, tensi: %s, keluhan: %s", p.SuhuTubuh, p.Tensi, p.Keluhan)
+	res, err := r.DB.NamedExec(query, p)
+	if err != nil {
+		log.Printf("[ERROR] Failed to execute update: %v", err)
+		return err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	log.Printf("[DEBUG] Rows affected: %d", rowsAffected)
+	if err != nil {
+		log.Printf("[ERROR] Could not get rows affected: %v", err)
+		return err
+	}
+
+	if rowsAffected == 0 {
+		log.Printf("[WARN] No rows updated for no_rawat=%s, tgl_perawatan=%s, jam_rawat=%s", p.NoRawat, p.TglPerawatan, p.JamRawat)
+		return fmt.Errorf("no record updated — no match for no_rawat=%s, tgl_perawatan=%s, jam_rawat=%s", p.NoRawat, p.TglPerawatan, p.JamRawat)
+	}
+
+	log.Printf("[SUCCESS] Updated pemeriksaan_ranap row for no_rawat=%s", p.NoRawat)
+	return nil
 }
 
 func (r *pemeriksaanRanapRepositoryImpl) Delete(nomorRawat string) error {

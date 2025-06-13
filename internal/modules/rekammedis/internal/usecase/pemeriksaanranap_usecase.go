@@ -154,12 +154,7 @@ func (u *PemeriksaanRanapUseCase) GetByNomorRawat(nomorRawat string) (*model.Pem
 }
 
 func (u *PemeriksaanRanapUseCase) Update(nomorRawat string, request *model.PemeriksaanRanapRequest) error {
-	record, err := u.Repository.FindByNomorRawat(nomorRawat)
-	if err != nil {
-		return fmt.Errorf("data tidak ditemukan: %v", err)
-	}
-
-	// Parse the date and time fields into time.Time
+	// Parse tanggal and jam
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
 		return fmt.Errorf("format tanggal salah: %v", err)
@@ -169,16 +164,35 @@ func (u *PemeriksaanRanapUseCase) Update(nomorRawat string, request *model.Pemer
 		return fmt.Errorf("format jam salah: %v", err)
 	}
 
-	// Update selected fields
-	record.TglPerawatan = tgl.Format("2006-01-02")
-	record.JamRawat = jam.Format("15:04:05")
-	record.CatatanDokter = request.Pemeriksaan
+	// Build updated record from request
+	record := &entity.PemeriksaanRanap{
+		NoRawat:      nomorRawat,
+		TglPerawatan: tgl.Format("2006-01-02"),
+		JamRawat:     jam.Format("15:04:05"),
+		SuhuTubuh:    request.SuhuTubuh,
+		Tensi:        request.Tensi,
+		Nadi:         request.Nadi,
+		Respirasi:    request.Respirasi,
+		Tinggi:       request.Tinggi,
+		Berat:        request.Berat,
+		Spo2:         request.Spo2,
+		GCS:          request.GCS,
+		Kesadaran:    request.Kesadaran,
+		Keluhan:      request.Keluhan,
+		Pemeriksaan:  request.Pemeriksaan,
+		Alergi:       request.Alergi,
+		Penilaian:    request.Penilaian,
+		RTL:          request.RTL,
+		Instruksi:    request.Instruksi,
+		Evaluasi:     request.Evaluasi,
+		NIP:          request.NIP,
+	}
 
-	// Save the updated record
-	err = u.Repository.Update(&record)
-	if err != nil {
+	// Call repository to update
+	if err := u.Repository.Update(record); err != nil {
 		return fmt.Errorf("gagal update data: %v", err)
 	}
+
 	return nil
 }
 

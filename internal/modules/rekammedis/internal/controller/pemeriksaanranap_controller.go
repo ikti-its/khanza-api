@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
@@ -97,7 +98,7 @@ func (c *PemeriksaanRanapController) Update(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(&request); err != nil {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
-
+	log.Printf("[DEBUG] Parsed request body: %+v", request)
 	// Call the use case to update the record
 	err := c.UseCase.Update(nomorRawat, &request) // Only error returned, not response
 	if err != nil {
