@@ -5,9 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
-	"github.com/ikti-its/khanza-api/internal/app/model"
-	"github.com/ikti-its/khanza-api/internal/modules/example/usecase"
-
+	web "github.com/ikti-its/khanza-api/internal/app/model"
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/usecase"
 )
 
 type Controller struct {

@@ -1,9 +1,8 @@
-package postgres
+package repository
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/ikti-its/khanza-api/internal/modules/example/entity"
-
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/entity"
 )
 
 type Repository interface {
@@ -39,7 +38,7 @@ func (r *RepositoryImpl) FindById(id string) (entity.Entity, error) {
 	return record, err
 }
 
-func (r *RepositoryImpl) Insert(Entity *entity.Entity) error {
+func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 	query := `
 		INSERT INTO kamar (
 			nomor_bed, kode_kamar, nama_kamar, kelas, tarif_kamar, status_kamar

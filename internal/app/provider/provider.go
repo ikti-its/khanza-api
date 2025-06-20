@@ -67,4 +67,5 @@ func (p *Provider) Provide() {
 	stokobatpasien.ProvideStokObatPasien(p.App, p.PG, p.Validator)
 	rekammedis.ProvideRekamMedis(p.App, p.PG, p.Validator)
 	pasien.ProvidePasien(p.App, p.PG, p.Validator)
+	example.Provide(p.App, p.PG, p.Validator)
 }

@@ -1,8 +1,8 @@
-package example
+package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/ikti-its/khanza-api/internal/modules/example/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/controller"
 
 )
 

@@ -1,16 +1,15 @@
-package example
+package usecase
 
 import (
 	"fmt" 
 	"github.com/jinzhu/copier"
-	"github.com/ikti-its/khanza-api/internal/modules/example/postgres"
-	"github.com/ikti-its/khanza-api/internal/modules/example/usecase"
-	"github.com/ikti-its/khanza-api/internal/modules/example/model"
-
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/example/internal/entity"
 )
 
 type UseCase struct {
-	Repository postgres.Repository
+	Repository repository.Repository
 }
 
 func NewUseCase(repo repository.Repository) *UseCase {
