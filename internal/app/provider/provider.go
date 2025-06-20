@@ -29,6 +29,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan"
 	"github.com/ikti-its/khanza-api/internal/modules/ugd"
 	"github.com/ikti-its/khanza-api/internal/modules/web"
+	"github.com/ikti-its/khanza-api/internal/modules/example"
 	"github.com/jmoiron/sqlx"
 )
 

@@ -1,0 +1,23 @@
+package example
+
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/jmoiron/sqlx"
+	"github.com/ikti-its/khanza-api/internal/app/config"
+	"github.com/ikti-its/khanza-api/internal/modules/example/usecase"
+	"github.com/ikti-its/khanza-api/internal/modules/example/postgres"
+	"github.com/ikti-its/khanza-api/internal/modules/example/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/example/router"
+)
+
+func Provide(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
+	// Initialize repository for Kamar
+	Repository := postgres.NewRepository(db)
+	// Initialize use case for Kamar
+	UseCase := usecase.NewUseCase(Repository)
+	// Initialize controller for Kamar
+	Controller := controller.NewController(UseCase)
+
+	// Set up routes for Kamar
+	router.Route(app, Controller) // Use KamarRoute to set up routes
+}
