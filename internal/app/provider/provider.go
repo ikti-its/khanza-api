@@ -30,6 +30,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/ugd"
 	"github.com/ikti-its/khanza-api/internal/modules/web"
 	"github.com/ikti-its/khanza-api/internal/modules/example"
+	"github.com/ikti-its/khanza-api/internal/modules/bpjs"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -68,4 +69,6 @@ func (p *Provider) Provide() {
 	rekammedis.ProvideRekamMedis(p.App, p.PG, p.Validator)
 	pasien.ProvidePasien(p.App, p.PG, p.Validator)
 	example.Provide(p.App, p.PG, p.Validator)
+	bpjs.Provide(p.App, p.PG, p.Validator)
+
 }
