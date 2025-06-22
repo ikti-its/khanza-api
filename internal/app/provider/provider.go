@@ -33,6 +33,8 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/bpjs"
 	"github.com/ikti-its/khanza-api/internal/modules/golongan"
 	"github.com/ikti-its/khanza-api/internal/modules/jabatan"
+	"github.com/ikti-its/khanza-api/internal/modules/ptkp"
+	"github.com/ikti-its/khanza-api/internal/modules/pph21"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -74,4 +76,6 @@ func (p *Provider) Provide() {
 	bpjs.Provide(p.App, p.PG, p.Validator)
 	golongan.Provide(p.App, p.PG, p.Validator)
 	jabatan.Provide(p.App, p.PG, p.Validator)
+	ptkp.Provide(p.App, p.PG, p.Validator)
+	pph21.Provide(p.App, p.PG, p.Validator)
 }
