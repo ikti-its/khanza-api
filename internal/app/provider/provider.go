@@ -35,6 +35,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/jabatan"
 	"github.com/ikti-its/khanza-api/internal/modules/ptkp"
 	"github.com/ikti-its/khanza-api/internal/modules/pph21"
+	"github.com/ikti-its/khanza-api/internal/modules/lembur"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -78,4 +79,5 @@ func (p *Provider) Provide() {
 	jabatan.Provide(p.App, p.PG, p.Validator)
 	ptkp.Provide(p.App, p.PG, p.Validator)
 	pph21.Provide(p.App, p.PG, p.Validator)
+	lembur.Provide(p.App, p.PG, p.Validator)
 }
