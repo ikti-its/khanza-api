@@ -38,7 +38,8 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/lembur"
 	"github.com/ikti-its/khanza-api/internal/modules/umr"
 	"github.com/ikti-its/khanza-api/internal/modules/thr"
-	"github.com/ikti-its/khanza-api/internal/modules/pesangon"		
+	"github.com/ikti-its/khanza-api/internal/modules/pesangon"	
+	"github.com/ikti-its/khanza-api/internal/modules/upmk"		
 	"github.com/jmoiron/sqlx"
 )
 
@@ -86,4 +87,5 @@ func (p *Provider) Provide() {
 	umr.Provide(p.App, p.PG, p.Validator)
 	thr.Provide(p.App, p.PG, p.Validator)
 	pesangon.Provide(p.App, p.PG, p.Validator)
+	upmk.Provide(p.App, p.PG, p.Validator)
 }
