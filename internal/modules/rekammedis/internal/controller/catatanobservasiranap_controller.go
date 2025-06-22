@@ -126,3 +126,62 @@ func (c *CatatanObservasiRanapController) Delete(ctx *fiber.Ctx) error {
 		Status: "Deleted",
 	})
 }
+
+func (c *CatatanObservasiRanapController) GetByRawatAndTanggal(ctx *fiber.Ctx) error {
+	noRawat := ctx.Params("no_rawat")
+	tanggal := ctx.Params("tgl_perawatan")
+	fmt.Println("📥 GET request:", noRawat, tanggal)
+
+	if noRawat == "" || tanggal == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    400,
+			"status":  "Bad Request",
+			"message": "no_rawat dan tgl_perawatan wajib diisi",
+		})
+	}
+
+	data, err := c.UseCase.FindByNoRawatAndTanggal(noRawat, tanggal)
+	if err != nil {
+		fmt.Println("❌ Error saat query observasi:", err)
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    500,
+			"status":  "Internal Server Error",
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "OK",
+		"data":   data,
+	})
+}
+
+func (c *CatatanObservasiRanapController) UpdateByNoRawatAndTanggal(ctx *fiber.Ctx) error {
+	noRawat := ctx.Params("no_rawat")
+	tanggal := ctx.Params("tgl_perawatan")
+
+	var req model.CatatanObservasiRanapRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    400,
+			"status":  "Bad Request",
+			"message": "Invalid body: " + err.Error(),
+		})
+	}
+
+	err := c.UseCase.UpdateByNoRawatAndTanggal(noRawat, tanggal, &req)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    500,
+			"status":  "Internal Server Error",
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":    200,
+		"status":  "Success",
+		"message": "Catatan observasi updated",
+	})
+}

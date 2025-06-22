@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/model"
@@ -17,17 +18,26 @@ func NewDokterJagaUseCase(repo repository.DokterJagaRepository) *DokterJagaUseCa
 }
 
 func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.DokterJagaResponse, error) {
+	jamMulai, err := time.Parse("15:04:05", request.JamMulai)
+	if err != nil {
+		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_mulai format: %v", err)
+	}
+
+	jamSelesai, err := time.Parse("15:04:05", request.JamSelesai)
+	if err != nil {
+		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_selesai format: %v", err)
+	}
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
 		HariKerja:  request.HariKerja,
-		JamMulai:   request.JamMulai,   // ✅ directly assign
-		JamSelesai: request.JamSelesai, // ✅ directly assign
+		JamMulai:   jamMulai,   // ✅ directly assign
+		JamSelesai: jamSelesai, // ✅ directly assign
 		Poliklinik: request.Poliklinik,
 		Status:     request.Status,
 	}
 
-	err := u.Repository.Insert(&dokter)
+	err = u.Repository.Insert(&dokter)
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("failed to create dokter jaga: %v", err)
 	}
@@ -94,14 +104,22 @@ func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.Dokt
 	if err != nil || len(records) == 0 {
 		return model.DokterJagaResponse{}, fmt.Errorf("dokter jaga not found")
 	}
+	jamMulai, err := time.Parse("15:04:05", request.JamMulai)
+	if err != nil {
+		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_mulai format: %v", err)
+	}
 
+	jamSelesai, err := time.Parse("15:04:05", request.JamSelesai)
+	if err != nil {
+		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_selesai format: %v", err)
+	}
 	// Directly use the string field for hari_kerja
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
 		HariKerja:  request.HariKerja, // no parsing needed
-		JamMulai:   request.JamMulai,
-		JamSelesai: request.JamSelesai,
+		JamMulai:   jamMulai,
+		JamSelesai: jamSelesai,
 		Poliklinik: request.Poliklinik,
 		Status:     request.Status,
 	}

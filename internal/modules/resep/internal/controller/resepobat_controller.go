@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/ikti-its/khanza-api/internal/app/exception"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/usecase"
@@ -86,25 +85,34 @@ func (c *ResepObatController) GetByNoResep(ctx *fiber.Ctx) error {
 }
 
 func (c *ResepObatController) Update(ctx *fiber.Ctx) error {
-	var request model.ResepObatRequest
-
-	if err := ctx.BodyParser(&request); err != nil {
-		panic(&exception.BadRequestError{Message: "Invalid request body"})
-	}
-
-	response, err := c.UseCase.Update(&request)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
-			Code:   fiber.StatusInternalServerError,
-			Status: "Error",
-			Data:   err.Error(),
+	noResep := ctx.Params("no_resep")
+	if noResep == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    400,
+			"status":  "Bad Request",
+			"message": "no_resep is required in URL",
 		})
 	}
-	return ctx.JSON(web.Response{
-		Code:   fiber.StatusOK,
-		Status: "OK",
-		Data:   response,
-	})
+
+	var request model.ResepObatRequest
+	if err := ctx.BodyParser(&request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    400,
+			"status":  "Bad Request",
+			"message": "Invalid request body",
+		})
+	}
+
+	result, err := c.UseCase.Update(noResep, &request)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    500,
+			"status":  "Internal Server Error",
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.JSON(result)
 }
 
 func (c *ResepObatController) Delete(ctx *fiber.Ctx) error {

@@ -20,7 +20,7 @@ func RegisterResepRoutes(
 	resepObat.Post("/", resepObatController.Create)
 	resepObat.Get("/", resepObatController.GetAll)
 	resepObat.Get("/:no_resep", resepObatController.GetByNoResep)
-	resepObat.Put("/", resepObatController.Update)
+	resepObat.Put("/:no_resep", resepObatController.Update)
 	resepObat.Delete("/:no_resep", resepObatController.Delete)
 	resepObat.Put("/:no_resep/validasi", resepObatController.UpdateValidasi)
 

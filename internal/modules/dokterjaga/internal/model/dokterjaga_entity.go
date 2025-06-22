@@ -13,13 +13,13 @@ type DokterJaga struct {
 }
 
 type DokterJagaRequest struct {
-	KodeDokter string    `json:"kode_dokter" db:"kode_dokter"`
-	NamaDokter string    `json:"nama_dokter" db:"nama_dokter"`
-	HariKerja  string    `json:"hari_kerja" db:"hari_kerja"`
-	JamMulai   time.Time `json:"jam_mulai" db:"jam_mulai"`
-	JamSelesai time.Time `json:"jam_selesai" db:"jam_selesai"`
-	Poliklinik string    `json:"poliklinik" db:"poliklinik"`
-	Status     string    `json:"status" db:"status"`
+	KodeDokter string `json:"kode_dokter" db:"kode_dokter"`
+	NamaDokter string `json:"nama_dokter" db:"nama_dokter"`
+	HariKerja  string `json:"hari_kerja" db:"hari_kerja"`
+	JamMulai   string `json:"jam_mulai" db:"jam_mulai"`     // ✅ ubah jadi string
+	JamSelesai string `json:"jam_selesai" db:"jam_selesai"` // ✅ ubah jadi string
+	Poliklinik string `json:"poliklinik" db:"poliklinik"`
+	Status     string `json:"status" db:"status"`
 }
 
 type DokterJagaResponse struct {

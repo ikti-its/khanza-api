@@ -144,3 +144,19 @@ func formatDate(t *time.Time) string {
 	}
 	return t.Format("2006-01-02")
 }
+
+func (u *CatatanObservasiRanapUseCase) FindByNoRawatAndTanggal(noRawat, tgl string) (*entity.CatatanObservasiRanap, error) {
+	// Validasi format tanggal jika perlu
+	_, err := time.Parse("2006-01-02", tgl)
+	if err != nil {
+		return nil, fmt.Errorf("format tanggal tidak valid: %v", err)
+	}
+
+	return u.Repository.FindByNoRawatAndTanggal2(noRawat, tgl)
+}
+
+func (u *CatatanObservasiRanapUseCase) UpdateByNoRawatAndTanggal(noRawat, tgl string, req *model.CatatanObservasiRanapRequest) error {
+	// Convert to entity and call repository
+	entity := entity.CatatanObservasiRanap{ /* mapping req here */ }
+	return u.Repository.UpdateByNoRawatAndTanggal(noRawat, tgl, &entity)
+}

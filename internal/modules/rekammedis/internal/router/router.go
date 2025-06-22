@@ -45,6 +45,8 @@ func RekamMedisRoute(
 	ranap.Post("/", catatanRanapController.Create)
 	ranap.Put("/:no_rawat", catatanRanapController.Update)
 	ranap.Delete("/:no_rawat", catatanRanapController.Delete)
+	ranap.Get("/:no_rawat/:tgl_perawatan", catatanRanapController.GetByRawatAndTanggal)
+	ranap.Put("/:no_rawat/:tgl_perawatan", catatanRanapController.UpdateByNoRawatAndTanggal)
 
 	// ===== Diagnosa Pasien =====
 	diagnosa := app.Group("/v1/diagnosa-pasien")

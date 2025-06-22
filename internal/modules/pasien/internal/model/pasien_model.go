@@ -23,21 +23,21 @@ type PasienRequest struct {
 	NamaKeluarga     string    `db:"namakeluarga" json:"namakeluarga"`
 	KdPJ             string    `db:"kd_pj" json:"kd_pj"`
 	NoPeserta        string    `db:"no_peserta" json:"no_peserta"`
-	KdKel            int       `db:"kd_kel" json:"kd_kel"`
-	KdKec            int       `db:"kd_kec" json:"kd_kec"`
-	KdKab            int       `db:"kd_kab" json:"kd_kab"`
+	KdKel            string    `db:"kd_kel" json:"kd_kel"`
+	KdKec            string    `db:"kd_kec" json:"kd_kec"`
+	KdKab            string    `db:"kd_kab" json:"kd_kab"`
 	PekerjaanPJ      string    `db:"pekerjaanpj" json:"pekerjaanpj"`
 	AlamatPJ         string    `db:"alamatpj" json:"alamatpj"`
 	KelurahanPJ      string    `db:"kelurahanpj" json:"kelurahanpj"`
 	KecamatanPJ      string    `db:"kecamatanpj" json:"kecamatanpj"`
 	KabupatenPJ      string    `db:"kabupatenpj" json:"kabupatenpj"`
 	PerusahaanPasien string    `db:"perusahaan_pasien" json:"perusahaan_pasien"`
-	SukuBangsa       int       `db:"suku_bangsa" json:"suku_bangsa"`
-	BahasaPasien     int       `db:"bahasa_pasien" json:"bahasa_pasien"`
-	CacatFisik       int       `db:"cacat_fisik" json:"cacat_fisik"`
+	SukuBangsa       string    `db:"suku_bangsa" json:"suku_bangsa"`
+	BahasaPasien     string    `db:"bahasa_pasien" json:"bahasa_pasien"`
+	CacatFisik       string    `db:"cacat_fisik" json:"cacat_fisik"`
 	Email            string    `db:"email" json:"email"`
 	NIP              string    `db:"nip" json:"nip"`
-	KdProp           int       `db:"kd_prop" json:"kd_prop"`
+	KdProp           string    `db:"kd_prop" json:"kd_prop"`
 	PropinsiPJ       string    `db:"propinsipj" json:"propinsipj"`
 }
 
@@ -62,21 +62,21 @@ type PasienResponse struct {
 	NamaKeluarga     string    `db:"namakeluarga" json:"namakeluarga"`
 	KdPJ             string    `db:"kd_pj" json:"kd_pj"`
 	NoPeserta        string    `db:"no_peserta" json:"no_peserta"`
-	KdKel            int       `db:"kd_kel" json:"kd_kel"`
-	KdKec            int       `db:"kd_kec" json:"kd_kec"`
-	KdKab            int       `db:"kd_kab" json:"kd_kab"`
+	KdKel            string    `db:"kd_kel" json:"kd_kel"`
+	KdKec            string    `db:"kd_kec" json:"kd_kec"`
+	KdKab            string    `db:"kd_kab" json:"kd_kab"`
 	PekerjaanPJ      string    `db:"pekerjaanpj" json:"pekerjaanpj"`
 	AlamatPJ         string    `db:"alamatpj" json:"alamatpj"`
 	KelurahanPJ      string    `db:"kelurahanpj" json:"kelurahanpj"`
 	KecamatanPJ      string    `db:"kecamatanpj" json:"kecamatanpj"`
 	KabupatenPJ      string    `db:"kabupatenpj" json:"kabupatenpj"`
 	PerusahaanPasien string    `db:"perusahaan_pasien" json:"perusahaan_pasien"`
-	SukuBangsa       int       `db:"suku_bangsa" json:"suku_bangsa"`
-	BahasaPasien     int       `db:"bahasa_pasien" json:"bahasa_pasien"`
-	CacatFisik       int       `db:"cacat_fisik" json:"cacat_fisik"`
+	SukuBangsa       string    `db:"suku_bangsa" json:"suku_bangsa"`
+	BahasaPasien     string    `db:"bahasa_pasien" json:"bahasa_pasien"`
+	CacatFisik       string    `db:"cacat_fisik" json:"cacat_fisik"`
 	Email            string    `db:"email" json:"email"`
 	NIP              string    `db:"nip" json:"nip"`
-	KdProp           int       `db:"kd_prop" json:"kd_prop"`
+	KdProp           string    `db:"kd_prop" json:"kd_prop"`
 	PropinsiPJ       string    `db:"propinsipj" json:"propinsipj"`
 }
 

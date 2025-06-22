@@ -8,6 +8,8 @@ type CatatanObservasiRanapRepository interface {
 	FindByNoRawat(noRawat string) ([]entity.CatatanObservasiRanap, error)
 	FindByTanggal(tanggal string) ([]entity.CatatanObservasiRanap, error)
 	FindByNoRawatAndTanggal(noRawat string, tanggal string) ([]entity.CatatanObservasiRanap, error)
+	FindByNoRawatAndTanggal2(noRawat, tanggal string) (*entity.CatatanObservasiRanap, error)
+	UpdateByNoRawatAndTanggal(noRawat string, tgl string, entity *entity.CatatanObservasiRanap) error
 	Update(observasi *entity.CatatanObservasiRanap) error
 	Delete(noRawat string, tglPerawatan string, jamRawat string) error
 }

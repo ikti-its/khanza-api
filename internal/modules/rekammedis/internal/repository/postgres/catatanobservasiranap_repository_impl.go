@@ -1,6 +1,10 @@
 package postgres
 
 import (
+	"database/sql"
+	"errors"
+	"fmt"
+
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
 	"github.com/jmoiron/sqlx"
@@ -67,4 +71,56 @@ func (r *catatanObservasiRanapRepositoryImpl) Delete(noRawat string, tglPerawata
 	query := `DELETE FROM catatan_observasi_ranap WHERE no_rawat = $1 AND tgl_perawatan = $2 AND jam_rawat = $3`
 	_, err := r.DB.Exec(query, noRawat, tglPerawatan, jamRawat)
 	return err
+}
+
+func (r *catatanObservasiRanapRepositoryImpl) FindByNoRawatAndTanggal2(noRawat string, tanggal string) (*entity.CatatanObservasiRanap, error) {
+	query := `
+        SELECT*
+		FROM catatan_observasi_ranap
+        WHERE no_rawat = $1 AND tgl_perawatan = $2
+        LIMIT 1
+    `
+	fmt.Println("📦 Executing query for no_rawat =", noRawat, "tgl =", tanggal)
+	var result entity.CatatanObservasiRanap
+	if err := r.DB.Get(&result, query, noRawat, tanggal); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, fmt.Errorf("catatan observasi tidak ditemukan")
+		}
+		return nil, fmt.Errorf("gagal query observasi: %v", err)
+	}
+
+	return &result, nil
+}
+
+func (r *catatanObservasiRanapRepositoryImpl) UpdateByNoRawatAndTanggal(noRawat string, tgl string, e *entity.CatatanObservasiRanap) error {
+	query := `
+		UPDATE catatan_observasi_ranap
+		SET 
+			jam_rawat = $1,
+			gcs = $2,
+			td = $3,
+			hr = $4,
+			rr = $5,
+			suhu = $6
+		WHERE no_rawat = $7 AND tgl_perawatan = $8
+	`
+
+	_, err := r.DB.Exec(
+		query,
+		e.JamRawat,
+		e.GCS,
+		e.TD,
+		e.HR,
+		e.RR,
+		e.Suhu,
+		noRawat,
+		e.TglPerawatan,
+	)
+	fmt.Println("🔧 Updating catatan_observasi for", noRawat, tgl)
+	fmt.Printf("➡️  Data: %+v\n", e)
+	if err != nil {
+		return fmt.Errorf("gagal update catatan observasi: %v", err)
+	}
+
+	return nil
 }

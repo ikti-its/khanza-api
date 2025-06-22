@@ -105,9 +105,9 @@ func (u *ResepObatUseCase) GetByNoResep(noResep string) (*model.ResepObat, error
 	return result, nil
 }
 
-func (u *ResepObatUseCase) Update(request *model.ResepObatRequest) (*model.ResepObatResponse, error) {
+func (u *ResepObatUseCase) Update(noResep string, request *model.ResepObatRequest) (*model.ResepObatResponse, error) {
 	entity := entity.ResepObat{
-		NoResep:       request.NoResep,
+		NoResep:       noResep, // Gunakan nilai dari URL, bukan dari request body
 		TglPerawatan:  request.TglPerawatan,
 		Jam:           request.Jam,
 		NoRawat:       request.NoRawat,
@@ -141,7 +141,6 @@ func (u *ResepObatUseCase) Update(request *model.ResepObatRequest) (*model.Resep
 			Validasi:      entity.Validasi,
 		},
 	}, nil
-
 }
 
 func (u *ResepObatUseCase) Delete(noResep string) error {
