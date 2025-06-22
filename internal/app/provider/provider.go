@@ -37,6 +37,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/pph21"
 	"github.com/ikti-its/khanza-api/internal/modules/lembur"
 	"github.com/ikti-its/khanza-api/internal/modules/umr"
+	"github.com/ikti-its/khanza-api/internal/modules/thr"	
 	"github.com/jmoiron/sqlx"
 )
 
@@ -82,4 +83,5 @@ func (p *Provider) Provide() {
 	pph21.Provide(p.App, p.PG, p.Validator)
 	lembur.Provide(p.App, p.PG, p.Validator)
 	umr.Provide(p.App, p.PG, p.Validator)
+	thr.Provide(p.App, p.PG, p.Validator)
 }
