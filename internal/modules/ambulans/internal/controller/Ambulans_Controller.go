@@ -23,11 +23,11 @@ func NewAmbulansController(useCase *usecase.AmbulansUseCase) *AmbulansController
 }
 
 func (c *AmbulansController) Create(ctx *fiber.Ctx) error {
-	var request model.AmbulansRequest
-	fmt.Println("Received a POST request to /ambulans") // Debug log
+	fmt.Println("✅ Received a POST request to /ambulans") // Log entry
 
+	var request model.AmbulansRequest
 	if err := ctx.BodyParser(&request); err != nil {
-		fmt.Println("Failed to parse request body:", err)
+		fmt.Println("❌ Failed to parse request body:", err)
 		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
 			Code:   fiber.StatusBadRequest,
 			Status: "Bad Request",
@@ -35,18 +35,21 @@ func (c *AmbulansController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	// 🆕 UseCase accepts context to support audit tracking
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
+		fmt.Println("❌ Error in UseCase.Create:", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
-			Status: "Error",
+			Status: "Internal Server Error",
 			Data:   err.Error(),
 		})
 	}
 
+	fmt.Println("✅ Ambulans created:", response.NoAmbulans)
 	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
 		Code:   fiber.StatusCreated,
-		Status: "OK",
+		Status: "Created",
 		Data:   response,
 	})
 }

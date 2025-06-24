@@ -1,8 +1,13 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans/internal/entity"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type AmbulansRepository interface {
@@ -16,6 +21,7 @@ type AmbulansRepository interface {
 	FindPendingRequests() ([]entity.Ambulans, error)
 	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
 	SetPending(noAmbulans string) error
+	InsertWithContext(c *fiber.Ctx, ambulans *entity.Ambulans) error
 }
 
 type ambulansRepositoryImpl struct {
@@ -24,6 +30,52 @@ type ambulansRepositoryImpl struct {
 
 func NewAmbulansRepository(db *sqlx.DB) AmbulansRepository {
 	return &ambulansRepositoryImpl{DB: db}
+}
+
+func (r *ambulansRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	// ✅ Escape userID safely for SQL string context
+	safeUserID := pq.QuoteLiteral(userID) // e.g., turns abc'def -> 'abc''def'
+
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	}
+	return err
+}
+
+func (r *ambulansRepositoryImpl) InsertWithContext(c *fiber.Ctx, ambulans *entity.Ambulans) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `
+		INSERT INTO sik.ambulans (
+			no_ambulans, status, supir
+		) VALUES (
+			$1, $2, $3
+		)
+	`
+	_, err = tx.Exec(query, ambulans.NoAmbulans, ambulans.Status, ambulans.Supir)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *ambulansRepositoryImpl) Insert(ambulans *entity.Ambulans) error {
@@ -94,6 +146,26 @@ func (r *ambulansRepositoryImpl) FindPendingRequests() ([]entity.Ambulans, error
 	var records []entity.Ambulans
 	err := r.DB.Select(&records, query)
 	return records, err
+}
+
+func (r *ambulansRepositoryImpl) UpdateAmbulansStatusWithContext(c *fiber.Ctx, noAmbulans string, newStatus string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `UPDATE ambulans SET status = $1 WHERE no_ambulans = $2`
+	_, err = tx.Exec(query, newStatus, noAmbulans)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *ambulansRepositoryImpl) UpdateAmbulansStatus(noAmbulans string, newStatus string) error {

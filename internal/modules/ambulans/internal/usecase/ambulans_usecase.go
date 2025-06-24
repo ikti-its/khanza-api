@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans/internal/repository"
@@ -17,14 +18,15 @@ func NewAmbulansUseCase(repo repository.AmbulansRepository) *AmbulansUseCase {
 }
 
 // Create a new ambulans entry
-func (u *AmbulansUseCase) Create(request *model.AmbulansRequest) (model.AmbulansResponse, error) {
+func (u *AmbulansUseCase) Create(ctx *fiber.Ctx, request *model.AmbulansRequest) (model.AmbulansResponse, error) {
 	ambulansEntity := entity.Ambulans{
 		NoAmbulans: request.NoAmbulans,
 		Status:     request.Status,
 		Supir:      request.Supir,
 	}
 
-	err := u.Repository.Insert(&ambulansEntity)
+	// 🆕 Use repository method that accepts Fiber context for audit tracking
+	err := u.Repository.InsertWithContext(ctx, &ambulansEntity)
 	if err != nil {
 		return model.AmbulansResponse{}, fmt.Errorf("failed to create ambulans: %v", err)
 	}

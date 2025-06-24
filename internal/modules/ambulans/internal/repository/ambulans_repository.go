@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans/internal/entity"
 )
 
@@ -14,4 +15,5 @@ type AmbulansRepository interface {
 	FindPendingRequests() ([]entity.Ambulans, error)
 	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
 	SetPending(noAmbulans string) error
+	InsertWithContext(c *fiber.Ctx, ambulans *entity.Ambulans) error
 }
