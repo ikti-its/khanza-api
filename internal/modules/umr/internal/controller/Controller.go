@@ -66,8 +66,8 @@ func (c *Controller) GetAll(ctx *fiber.Ctx) error {
 }
 
 func (c *Controller) GetById(ctx *fiber.Ctx) error {
-	nomorBed := ctx.Params("no_umr")
-	response, err := c.UseCase.GetById(nomorBed)
+	id := ctx.Params("id")
+	response, err := c.UseCase.GetById(id)
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
 			Code:   fiber.StatusNotFound,
@@ -83,7 +83,7 @@ func (c *Controller) GetById(ctx *fiber.Ctx) error {
 }
 
 func (c *Controller) Update(ctx *fiber.Ctx) error {
-	id := ctx.Params("no_umr")
+	id := ctx.Params("id")
 	var request model.Request
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -106,7 +106,7 @@ func (c *Controller) Update(ctx *fiber.Ctx) error {
 }
 
 func (c *Controller) Delete(ctx *fiber.Ctx) error {
-	id := ctx.Params("no_umr")
+	id := ctx.Params("id")
 	err := c.UseCase.Delete(id)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
