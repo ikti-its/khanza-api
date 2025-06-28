@@ -286,3 +286,27 @@ func (c *RegistrasiController) GetByNoRawat(ctx *fiber.Ctx) error {
 		"data":   result,
 	})
 }
+
+func (c *RegistrasiController) GetRegistrasi(ctx *fiber.Ctx) error {
+	data, err := c.UseCase.GetAll()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":   500,
+			"status": "Internal Server Error",
+			"data":   err.Error(),
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"code":   200,
+		"status": "success",
+		"data":   data,
+		"meta_data": fiber.Map{
+			"page":  1,
+			"size":  len(data),
+			"total": len(data),
+		},
+	})
+}
+
+

@@ -41,6 +41,8 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/pesangon"	
 	"github.com/ikti-its/khanza-api/internal/modules/upmk"		
 	"github.com/jmoiron/sqlx"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien"
+
 )
 
 type Provider struct {
@@ -88,4 +90,6 @@ func (p *Provider) Provide() {
 	thr.Provide(p.App, p.PG, p.Validator)
 	pesangon.Provide(p.App, p.PG, p.Validator)
 	upmk.Provide(p.App, p.PG, p.Validator)
+	masterpasien.ProvideMasterPasien(p.App, p.PG, p.Validator)
+
 }
