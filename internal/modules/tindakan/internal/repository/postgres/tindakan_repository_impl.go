@@ -6,18 +6,20 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type TindakanRepository interface {
-	Insert(t *entity.Tindakan) error
+	Insert(c *fiber.Ctx, t *entity.Tindakan) error
 	FindAll() ([]entity.Tindakan, error)
 	FindByNomorRawat(nomorRawat string) ([]entity.Tindakan, error)
-	Update(t *entity.Tindakan) error
-	Delete(nomorRawat string, jamRawat string) error
+	Update(c *fiber.Ctx, t *entity.Tindakan) error
+	Delete(c *fiber.Ctx, nomorRawat, jamRawat string) error
 	CheckDokterExists(kodeDokter string) (bool, error)
 	GetAllJenisTindakan() ([]entity.JenisTindakan, error)
 	FindByNomorRawatAndJamRawat(nomorRawat, jamRawat string) (*entity.Tindakan, error)
@@ -31,7 +33,35 @@ func NewTindakanRepository(db *sqlx.DB) repository.TindakanRepository {
 	return &tindakanRepositoryImpl{DB: db}
 }
 
-func (r *tindakanRepositoryImpl) Insert(t *entity.Tindakan) error {
+func (r *tindakanRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID)
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	}
+	return err
+}
+
+func (r *tindakanRepositoryImpl) Insert(c *fiber.Ctx, t *entity.Tindakan) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO tindakan (
 			nomor_rawat, nomor_rm, nama_pasien, tindakan, kode_dokter, nama_dokter,
@@ -41,11 +71,15 @@ func (r *tindakanRepositoryImpl) Insert(t *entity.Tindakan) error {
 			$7, $8, $9, $10, $11
 		)
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		t.NomorRawat, t.NomorRM, t.NamaPasien, t.Tindakan, t.KodeDokter, t.NamaDokter,
 		t.NIP, t.NamaPetugas, t.TanggalRawat, t.JamRawat, t.Biaya,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *tindakanRepositoryImpl) FindAll() ([]entity.Tindakan, error) {
@@ -62,7 +96,17 @@ func (r *tindakanRepositoryImpl) FindByNomorRawat(nomorRawat string) ([]entity.T
 	return list, err
 }
 
-func (r *tindakanRepositoryImpl) Update(t *entity.Tindakan) error {
+func (r *tindakanRepositoryImpl) Update(c *fiber.Ctx, t *entity.Tindakan) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE tindakan SET 
 			nama_pasien = :nama_pasien,
@@ -76,17 +120,32 @@ func (r *tindakanRepositoryImpl) Update(t *entity.Tindakan) error {
 			biaya = :biaya
 		WHERE nomor_rawat = :nomor_rawat AND jam_rawat = :jam_rawat
 	`
-	_, err := r.DB.NamedExec(query, t)
+	_, err = tx.NamedExec(query, t)
 	if err != nil {
 		return fmt.Errorf("failed to update tindakan: %v", err)
 	}
-	return nil
+
+	return tx.Commit()
 }
 
-func (r *tindakanRepositoryImpl) Delete(nomorRawat, jamRawat string) error {
+func (r *tindakanRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat, jamRawat string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM tindakan WHERE nomor_rawat = $1 AND jam_rawat = $2`
-	_, err := r.DB.Exec(query, nomorRawat, jamRawat)
-	return err
+	_, err = tx.Exec(query, nomorRawat, jamRawat)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *tindakanRepositoryImpl) CheckDokterExists(kodeDokter string) (bool, error) {

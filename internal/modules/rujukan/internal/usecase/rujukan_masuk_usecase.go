@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/repository"
@@ -18,7 +19,7 @@ func NewRujukanMasukUseCase(repo repository.RujukanMasukRepository) *RujukanMasu
 }
 
 // Create a new RujukanMasuk entry
-func (u *RujukanMasukUseCase) Create(request *model.RujukanMasukRequest) (model.RujukanMasukResponse, error) {
+func (u *RujukanMasukUseCase) Create(c *fiber.Ctx, request *model.RujukanMasukRequest) (model.RujukanMasukResponse, error) {
 	tanggalMasuk, err := time.Parse("2006-01-02", request.TanggalMasuk)
 	if err != nil {
 		return model.RujukanMasukResponse{}, fmt.Errorf("invalid tanggal_masuk format: %v", err)
@@ -47,7 +48,7 @@ func (u *RujukanMasukUseCase) Create(request *model.RujukanMasukRequest) (model.
 		DiagnosaAwal:  request.DiagnosaAwal,
 	}
 
-	if err := u.Repository.Insert(&entityData); err != nil {
+	if err := u.Repository.Insert(c, &entityData); err != nil {
 		return model.RujukanMasukResponse{}, fmt.Errorf("failed to insert: %v", err)
 	}
 
@@ -133,7 +134,7 @@ func (u *RujukanMasukUseCase) GetByNomorRawat(nomorRawat string) (model.RujukanM
 }
 
 // Update by nomor_rawat
-func (u *RujukanMasukUseCase) Update(nomorRawat string, request *model.RujukanMasukRequest) (model.RujukanMasukResponse, error) {
+func (u *RujukanMasukUseCase) Update(c *fiber.Ctx, nomorRawat string, request *model.RujukanMasukRequest) (model.RujukanMasukResponse, error) {
 	r, err := u.Repository.FindByNomorRawat(nomorRawat)
 	if err != nil {
 		return model.RujukanMasukResponse{}, fmt.Errorf("data not found")
@@ -163,7 +164,7 @@ func (u *RujukanMasukUseCase) Update(nomorRawat string, request *model.RujukanMa
 		r.TanggalKeluar = nil
 	}
 
-	if err := u.Repository.Update(&r); err != nil {
+	if err := u.Repository.Update(c, &r); err != nil {
 		return model.RujukanMasukResponse{}, fmt.Errorf("failed to update")
 	}
 
@@ -171,6 +172,6 @@ func (u *RujukanMasukUseCase) Update(nomorRawat string, request *model.RujukanMa
 }
 
 // Delete by nomor_rawat
-func (u *RujukanMasukUseCase) Delete(nomorRawat string) error {
-	return u.Repository.Delete(nomorRawat)
+func (u *RujukanMasukUseCase) Delete(c *fiber.Ctx, nomorRawat string) error {
+	return u.Repository.Delete(c, nomorRawat)
 }

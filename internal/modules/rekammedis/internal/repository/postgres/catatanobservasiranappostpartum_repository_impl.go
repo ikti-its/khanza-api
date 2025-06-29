@@ -1,9 +1,14 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type catatanObservasiRanapPostpartumRepositoryImpl struct {
@@ -14,7 +19,35 @@ func NewCatatanObservasiRanapPostpartumRepository(db *sqlx.DB) repository.Catata
 	return &catatanObservasiRanapPostpartumRepositoryImpl{DB: db}
 }
 
-func (r *catatanObservasiRanapPostpartumRepositoryImpl) Insert(data *entity.CatatanObservasiRanapPostpartum) error {
+func (r *catatanObservasiRanapPostpartumRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID)
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	if _, err := tx.Exec(query); err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+		return err
+	}
+	return nil
+}
+
+func (r *catatanObservasiRanapPostpartumRepositoryImpl) Insert(c *fiber.Ctx, data *entity.CatatanObservasiRanapPostpartum) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO catatan_observasi_ranap_postpartum (
 			no_rawat, tgl_perawatan, jam_rawat, gcs, td, hr, rr, suhu,
@@ -24,8 +57,12 @@ func (r *catatanObservasiRanapPostpartumRepositoryImpl) Insert(data *entity.Cata
 			:spo2, :tfu, :kontraksi, :perdarahan, :keterangan, :nip
 		)
 	`
-	_, err := r.DB.NamedExec(query, data)
-	return err
+	_, err = tx.NamedExec(query, data)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *catatanObservasiRanapPostpartumRepositoryImpl) FindAll() ([]entity.CatatanObservasiRanapPostpartum, error) {
@@ -56,7 +93,17 @@ func (r *catatanObservasiRanapPostpartumRepositoryImpl) FindByNoRawatAndTanggal(
 	return list, err
 }
 
-func (r *catatanObservasiRanapPostpartumRepositoryImpl) Update(data *entity.CatatanObservasiRanapPostpartum) error {
+func (r *catatanObservasiRanapPostpartumRepositoryImpl) Update(c *fiber.Ctx, data *entity.CatatanObservasiRanapPostpartum) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE catatan_observasi_ranap_postpartum SET
 			gcs = :gcs, td = :td, hr = :hr, rr = :rr, suhu = :suhu,
@@ -64,12 +111,30 @@ func (r *catatanObservasiRanapPostpartumRepositoryImpl) Update(data *entity.Cata
 			perdarahan = :perdarahan, keterangan = :keterangan, nip = :nip
 		WHERE no_rawat = :no_rawat AND tgl_perawatan = :tgl_perawatan AND jam_rawat = :jam_rawat
 	`
-	_, err := r.DB.NamedExec(query, data)
-	return err
+	_, err = tx.NamedExec(query, data)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *catatanObservasiRanapPostpartumRepositoryImpl) Delete(noRawat string, tglPerawatan string, jamRawat string) error {
+func (r *catatanObservasiRanapPostpartumRepositoryImpl) Delete(c *fiber.Ctx, noRawat string, tglPerawatan string, jamRawat string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM catatan_observasi_ranap_postpartum WHERE no_rawat = $1 AND tgl_perawatan = $2 AND jam_rawat = $3`
-	_, err := r.DB.Exec(query, noRawat, tglPerawatan, jamRawat)
-	return err
+	_, err = tx.Exec(query, noRawat, tglPerawatan, jamRawat)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

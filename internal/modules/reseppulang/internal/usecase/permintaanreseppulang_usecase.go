@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/repository"
@@ -17,7 +18,7 @@ func NewPermintaanResepPulangUseCase(repo repository.PermintaanResepPulangReposi
 	return &PermintaanResepPulangUseCase{Repository: repo}
 }
 
-func (u *PermintaanResepPulangUseCase) Create(requests []*model.PermintaanResepPulangRequest) ([]model.PermintaanResepPulangResponse, error) {
+func (u *PermintaanResepPulangUseCase) Create(c *fiber.Ctx, requests []*model.PermintaanResepPulangRequest) ([]model.PermintaanResepPulangResponse, error) {
 	var responses []model.PermintaanResepPulangResponse
 
 	for _, req := range requests {
@@ -61,7 +62,7 @@ func (u *PermintaanResepPulangUseCase) Create(requests []*model.PermintaanResepP
 		}
 
 		// Insert ke DB
-		if err := u.Repository.InsertMany([]*entity.PermintaanResepPulang{&data}); err != nil {
+		if err := u.Repository.InsertMany(c, []*entity.PermintaanResepPulang{&data}); err != nil {
 			return nil, fmt.Errorf("failed to insert permintaan resep pulang: %v", err)
 		}
 
@@ -156,7 +157,7 @@ func (u *PermintaanResepPulangUseCase) GetByNoPermintaan(noPermintaan string) (m
 	}, nil
 }
 
-func (u *PermintaanResepPulangUseCase) Update(noPermintaan string, request *model.PermintaanResepPulangRequest) (model.PermintaanResepPulangResponse, error) {
+func (u *PermintaanResepPulangUseCase) Update(c *fiber.Ctx, noPermintaan string, request *model.PermintaanResepPulangRequest) (model.PermintaanResepPulangResponse, error) {
 	data, err := u.Repository.FindByNoPermintaan(noPermintaan)
 	if err != nil {
 		return model.PermintaanResepPulangResponse{}, fmt.Errorf("data not found")
@@ -191,7 +192,7 @@ func (u *PermintaanResepPulangUseCase) Update(noPermintaan string, request *mode
 	data.TglValidasi = tglValidasi
 	data.JamValidasi = jamValidasi
 
-	if err := u.Repository.Update(data); err != nil {
+	if err := u.Repository.Update(c, data); err != nil {
 		return model.PermintaanResepPulangResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
@@ -210,8 +211,8 @@ func (u *PermintaanResepPulangUseCase) Update(noPermintaan string, request *mode
 	}, nil
 }
 
-func (u *PermintaanResepPulangUseCase) Delete(noPermintaan string) error {
-	return u.Repository.Delete(noPermintaan)
+func (u *PermintaanResepPulangUseCase) Delete(c *fiber.Ctx, noPermintaan string) error {
+	return u.Repository.Delete(c, noPermintaan)
 }
 
 // Utilities
@@ -227,7 +228,7 @@ func generateNoPermintaan() string {
 	return fmt.Sprintf("PRP%s", time.Now().Format("20060102150405"))
 }
 
-func (u *PermintaanResepPulangUseCase) UpdateStatus(noPermintaan string, status string) (model.PermintaanResepPulangResponse, error) {
+func (u *PermintaanResepPulangUseCase) UpdateStatus(c *fiber.Ctx, noPermintaan string, status string) (model.PermintaanResepPulangResponse, error) {
 	fmt.Println("🚀 [DEBUG] UpdateStatus UseCase. no_permintaan:", noPermintaan)
 
 	data, err := u.Repository.FindByNoPermintaan(noPermintaan)
@@ -243,7 +244,7 @@ func (u *PermintaanResepPulangUseCase) UpdateStatus(noPermintaan string, status 
 	// Update status
 	data.Status = status
 
-	if err := u.Repository.Update(data); err != nil {
+	if err := u.Repository.Update(c, data); err != nil {
 		return model.PermintaanResepPulangResponse{}, fmt.Errorf("failed to update status: %w", err)
 	}
 

@@ -1,9 +1,14 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type pemberianObatRepositoryImpl struct {
@@ -14,7 +19,37 @@ func NewPemberianObatRepository(db *sqlx.DB) repository.PemberianObatRepository 
 	return &pemberianObatRepositoryImpl{DB: db}
 }
 
-func (r *pemberianObatRepositoryImpl) Insert(p *entity.PemberianObat) error {
+func (r *pemberianObatRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	// ✅ Safely quote the user_id for SQL
+	safeUserID := pq.QuoteLiteral(userID) // e.g., abc'def → 'abc''def'
+
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	}
+	return err
+}
+
+func (r *pemberianObatRepositoryImpl) Insert(c *fiber.Ctx, p *entity.PemberianObat) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO pemberian_obat (
 			tanggal_beri, jam_beri, nomor_rawat, nama_pasien, kode_obat, 
@@ -26,12 +61,16 @@ func (r *pemberianObatRepositoryImpl) Insert(p *entity.PemberianObat) error {
 			$12, $13, $14, $15
 		)
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		p.TanggalBeri, p.JamBeri, p.NomorRawat, p.NamaPasien, p.KodeObat,
 		p.NamaObat, p.Embalase, p.Tuslah, p.Jumlah, p.BiayaObat, p.Total,
 		p.Gudang, p.NoBatch, p.NoFaktur, p.Kelas,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *pemberianObatRepositoryImpl) FindAll() ([]entity.PemberianObat, error) {
@@ -48,7 +87,17 @@ func (r *pemberianObatRepositoryImpl) FindByNomorRawat(nomorRawat string) ([]ent
 	return list, err
 }
 
-func (r *pemberianObatRepositoryImpl) Update(p *entity.PemberianObat) error {
+func (r *pemberianObatRepositoryImpl) Update(c *fiber.Ctx, p *entity.PemberianObat) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE pemberian_obat SET 
 			nama_pasien = $4, kode_obat = $5, nama_obat = $6, embalase = $7,
@@ -56,18 +105,36 @@ func (r *pemberianObatRepositoryImpl) Update(p *entity.PemberianObat) error {
 			gudang = $12, no_batch = $13, no_faktur = $14, kelas = $15
 		WHERE nomor_rawat = $3 AND tanggal_beri = $1 AND jam_beri = $2
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		p.TanggalBeri, p.JamBeri, p.NomorRawat, p.NamaPasien, p.KodeObat,
 		p.NamaObat, p.Embalase, p.Tuslah, p.Jumlah, p.BiayaObat, p.Total,
 		p.Gudang, p.NoBatch, p.NoFaktur, p.Kelas,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *pemberianObatRepositoryImpl) Delete(nomorRawat, jamBeri string) error {
+func (r *pemberianObatRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat, jamBeri string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM pemberian_obat WHERE nomor_rawat = $1 AND jam_beri = $2`
-	_, err := r.DB.Exec(query, nomorRawat, jamBeri)
-	return err
+	_, err = tx.Exec(query, nomorRawat, jamBeri)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *pemberianObatRepositoryImpl) GetAllDataBarang() ([]entity.DataBarang, error) {

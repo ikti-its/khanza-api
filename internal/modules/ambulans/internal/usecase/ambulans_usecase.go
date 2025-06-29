@@ -71,8 +71,8 @@ func (u *AmbulansUseCase) GetByNoAmbulans(noAmbulans string) (model.AmbulansResp
 	}, nil
 }
 
-// Update an existing ambulans record
-func (u *AmbulansUseCase) Update(noAmbulans string, request *model.AmbulansRequest) (model.AmbulansResponse, error) {
+// Update ambulans dengan audit context
+func (u *AmbulansUseCase) Update(c *fiber.Ctx, noAmbulans string, request *model.AmbulansRequest) (model.AmbulansResponse, error) {
 	ambulans, err := u.Repository.FindByNoAmbulans(noAmbulans)
 	if err != nil {
 		return model.AmbulansResponse{}, fmt.Errorf("ambulans not found")
@@ -81,7 +81,7 @@ func (u *AmbulansUseCase) Update(noAmbulans string, request *model.AmbulansReque
 	ambulans.Status = request.Status
 	ambulans.Supir = request.Supir
 
-	err = u.Repository.Update(&ambulans)
+	err = u.Repository.Update(c, &ambulans)
 	if err != nil {
 		return model.AmbulansResponse{}, fmt.Errorf("failed to update ambulans: %v", err)
 	}
@@ -93,9 +93,9 @@ func (u *AmbulansUseCase) Update(noAmbulans string, request *model.AmbulansReque
 	}, nil
 }
 
-// Delete an ambulans record by NoAmbulans
-func (u *AmbulansUseCase) Delete(noAmbulans string) error {
-	err := u.Repository.Delete(noAmbulans)
+// Delete ambulans dengan audit context
+func (u *AmbulansUseCase) Delete(c *fiber.Ctx, noAmbulans string) error {
+	err := u.Repository.Delete(c, noAmbulans)
 	if err != nil {
 		return fmt.Errorf("failed to delete ambulans: %v", err)
 	}

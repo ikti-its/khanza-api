@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/repository"
@@ -46,7 +47,7 @@ func NewPemberianObatUseCase(repo repository.PemberianObatRepository) *Pemberian
 	return &PemberianObatUseCase{Repository: repo}
 }
 
-func (u *PemberianObatUseCase) Create(request *model.PemberianObatRequest) (model.PemberianObatResponse, error) {
+func (u *PemberianObatUseCase) Create(c *fiber.Ctx, request *model.PemberianObatRequest) (model.PemberianObatResponse, error) {
 	tgl, err := time.Parse("2006-01-02", request.TanggalBeri)
 	if err != nil {
 		return model.PemberianObatResponse{}, fmt.Errorf("invalid tanggal_beri format: %v", err)
@@ -73,7 +74,7 @@ func (u *PemberianObatUseCase) Create(request *model.PemberianObatRequest) (mode
 		NoFaktur:    ptrStr(request.NoFaktur),
 	}
 
-	if err := u.Repository.Insert(&obat); err != nil {
+	if err := u.Repository.Insert(c, &obat); err != nil {
 		return model.PemberianObatResponse{}, fmt.Errorf("failed to insert pemberian obat: %v", err)
 	}
 
@@ -153,7 +154,7 @@ func (u *PemberianObatUseCase) GetByNomorRawat(nomorRawat string) ([]model.Pembe
 	return result, nil
 }
 
-func (u *PemberianObatUseCase) Update(nomorRawat string, request *model.PemberianObatRequest) (model.PemberianObatResponse, error) {
+func (u *PemberianObatUseCase) Update(c *fiber.Ctx, nomorRawat string, request *model.PemberianObatRequest) (model.PemberianObatResponse, error) {
 	records, err := u.Repository.FindByNomorRawat(nomorRawat)
 	if err != nil || len(records) == 0 {
 		return model.PemberianObatResponse{}, fmt.Errorf("data not found")
@@ -183,7 +184,7 @@ func (u *PemberianObatUseCase) Update(nomorRawat string, request *model.Pemberia
 	existing.TanggalBeri = tgl
 	existing.JamBeri = jam
 
-	if err := u.Repository.Update(existing); err != nil {
+	if err := u.Repository.Update(c, existing); err != nil {
 		return model.PemberianObatResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
@@ -205,8 +206,8 @@ func (u *PemberianObatUseCase) Update(nomorRawat string, request *model.Pemberia
 	}, nil
 }
 
-func (u *PemberianObatUseCase) Delete(nomorRawat string, jamBeri string) error {
-	return u.Repository.Delete(nomorRawat, jamBeri)
+func (u *PemberianObatUseCase) Delete(c *fiber.Ctx, nomorRawat string, jamBeri string) error {
+	return u.Repository.Delete(c, nomorRawat, jamBeri)
 }
 
 func (u *PemberianObatUseCase) GetAllDataBarang() ([]entity.DataBarang, error) {

@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/model"
@@ -18,7 +19,7 @@ func NewGudangBarangUseCase(repo repository.GudangBarangRepository) *GudangBaran
 }
 
 // Create a new gudang barang entry
-func (u *GudangBarangUseCase) Create(request *model.GudangBarangRequest) (model.GudangBarangResponse, error) {
+func (u *GudangBarangUseCase) Create(c *fiber.Ctx, request *model.GudangBarangRequest) (model.GudangBarangResponse, error) {
 	newID := uuid.New()
 
 	entity := &entity.GudangBarang{
@@ -30,7 +31,7 @@ func (u *GudangBarangUseCase) Create(request *model.GudangBarangRequest) (model.
 		NoFaktur:      request.NoFaktur,
 	}
 
-	if err := u.Repo.Insert(entity); err != nil {
+	if err := u.Repo.Insert(c, entity); err != nil {
 		return model.GudangBarangResponse{}, fmt.Errorf("failed to insert gudang barang: %w", err)
 	}
 
@@ -80,7 +81,7 @@ func (u *GudangBarangUseCase) GetByID(id string) (model.GudangBarangResponse, er
 	}, nil
 }
 
-func (u *GudangBarangUseCase) Update(id string, request *model.GudangBarangRequest) (model.GudangBarangResponse, error) {
+func (u *GudangBarangUseCase) Update(c *fiber.Ctx, id string, request *model.GudangBarangRequest) (model.GudangBarangResponse, error) {
 	entity := &entity.GudangBarang{
 		ID:            uuid.MustParse(id),
 		IDBarangMedis: request.IDBarangMedis,
@@ -90,7 +91,7 @@ func (u *GudangBarangUseCase) Update(id string, request *model.GudangBarangReque
 		NoFaktur:      request.NoFaktur,
 	}
 
-	if err := u.Repo.Update(entity); err != nil {
+	if err := u.Repo.Update(c, entity); err != nil {
 		return model.GudangBarangResponse{}, err
 	}
 
@@ -104,6 +105,6 @@ func (u *GudangBarangUseCase) Update(id string, request *model.GudangBarangReque
 	}, nil
 }
 
-func (u *GudangBarangUseCase) Delete(id string) error {
-	return u.Repo.Delete(id)
+func (u *GudangBarangUseCase) Delete(c *fiber.Ctx, id string) error {
+	return u.Repo.Delete(c, id)
 }

@@ -36,7 +36,7 @@ func (c *PermintaanResepPulangController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	responses, err := c.UseCase.Create(requests)
+	responses, err := c.UseCase.Create(ctx, requests)
 	if err != nil {
 		fmt.Println("❌ Error in usecase.Create():", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -115,7 +115,7 @@ func (c *PermintaanResepPulangController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(noPermintaan, &request)
+	response, err := c.UseCase.Update(ctx, noPermintaan, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -141,7 +141,7 @@ func (c *PermintaanResepPulangController) Delete(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.Delete(noPermintaan)
+	err := c.UseCase.Delete(ctx, noPermintaan)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -172,7 +172,7 @@ func (c *PermintaanResepPulangController) UpdateStatus(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.UpdateStatus(noPermintaan, request.Status)
+	response, err := c.UseCase.UpdateStatus(ctx, noPermintaan, request.Status)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":   500,

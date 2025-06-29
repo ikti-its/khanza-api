@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/tindakan/internal/repository"
@@ -46,7 +47,7 @@ func NewTindakanUseCase(repo repository.TindakanRepository) *TindakanUseCase {
 }
 
 // Create a new tindakan entry
-func (u *TindakanUseCase) Create(request *model.TindakanRequest) (model.TindakanResponse, error) {
+func (u *TindakanUseCase) Create(c *fiber.Ctx, request *model.TindakanRequest) (model.TindakanResponse, error) {
 	exists, err := u.Repository.CheckDokterExists(request.KodeDokter)
 	if err != nil {
 		return model.TindakanResponse{}, fmt.Errorf("database error: %v", err)
@@ -78,7 +79,7 @@ func (u *TindakanUseCase) Create(request *model.TindakanRequest) (model.Tindakan
 		Biaya:        ptrInt(int64(request.Biaya)),
 	}
 
-	err = u.Repository.Insert(&tindakan)
+	err = u.Repository.Insert(c, &tindakan)
 	if err != nil {
 		return model.TindakanResponse{}, fmt.Errorf("failed to insert tindakan: %v", err)
 	}
@@ -149,7 +150,7 @@ func (u *TindakanUseCase) GetByNomorRawat(nomorRawat string) ([]model.TindakanRe
 	return result, nil
 }
 
-func (u *TindakanUseCase) Update(nomorRawat string, jamRawat string, request *model.TindakanRequest) (model.TindakanResponse, error) {
+func (u *TindakanUseCase) Update(c *fiber.Ctx, nomorRawat string, jamRawat string, request *model.TindakanRequest) (model.TindakanResponse, error) {
 	// Fetch the exact tindakan record using composite key
 	existing, err := u.Repository.FindByNomorRawatAndJamRawat(nomorRawat, jamRawat)
 	if err != nil {
@@ -178,7 +179,7 @@ func (u *TindakanUseCase) Update(nomorRawat string, jamRawat string, request *mo
 	existing.Biaya = ptrInt(int64(request.Biaya))
 
 	// Persist the update
-	err = u.Repository.Update(existing)
+	err = u.Repository.Update(c, existing)
 	if err != nil {
 		return model.TindakanResponse{}, fmt.Errorf("update failed: %v", err)
 	}
@@ -200,8 +201,8 @@ func (u *TindakanUseCase) Update(nomorRawat string, jamRawat string, request *mo
 }
 
 // Delete tindakan
-func (u *TindakanUseCase) Delete(nomorRawat, jamRawat string) error {
-	return u.Repository.Delete(nomorRawat, jamRawat)
+func (u *TindakanUseCase) Delete(c *fiber.Ctx, nomorRawat, jamRawat string) error {
+	return u.Repository.Delete(c, nomorRawat, jamRawat)
 }
 
 func (u *TindakanUseCase) GetAllJenisTindakan() ([]entity.JenisTindakan, error) {

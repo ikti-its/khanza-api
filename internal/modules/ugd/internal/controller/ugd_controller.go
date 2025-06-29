@@ -33,7 +33,7 @@ func (c *UGDController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -91,7 +91,7 @@ func (c *UGDController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(nomorReg, &request)
+	response, err := c.UseCase.Update(ctx, nomorReg, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -108,7 +108,7 @@ func (c *UGDController) Update(ctx *fiber.Ctx) error {
 
 func (c *UGDController) Delete(ctx *fiber.Ctx) error {
 	nomorReg := ctx.Params("nomor_reg")
-	err := c.UseCase.Delete(nomorReg)
+	err := c.UseCase.Delete(ctx, nomorReg)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

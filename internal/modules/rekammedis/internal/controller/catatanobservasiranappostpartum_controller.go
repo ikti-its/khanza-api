@@ -29,7 +29,7 @@ func (c *CatatanObservasiRanapPostpartumController) Create(ctx *fiber.Ctx) error
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -110,7 +110,7 @@ func (c *CatatanObservasiRanapPostpartumController) Update(ctx *fiber.Ctx) error
 	// Set no_rawat from route param
 	request.NoRawat = noRawat
 
-	if err := c.UseCase.Update(&request); err != nil {
+	if err := c.UseCase.Update(ctx, &request); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
 			Status: "Error",
@@ -138,7 +138,7 @@ func (c *CatatanObservasiRanapPostpartumController) Delete(ctx *fiber.Ctx) error
 		})
 	}
 
-	err := c.UseCase.Delete(noRawat, tanggal, jam)
+	err := c.UseCase.Delete(ctx, noRawat, tanggal, jam)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

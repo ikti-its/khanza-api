@@ -32,7 +32,7 @@ func (c *ResepObatController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		fmt.Println("❌ Error in usecase.Create():", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -103,7 +103,7 @@ func (c *ResepObatController) Update(ctx *fiber.Ctx) error {
 		})
 	}
 
-	result, err := c.UseCase.Update(noResep, &request)
+	result, err := c.UseCase.Update(ctx, noResep, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":    500,
@@ -126,7 +126,7 @@ func (c *ResepObatController) Delete(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.Delete(noResep)
+	err := c.UseCase.Delete(ctx, noResep)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":   500,

@@ -1,18 +1,23 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/entity"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type RujukanKeluarRepository interface {
-	Insert(rujukan *entity.RujukanKeluar) error
+	Insert(c *fiber.Ctx, rujukan *entity.RujukanKeluar) error
 	FindAll() ([]entity.RujukanKeluar, error)
 	FindByNomorRawat(nomorRawat string) (entity.RujukanKeluar, error)
 	FindByNomorRM(nomorRM string) ([]entity.RujukanKeluar, error)
 	FindByTanggalRujuk(tanggal string) ([]entity.RujukanKeluar, error)
-	Update(rujukan *entity.RujukanKeluar) error
-	Delete(nomorRawat string) error
+	Update(c *fiber.Ctx, rujukan *entity.RujukanKeluar) error
+	Delete(c *fiber.Ctx, nomorRawat string) error
 }
 
 type rujukanKeluarRepositoryImpl struct {
@@ -23,7 +28,38 @@ func NewRujukanKeluarRepository(db *sqlx.DB) RujukanKeluarRepository {
 	return &rujukanKeluarRepositoryImpl{DB: db}
 }
 
-func (r *rujukanKeluarRepositoryImpl) Insert(rujukan *entity.RujukanKeluar) error {
+func (r *rujukanKeluarRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	// ✅ Escape userID safely for SQL
+	safeUserID := pq.QuoteLiteral(userID) // e.g., abc'def → 'abc''def'
+
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	if _, err := tx.Exec(query); err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+		return err
+	}
+
+	return nil
+}
+
+func (r *rujukanKeluarRepositoryImpl) Insert(c *fiber.Ctx, rujukan *entity.RujukanKeluar) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO rujukan_keluar (
 			nomor_rujuk, nomor_rawat, nomor_rm, nama_pasien,
@@ -37,13 +73,17 @@ func (r *rujukanKeluarRepositoryImpl) Insert(rujukan *entity.RujukanKeluar) erro
 			$11, $12
 		)
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		rujukan.NomorRujuk, rujukan.NomorRawat, rujukan.NomorRM, rujukan.NamaPasien,
 		rujukan.TempatRujuk, rujukan.TanggalRujuk, rujukan.JamRujuk,
 		rujukan.KeteranganDiagnosa, rujukan.DokterPerujuk, rujukan.KategoriRujuk,
 		rujukan.Pengantaran, rujukan.Keterangan,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *rujukanKeluarRepositoryImpl) FindAll() ([]entity.RujukanKeluar, error) {
@@ -74,7 +114,17 @@ func (r *rujukanKeluarRepositoryImpl) FindByTanggalRujuk(tanggal string) ([]enti
 	return records, err
 }
 
-func (r *rujukanKeluarRepositoryImpl) Update(rujukan *entity.RujukanKeluar) error {
+func (r *rujukanKeluarRepositoryImpl) Update(c *fiber.Ctx, rujukan *entity.RujukanKeluar) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE rujukan_keluar SET 
 			nomor_rujuk = $1,
@@ -90,17 +140,35 @@ func (r *rujukanKeluarRepositoryImpl) Update(rujukan *entity.RujukanKeluar) erro
 			keterangan = $11
 		WHERE nomor_rawat = $12
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		rujukan.NomorRujuk, rujukan.NomorRM, rujukan.NamaPasien, rujukan.TempatRujuk,
 		rujukan.TanggalRujuk, rujukan.JamRujuk, rujukan.KeteranganDiagnosa,
 		rujukan.DokterPerujuk, rujukan.KategoriRujuk, rujukan.Pengantaran,
 		rujukan.Keterangan, rujukan.NomorRawat,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *rujukanKeluarRepositoryImpl) Delete(nomorRawat string) error {
+func (r *rujukanKeluarRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM rujukan_keluar WHERE nomor_rawat = $1`
-	_, err := r.DB.Exec(query, nomorRawat)
-	return err
+	_, err = tx.Exec(query, nomorRawat)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

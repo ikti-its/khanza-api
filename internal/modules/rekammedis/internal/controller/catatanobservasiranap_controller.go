@@ -32,7 +32,7 @@ func (c *CatatanObservasiRanapController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -91,7 +91,7 @@ func (c *CatatanObservasiRanapController) Update(ctx *fiber.Ctx) error {
 	// ⛔ Important: assign `no_rawat` from URL param
 	request.NoRawat = ctx.Params("no_rawat")
 
-	err := c.UseCase.Update(&request)
+	err := c.UseCase.Update(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -112,7 +112,7 @@ func (c *CatatanObservasiRanapController) Delete(ctx *fiber.Ctx) error {
 	tanggal := ctx.Query("tanggal")
 	jam := ctx.Query("jam")
 
-	err := c.UseCase.Delete(noRawat, tanggal, jam)
+	err := c.UseCase.Delete(ctx, noRawat, tanggal, jam)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

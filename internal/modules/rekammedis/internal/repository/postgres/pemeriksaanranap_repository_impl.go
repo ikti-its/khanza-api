@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type pemeriksaanRanapRepositoryImpl struct {
@@ -17,7 +19,35 @@ func NewPemeriksaanRanapRepository(db *sqlx.DB) repository.PemeriksaanRanapRepos
 	return &pemeriksaanRanapRepositoryImpl{DB: db}
 }
 
-func (r *pemeriksaanRanapRepositoryImpl) Insert(p *entity.PemeriksaanRanap) error {
+func (r *pemeriksaanRanapRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID)
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v", userID, err)
+	}
+	return err
+}
+
+func (r *pemeriksaanRanapRepositoryImpl) Insert(c *fiber.Ctx, p *entity.PemeriksaanRanap) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO pemeriksaan_ranap (
 			no_rawat, tgl_perawatan, jam_rawat, suhu_tubuh, tensi, nadi, 
@@ -29,8 +59,12 @@ func (r *pemeriksaanRanapRepositoryImpl) Insert(p *entity.PemeriksaanRanap) erro
 			:pemeriksaan, :alergi, :penilaian, :rtl, :instruksi, :evaluasi, :nip
 		)
 	`
-	_, err := r.DB.NamedExec(query, p)
-	return err
+	_, err = tx.NamedExec(query, p)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *pemeriksaanRanapRepositoryImpl) FindAll() ([]entity.PemeriksaanRanap, error) {
@@ -54,7 +88,17 @@ func (r *pemeriksaanRanapRepositoryImpl) FindByTanggal(tanggal string) ([]entity
 	return list, err
 }
 
-func (r *pemeriksaanRanapRepositoryImpl) Update(p *entity.PemeriksaanRanap) error {
+func (r *pemeriksaanRanapRepositoryImpl) Update(c *fiber.Ctx, p *entity.PemeriksaanRanap) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE pemeriksaan_ranap SET 
 			suhu_tubuh = :suhu_tubuh, tensi = :tensi, nadi = :nadi, respirasi = :respirasi,
@@ -68,14 +112,14 @@ func (r *pemeriksaanRanapRepositoryImpl) Update(p *entity.PemeriksaanRanap) erro
 
 	log.Printf("[INFO] Attempting update for no_rawat=%s, tgl_perawatan=%s, jam_rawat=%s", p.NoRawat, p.TglPerawatan, p.JamRawat)
 	log.Printf("[DEBUG] suhu: %s, tensi: %s, keluhan: %s", p.SuhuTubuh, p.Tensi, p.Keluhan)
-	res, err := r.DB.NamedExec(query, p)
+
+	res, err := tx.NamedExec(query, p)
 	if err != nil {
 		log.Printf("[ERROR] Failed to execute update: %v", err)
 		return err
 	}
 
 	rowsAffected, err := res.RowsAffected()
-	log.Printf("[DEBUG] Rows affected: %d", rowsAffected)
 	if err != nil {
 		log.Printf("[ERROR] Could not get rows affected: %v", err)
 		return err
@@ -87,13 +131,28 @@ func (r *pemeriksaanRanapRepositoryImpl) Update(p *entity.PemeriksaanRanap) erro
 	}
 
 	log.Printf("[SUCCESS] Updated pemeriksaan_ranap row for no_rawat=%s", p.NoRawat)
-	return nil
+
+	return tx.Commit()
 }
 
-func (r *pemeriksaanRanapRepositoryImpl) Delete(nomorRawat string) error {
+func (r *pemeriksaanRanapRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM pemeriksaan_ranap WHERE no_rawat = $1`
-	_, err := r.DB.Exec(query, nomorRawat)
-	return err
+	_, err = tx.Exec(query, nomorRawat)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *pemeriksaanRanapRepositoryImpl) GetNamaDokter(kode string) (string, error) {

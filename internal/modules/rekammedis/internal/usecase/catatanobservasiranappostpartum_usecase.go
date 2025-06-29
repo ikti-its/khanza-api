@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
@@ -19,7 +20,7 @@ func NewCatatanObservasiRanapPostpartumUseCase(repo repository.CatatanObservasiR
 	}
 }
 
-func (u *CatatanObservasiRanapPostpartumUseCase) Create(request *model.CatatanObservasiRanapPostpartumRequest) (*model.CatatanObservasiRanapPostpartumResponse, error) {
+func (u *CatatanObservasiRanapPostpartumUseCase) Create(c *fiber.Ctx, request *model.CatatanObservasiRanapPostpartumRequest) (*model.CatatanObservasiRanapPostpartumResponse, error) {
 	entity := &entity.CatatanObservasiRanapPostpartum{
 		NoRawat:      request.NoRawat,
 		TglPerawatan: parseDate(request.TglPerawatan),
@@ -37,7 +38,7 @@ func (u *CatatanObservasiRanapPostpartumUseCase) Create(request *model.CatatanOb
 		NIP:          request.NIP,
 	}
 
-	if err := u.Repository.Insert(entity); err != nil {
+	if err := u.Repository.Insert(c, entity); err != nil {
 		return nil, err
 	}
 
@@ -118,7 +119,7 @@ func (u *CatatanObservasiRanapPostpartumUseCase) GetByNoRawat(noRawat string) ([
 	return responses, nil
 }
 
-func (u *CatatanObservasiRanapPostpartumUseCase) Update(request *model.CatatanObservasiRanapPostpartumRequest) error {
+func (u *CatatanObservasiRanapPostpartumUseCase) Update(c *fiber.Ctx, request *model.CatatanObservasiRanapPostpartumRequest) error {
 	entity := &entity.CatatanObservasiRanapPostpartum{
 		NoRawat:      request.NoRawat,
 		TglPerawatan: parseDate(request.TglPerawatan),
@@ -135,17 +136,17 @@ func (u *CatatanObservasiRanapPostpartumUseCase) Update(request *model.CatatanOb
 		Keterangan:   request.Keterangan,
 		NIP:          request.NIP,
 	}
-	return u.Repository.Update(entity)
+	return u.Repository.Update(c, entity)
 }
 
-func (u *CatatanObservasiRanapPostpartumUseCase) Delete(noRawat, tanggal, jam string) error {
+func (u *CatatanObservasiRanapPostpartumUseCase) Delete(c *fiber.Ctx, noRawat, tanggal, jam string) error {
 	if _, err := time.Parse("2006-01-02", tanggal); err != nil {
 		return fmt.Errorf("invalid date format: %v", err)
 	}
 	if _, err := time.Parse("15:04:05", jam); err != nil {
 		return fmt.Errorf("invalid time format: %v", err)
 	}
-	return u.Repository.Delete(noRawat, tanggal, jam)
+	return u.Repository.Delete(c, noRawat, tanggal, jam)
 }
 
 func nullableString(s string) *string {

@@ -10,7 +10,7 @@ func AmbulansRoute(app *fiber.App, ambulansController *controller.AmbulansContro
 	ambulans := app.Group("/v1/ambulans")
 
 	// ✅ Order matters
-	ambulans.Post("/", middleware.Authenticate([]int{1337, 1, 0}), ambulansController.Create)
+	ambulans.Post("/", middleware.Authenticate([]int{1337, 1, 0, 2, 3}), ambulansController.Create)
 	ambulans.Get("/", middleware.Authenticate([]int{0}), ambulansController.GetAll)
 
 	// ✅ Always put parameterized routes AFTER fixed ones

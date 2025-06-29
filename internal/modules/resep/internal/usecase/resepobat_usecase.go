@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/repository"
@@ -17,7 +18,7 @@ func NewResepObatUseCase(repo repository.ResepObatRepository) *ResepObatUseCase 
 	return &ResepObatUseCase{Repository: repo}
 }
 
-func (u *ResepObatUseCase) Create(request *model.ResepObatRequest) (*model.ResepObatResponse, error) {
+func (u *ResepObatUseCase) Create(c *fiber.Ctx, request *model.ResepObatRequest) (*model.ResepObatResponse, error) {
 	entity := entity.ResepObat{
 		NoResep:       request.NoResep,
 		TglPerawatan:  request.TglPerawatan,
@@ -32,7 +33,7 @@ func (u *ResepObatUseCase) Create(request *model.ResepObatRequest) (*model.Resep
 		Validasi:      request.Validasi,
 	}
 
-	if err := u.Repository.Insert(&entity); err != nil {
+	if err := u.Repository.Insert(c, &entity); err != nil {
 		return nil, fmt.Errorf("failed to insert resep_obat: %v", err)
 	}
 
@@ -105,7 +106,7 @@ func (u *ResepObatUseCase) GetByNoResep(noResep string) (*model.ResepObat, error
 	return result, nil
 }
 
-func (u *ResepObatUseCase) Update(noResep string, request *model.ResepObatRequest) (*model.ResepObatResponse, error) {
+func (u *ResepObatUseCase) Update(c *fiber.Ctx, noResep string, request *model.ResepObatRequest) (*model.ResepObatResponse, error) {
 	entity := entity.ResepObat{
 		NoResep:       noResep, // Gunakan nilai dari URL, bukan dari request body
 		TglPerawatan:  request.TglPerawatan,
@@ -120,7 +121,7 @@ func (u *ResepObatUseCase) Update(noResep string, request *model.ResepObatReques
 		Validasi:      request.Validasi,
 	}
 
-	if err := u.Repository.Update(&entity); err != nil {
+	if err := u.Repository.Update(c, &entity); err != nil {
 		return nil, fmt.Errorf("update failed: %v", err)
 	}
 
@@ -143,8 +144,8 @@ func (u *ResepObatUseCase) Update(noResep string, request *model.ResepObatReques
 	}, nil
 }
 
-func (u *ResepObatUseCase) Delete(noResep string) error {
-	return u.Repository.Delete(noResep)
+func (u *ResepObatUseCase) Delete(c *fiber.Ctx, noResep string) error {
+	return u.Repository.Delete(c, noResep)
 }
 
 func (u *ResepObatUseCase) GetByNomorRawat(nomorRawat string) ([]entity.ResepObat, error) {

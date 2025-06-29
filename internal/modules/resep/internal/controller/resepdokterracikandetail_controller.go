@@ -34,7 +34,7 @@ func (c *ResepDokterRacikanDetailController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		fmt.Println("❌ Error in usecase.Create():", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -94,7 +94,7 @@ func (c *ResepDokterRacikanDetailController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(&request)
+	response, err := c.UseCase.Update(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -122,7 +122,7 @@ func (c *ResepDokterRacikanDetailController) Delete(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.Delete(noResep, noRacik, kodeBrng)
+	err := c.UseCase.Delete(ctx, noResep, noRacik, kodeBrng)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":   500,

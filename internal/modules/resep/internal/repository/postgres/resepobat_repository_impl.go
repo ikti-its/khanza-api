@@ -2,10 +2,14 @@ package postgres
 
 import (
 	"context"
+	"fmt"
+	"log"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type resepObatRepositoryImpl struct {
@@ -16,20 +20,21 @@ func NewResepObatRepository(db *sqlx.DB) repository.ResepObatRepository {
 	return &resepObatRepositoryImpl{DB: db}
 }
 
-func (r *resepObatRepositoryImpl) Insert(p *entity.ResepObat) error {
-	query := `
-		INSERT INTO resep_obat (
-			no_resep, tgl_perawatan, jam, no_rawat, kd_dokter,
-			tgl_peresepan, jam_peresepan, status, tgl_penyerahan, jam_penyerahan, validasi
-		) VALUES (
-			$1, $2, $3, $4, $5,
-			$6, $7, $8, $9, $10, $11
-		)
-	`
-	_, err := r.DB.Exec(query,
-		p.NoResep, p.TglPerawatan, p.Jam, p.NoRawat, p.KdDokter,
-		p.TglPeresepan, p.JamPeresepan, p.Status, p.TglPenyerahan, p.JamPenyerahan, p.Validasi,
-	)
+func (r *resepObatRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID) // PostgreSQL-safe string
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	}
 	return err
 }
 
@@ -50,7 +55,48 @@ func (r *resepObatRepositoryImpl) FindByNoResep(noResep string) (*entity.ResepOb
 	return &resep, nil
 }
 
-func (r *resepObatRepositoryImpl) Update(p *entity.ResepObat) error {
+func (r *resepObatRepositoryImpl) Insert(c *fiber.Ctx, p *entity.ResepObat) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `
+		INSERT INTO resep_obat (
+			no_resep, tgl_perawatan, jam, no_rawat, kd_dokter,
+			tgl_peresepan, jam_peresepan, status, tgl_penyerahan, jam_penyerahan, validasi
+		) VALUES (
+			$1, $2, $3, $4, $5,
+			$6, $7, $8, $9, $10, $11
+		)
+	`
+	_, err = tx.Exec(query,
+		p.NoResep, p.TglPerawatan, p.Jam, p.NoRawat, p.KdDokter,
+		p.TglPeresepan, p.JamPeresepan, p.Status, p.TglPenyerahan, p.JamPenyerahan, p.Validasi,
+	)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (r *resepObatRepositoryImpl) Update(c *fiber.Ctx, p *entity.ResepObat) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE resep_obat SET 
 			tgl_perawatan = $2,
@@ -65,17 +111,35 @@ func (r *resepObatRepositoryImpl) Update(p *entity.ResepObat) error {
 			validasi = $11
 		WHERE no_resep = $1
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		p.NoResep, p.TglPerawatan, p.Jam, p.NoRawat, p.KdDokter,
-		p.TglPeresepan, p.JamPeresepan, p.Status, p.TglPenyerahan, p.JamPenyerahan,
+		p.TglPeresepan, p.JamPeresepan, p.Status, p.TglPenyerahan, p.JamPenyerahan, p.Validasi,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *resepObatRepositoryImpl) Delete(noResep string) error {
+func (r *resepObatRepositoryImpl) Delete(c *fiber.Ctx, noResep string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM resep_obat WHERE no_resep = $1`
-	_, err := r.DB.Exec(query, noResep)
-	return err
+	_, err = tx.Exec(query, noResep)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *resepObatRepositoryImpl) GetByNomorRawat(nomorRawat string) ([]entity.ResepObat, error) {

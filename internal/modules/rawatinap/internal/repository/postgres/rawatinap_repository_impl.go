@@ -1,18 +1,23 @@
 package repository
 
 import (
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rawatinap/internal/entity"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type RawatInapRepository interface {
-	Insert(rawatInap *entity.RawatInap) error
+	Insert(c *fiber.Ctx, rawatInap *entity.RawatInap) error
 	FindAll() ([]entity.RawatInap, error)
 	FindByNomorRawat(nomorRawat string) (entity.RawatInap, error)
 	FindByNomorRM(nomorRM string) ([]entity.RawatInap, error)
 	FindByTanggalMasuk(tanggal string) ([]entity.RawatInap, error)
-	Update(rawatInap *entity.RawatInap) error
-	Delete(nomorRawat string) error
+	Update(c *fiber.Ctx, rawatInap *entity.RawatInap) error
+	Delete(c *fiber.Ctx, nomorRawat string) error
+	setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error
 }
 
 type rawatInapRepositoryImpl struct {
@@ -23,7 +28,27 @@ func NewRawatInapRepository(db *sqlx.DB) RawatInapRepository {
 	return &rawatInapRepositoryImpl{DB: db}
 }
 
-func (r *rawatInapRepositoryImpl) Insert(ri *entity.RawatInap) error {
+func (r *rawatInapRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
+	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
+	return err
+}
+
+func (r *rawatInapRepositoryImpl) Insert(c *fiber.Ctx, ri *entity.RawatInap) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
 	query := `
 		INSERT INTO rawat_inap (
 			nomor_rawat, nomor_rm, nama_pasien, alamat_pasien, penanggung_jawab,
@@ -37,8 +62,12 @@ func (r *rawatInapRepositoryImpl) Insert(ri *entity.RawatInap) error {
 			:status_pulang, :lama_ranap, :dokter_pj, :status_bayar
 		)
 	`
-	_, err := r.DB.NamedExec(query, ri)
-	return err
+	_, err = tx.NamedExec(query, ri)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *rawatInapRepositoryImpl) FindAll() ([]entity.RawatInap, error) {
@@ -69,7 +98,16 @@ func (r *rawatInapRepositoryImpl) FindByTanggalMasuk(tanggal string) ([]entity.R
 	return result, err
 }
 
-func (r *rawatInapRepositoryImpl) Update(ri *entity.RawatInap) error {
+func (r *rawatInapRepositoryImpl) Update(c *fiber.Ctx, ri *entity.RawatInap) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
 	query := `
 		UPDATE rawat_inap SET
 			nomor_rm = :nomor_rm,
@@ -93,12 +131,30 @@ func (r *rawatInapRepositoryImpl) Update(ri *entity.RawatInap) error {
 			status_bayar = :status_bayar
 		WHERE nomor_rawat = :nomor_rawat
 	`
-	_, err := r.DB.NamedExec(query, ri)
-	return err
+	_, err = tx.NamedExec(query, ri)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *rawatInapRepositoryImpl) Delete(nomorRawat string) error {
+func (r *rawatInapRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM rawat_inap WHERE nomor_rawat = $1`
-	_, err := r.DB.Exec(query, nomorRawat)
-	return err
+	_, err = tx.Exec(query, nomorRawat)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

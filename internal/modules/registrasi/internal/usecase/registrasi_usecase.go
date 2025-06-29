@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/repository"
@@ -19,7 +20,7 @@ func NewRegistrasiUseCase(repo repository.RegistrasiRepository) *RegistrasiUseCa
 }
 
 // Create a new registrasi entry
-func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.RegistrasiResponse, error) {
+func (u *RegistrasiUseCase) Create(c *fiber.Ctx, request *model.RegistrasiRequest) (model.RegistrasiResponse, error) {
 	// ✅ Validate if kode_dokter exists
 	exists, err := u.Repository.CheckDokterExists(request.KodeDokter)
 	if err != nil {
@@ -79,7 +80,8 @@ func (u *RegistrasiUseCase) Create(request *model.RegistrasiRequest) (model.Regi
 	}
 
 	// ✅ Insert into database
-	err = u.Repository.Insert(&registrasiEntity)
+	err = u.Repository.Insert(c, &registrasiEntity)
+
 	if err != nil {
 		return model.RegistrasiResponse{}, fmt.Errorf("failed to create registrasi: %v", err)
 	}
@@ -185,7 +187,7 @@ func (u *RegistrasiUseCase) GetByNomorReg(nomorReg string) (model.RegistrasiResp
 }
 
 // Update an existing registrasi record
-func (u *RegistrasiUseCase) Update(nomorReg string, request *model.RegistrasiRequest) (model.RegistrasiResponse, error) {
+func (u *RegistrasiUseCase) Update(c *fiber.Ctx, nomorReg string, request *model.RegistrasiRequest) (model.RegistrasiResponse, error) {
 	registrasi, err := u.Repository.FindByNomorReg(nomorReg)
 	if err != nil {
 		return model.RegistrasiResponse{}, fmt.Errorf("registrasi not found")
@@ -205,7 +207,7 @@ func (u *RegistrasiUseCase) Update(nomorReg string, request *model.RegistrasiReq
 	registrasi.Alamat = request.Alamat
 	registrasi.Tanggal = parsedDate
 
-	err = u.Repository.Update(&registrasi)
+	err = u.Repository.Update(c, &registrasi)
 	if err != nil {
 		return model.RegistrasiResponse{}, fmt.Errorf("failed to update registrasi: %v", err)
 	}
@@ -237,15 +239,15 @@ func (u *RegistrasiUseCase) Update(nomorReg string, request *model.RegistrasiReq
 }
 
 // Delete a registrasi record by NomorReg
-func (u *RegistrasiUseCase) Delete(nomorReg string) error {
-	err := u.Repository.Delete(nomorReg)
+func (u *RegistrasiUseCase) Delete(c *fiber.Ctx, nomorReg string) error {
+	err := u.Repository.Delete(c, nomorReg)
 	if err != nil {
 		return fmt.Errorf("failed to delete registrasi: %v", err)
 	}
 	return nil
 }
 
-func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse, error) {
+func (u *RegistrasiUseCase) GetPendingRoomRequests(c *fiber.Ctx) ([]model.RegistrasiResponse, error) {
 	list, err := u.Repository.FindPendingRoomRequests()
 	fmt.Printf("🧠 Usecase received %d pending room requests\n", len(list))
 	if err != nil {
@@ -287,12 +289,12 @@ func (u *RegistrasiUseCase) GetPendingRoomRequests() ([]model.RegistrasiResponse
 	return responses, nil
 }
 
-func (uc *RegistrasiUseCase) UpdateStatusKamar(nomorReg, status string) error {
-	return uc.Repository.UpdateStatusKamar(nomorReg, status)
+func (uc *RegistrasiUseCase) UpdateStatusKamar(c *fiber.Ctx, nomorReg, status string) error {
+	return uc.Repository.UpdateStatusKamar(c, nomorReg, status)
 }
 
-func (u *RegistrasiUseCase) AssignKamar(nomorReg string, kamarID string) error {
-	return u.Repository.AssignKamar(nomorReg, kamarID)
+func (u *RegistrasiUseCase) AssignKamar(c *fiber.Ctx, nomorReg string, kamarID string) error {
+	return u.Repository.AssignKamar(c, nomorReg, kamarID)
 }
 
 func (u *RegistrasiUseCase) GetAllDokter() ([]model.DokterResponse, error) {

@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/repository"
@@ -16,7 +17,7 @@ func NewResepDokterUseCase(repo repository.ResepDokterRepository) *ResepDokterUs
 	return &ResepDokterUseCase{Repository: repo}
 }
 
-func (u *ResepDokterUseCase) Create(request *model.ResepDokterRequest) (model.ResepDokterResponse, error) {
+func (u *ResepDokterUseCase) Create(c *fiber.Ctx, request *model.ResepDokterRequest) (model.ResepDokterResponse, error) {
 	entity := entity.ResepDokter{
 		NoResep:     request.NoResep,
 		KodeBarang:  request.KodeBarang,
@@ -24,7 +25,7 @@ func (u *ResepDokterUseCase) Create(request *model.ResepDokterRequest) (model.Re
 		AturanPakai: request.AturanPakai,
 	}
 
-	if err := u.Repository.Insert(&entity); err != nil {
+	if err := u.Repository.Insert(c, &entity); err != nil {
 		return model.ResepDokterResponse{}, fmt.Errorf("failed to insert resep dokter: %v", err)
 	}
 
@@ -57,7 +58,7 @@ func (u *ResepDokterUseCase) GetByNoResep(noResep string) ([]model.ResepDokterRe
 	return result, nil
 }
 
-func (u *ResepDokterUseCase) Update(request *model.ResepDokterRequest) (model.ResepDokterResponse, error) {
+func (u *ResepDokterUseCase) Update(c *fiber.Ctx, request *model.ResepDokterRequest) (model.ResepDokterResponse, error) {
 	entity := entity.ResepDokter{
 		NoResep:     request.NoResep,
 		KodeBarang:  request.KodeBarang,
@@ -65,13 +66,13 @@ func (u *ResepDokterUseCase) Update(request *model.ResepDokterRequest) (model.Re
 		AturanPakai: request.AturanPakai,
 	}
 
-	if err := u.Repository.Update(&entity); err != nil {
+	if err := u.Repository.Update(c, &entity); err != nil {
 		return model.ResepDokterResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
 	return model.ResepDokterResponse(entity), nil
 }
 
-func (u *ResepDokterUseCase) Delete(noResep, kodeBarang string) error {
-	return u.Repository.Delete(noResep, kodeBarang)
+func (u *ResepDokterUseCase) Delete(c *fiber.Ctx, noResep, kodeBarang string) error {
+	return u.Repository.Delete(c, noResep, kodeBarang)
 }

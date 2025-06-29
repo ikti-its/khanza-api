@@ -38,7 +38,7 @@ func (c *PemeriksaanRanapController) Create(ctx *fiber.Ctx) error {
 	fmt.Printf("📨 Parsed request: %+v\n", request)
 
 	// Call the use case to handle the business logic
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -100,7 +100,7 @@ func (c *PemeriksaanRanapController) Update(ctx *fiber.Ctx) error {
 	}
 	log.Printf("[DEBUG] Parsed request body: %+v", request)
 	// Call the use case to update the record
-	err := c.UseCase.Update(nomorRawat, &request) // Only error returned, not response
+	err := c.UseCase.Update(ctx, nomorRawat, &request) // Only error returned, not response
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -120,7 +120,7 @@ func (c *PemeriksaanRanapController) Update(ctx *fiber.Ctx) error {
 // Delete handles the deletion of a pemeriksaan rawat inap record
 func (c *PemeriksaanRanapController) Delete(ctx *fiber.Ctx) error {
 	nomorRawat := ctx.Params("nomor_rawat")
-	err := c.UseCase.Delete(nomorRawat)
+	err := c.UseCase.Delete(ctx, nomorRawat)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

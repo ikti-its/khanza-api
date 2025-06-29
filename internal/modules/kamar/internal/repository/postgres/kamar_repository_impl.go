@@ -1,18 +1,23 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/kamar/internal/entity"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type KamarRepository interface {
-	Insert(kamar *entity.Kamar) error
 	Find() ([]entity.Kamar, error)
 	FindAll() ([]entity.Kamar, error)
 	FindByNomorBed(nomorReg string) (entity.Kamar, error)
 	FindByKodeKamar(nomorReg string) (entity.Kamar, error)
-	Update(kamar *entity.Kamar) error
-	Delete(nomorReg string) error
+	Insert(c *fiber.Ctx, kamar *entity.Kamar) error
+	Update(c *fiber.Ctx, kamar *entity.Kamar) error
+	Delete(c *fiber.Ctx, nomorReg string) error
 	GetAvailableRooms() ([]entity.Kamar, error)
 	UpdateStatusKamar(nomorBed string, status string) error
 	GetDistinctKelas() ([]string, error)
@@ -26,7 +31,35 @@ func NewKamarRepository(db *sqlx.DB) KamarRepository {
 	return &kamarRepositoryImpl{DB: db}
 }
 
-func (r *kamarRepositoryImpl) Insert(kamar *entity.Kamar) error {
+func (r *kamarRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID)
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	}
+	return err
+}
+
+func (r *kamarRepositoryImpl) Insert(c *fiber.Ctx, kamar *entity.Kamar) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO kamar (
 			nomor_bed, kode_kamar, nama_kamar, kelas, tarif_kamar, status_kamar
@@ -34,15 +67,19 @@ func (r *kamarRepositoryImpl) Insert(kamar *entity.Kamar) error {
 			$1, $2, $3, $4, $5, $6
 		)
 	`
-	_, err := r.DB.Exec(query,
-		kamar.NomorBed,    // Corresponds to nomor_bed
-		kamar.KodeKamar,   // Corresponds to kode_kamar
-		kamar.NamaKamar,   // Corresponds to nama_kamar
-		kamar.Kelas,       // Corresponds to kelas
-		kamar.TarifKamar,  // Corresponds to tarif_kamar
-		kamar.StatusKamar, // Corresponds to status_kamar
+	_, err = tx.Exec(query,
+		kamar.NomorBed,
+		kamar.KodeKamar,
+		kamar.NamaKamar,
+		kamar.Kelas,
+		kamar.TarifKamar,
+		kamar.StatusKamar,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *kamarRepositoryImpl) Find() ([]entity.Kamar, error) {
@@ -80,29 +117,55 @@ func (r *kamarRepositoryImpl) FindByKodeKamar(nomorBed string) (entity.Kamar, er
 	return record, err
 }
 
-func (r *kamarRepositoryImpl) Update(kamar *entity.Kamar) error {
+func (r *kamarRepositoryImpl) Update(c *fiber.Ctx, kamar *entity.Kamar) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE kamar SET 
 			kode_kamar = $2, nama_kamar = $3, kelas = $4, tarif_kamar = $5, status_kamar = $6
 		WHERE nomor_bed = $1
 	`
-	_, err := r.DB.Exec(query,
-		kamar.NomorBed,    // Corresponds to nomor_bed
-		kamar.KodeKamar,   // Corresponds to kode_kamar
-		kamar.NamaKamar,   // Corresponds to nama_kamar
-		kamar.Kelas,       // Corresponds to kelas
-		kamar.TarifKamar,  // Corresponds to tarif_kamar
-		kamar.StatusKamar, // Corresponds to status_kamar
+	_, err = tx.Exec(query,
+		kamar.NomorBed,
+		kamar.KodeKamar,
+		kamar.NamaKamar,
+		kamar.Kelas,
+		kamar.TarifKamar,
+		kamar.StatusKamar,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *kamarRepositoryImpl) Delete(nomorReg string) error {
-	query := `
-		DELETE FROM kamar WHERE nomor_bed = $1
-	`
-	_, err := r.DB.Exec(query, nomorReg)
-	return err
+func (r *kamarRepositoryImpl) Delete(c *fiber.Ctx, nomorReg string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `DELETE FROM kamar WHERE nomor_bed = $1`
+	_, err = tx.Exec(query, nomorReg)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *kamarRepositoryImpl) GetAvailableRooms() ([]entity.Kamar, error) {

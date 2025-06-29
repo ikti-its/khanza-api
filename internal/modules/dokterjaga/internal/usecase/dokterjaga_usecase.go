@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/repository"
@@ -17,7 +18,7 @@ func NewDokterJagaUseCase(repo repository.DokterJagaRepository) *DokterJagaUseCa
 	return &DokterJagaUseCase{Repository: repo}
 }
 
-func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.DokterJagaResponse, error) {
+func (u *DokterJagaUseCase) Create(c *fiber.Ctx, request *model.DokterJagaRequest) (model.DokterJagaResponse, error) {
 	jamMulai, err := time.Parse("15:04:05", request.JamMulai)
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_mulai format: %v", err)
@@ -27,17 +28,19 @@ func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.Dokt
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_selesai format: %v", err)
 	}
+
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
 		HariKerja:  request.HariKerja,
-		JamMulai:   jamMulai,   // ✅ directly assign
-		JamSelesai: jamSelesai, // ✅ directly assign
+		JamMulai:   jamMulai,
+		JamSelesai: jamSelesai,
 		Poliklinik: request.Poliklinik,
 		Status:     request.Status,
 	}
 
-	err = u.Repository.Insert(&dokter)
+	// 🔁 Call repository with context
+	err = u.Repository.Insert(c, &dokter)
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("failed to create dokter jaga: %v", err)
 	}
@@ -45,7 +48,7 @@ func (u *DokterJagaUseCase) Create(request *model.DokterJagaRequest) (model.Dokt
 	return model.DokterJagaResponse{
 		KodeDokter: dokter.KodeDokter,
 		NamaDokter: dokter.NamaDokter,
-		HariKerja:  dokter.HariKerja, // plain string
+		HariKerja:  dokter.HariKerja,
 		JamMulai:   dokter.JamMulai.Format("15:04:05"),
 		JamSelesai: dokter.JamSelesai.Format("15:04:05"),
 		Poliklinik: dokter.Poliklinik,
@@ -97,13 +100,12 @@ func (u *DokterJagaUseCase) GetByKodeDokter(kode string) ([]model.DokterJagaResp
 	return response, nil
 }
 
-// Update a record
-func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.DokterJagaResponse, error) {
-	// Ensure record exists
+func (u *DokterJagaUseCase) Update(c *fiber.Ctx, request *model.DokterJagaRequest) (model.DokterJagaResponse, error) {
 	records, err := u.Repository.FindByKodeDokter(request.KodeDokter)
 	if err != nil || len(records) == 0 {
 		return model.DokterJagaResponse{}, fmt.Errorf("dokter jaga not found")
 	}
+
 	jamMulai, err := time.Parse("15:04:05", request.JamMulai)
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_mulai format: %v", err)
@@ -113,18 +115,18 @@ func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.Dokt
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("invalid jam_selesai format: %v", err)
 	}
-	// Directly use the string field for hari_kerja
+
 	dokter := entity.DokterJaga{
 		KodeDokter: request.KodeDokter,
 		NamaDokter: request.NamaDokter,
-		HariKerja:  request.HariKerja, // no parsing needed
+		HariKerja:  request.HariKerja,
 		JamMulai:   jamMulai,
 		JamSelesai: jamSelesai,
 		Poliklinik: request.Poliklinik,
 		Status:     request.Status,
 	}
 
-	err = u.Repository.Update(&dokter)
+	err = u.Repository.Update(c, &dokter)
 	if err != nil {
 		return model.DokterJagaResponse{}, fmt.Errorf("failed to update dokter jaga: %v", err)
 	}
@@ -140,9 +142,8 @@ func (u *DokterJagaUseCase) Update(request *model.DokterJagaRequest) (model.Dokt
 	}, nil
 }
 
-// Delete a dokter jaga shift by kode_dokter and hari_kerja
-func (u *DokterJagaUseCase) Delete(kodeDokter, hariKerja string) error {
-	return u.Repository.Delete(kodeDokter, hariKerja)
+func (u *DokterJagaUseCase) Delete(c *fiber.Ctx, kodeDokter, hariKerja string) error {
+	return u.Repository.Delete(c, kodeDokter, hariKerja)
 }
 
 // Change status of a shift

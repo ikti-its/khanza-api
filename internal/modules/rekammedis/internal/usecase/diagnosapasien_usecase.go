@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
@@ -16,7 +17,7 @@ func NewDiagnosaPasienUseCase(repo repository.DiagnosaPasienRepository) *Diagnos
 	return &DiagnosaPasienUseCase{Repository: repo}
 }
 
-func (u *DiagnosaPasienUseCase) Create(request *model.DiagnosaPasienRequest) (*model.DiagnosaPasienResponse, error) {
+func (u *DiagnosaPasienUseCase) Create(c *fiber.Ctx, request *model.DiagnosaPasienRequest) (*model.DiagnosaPasienResponse, error) {
 	var statusPenyakit *string
 	if request.StatusPenyakit != "" {
 		statusPenyakit = &request.StatusPenyakit
@@ -30,7 +31,7 @@ func (u *DiagnosaPasienUseCase) Create(request *model.DiagnosaPasienRequest) (*m
 		StatusPenyakit: statusPenyakit,
 	}
 
-	if err := u.Repository.Insert(&diagnosa); err != nil {
+	if err := u.Repository.Insert(c, &diagnosa); err != nil {
 		return nil, fmt.Errorf("gagal insert diagnosa pasien: %v", err)
 	}
 
@@ -100,7 +101,7 @@ func (u *DiagnosaPasienUseCase) GetByNoRawatAndStatus(noRawat string, status str
 	return responses, nil
 }
 
-func (u *DiagnosaPasienUseCase) Update(request *model.DiagnosaPasienRequest) error {
+func (u *DiagnosaPasienUseCase) Update(c *fiber.Ctx, request *model.DiagnosaPasienRequest) error {
 	var statusPenyakit *string
 	if request.StatusPenyakit != "" {
 		statusPenyakit = &request.StatusPenyakit
@@ -114,9 +115,9 @@ func (u *DiagnosaPasienUseCase) Update(request *model.DiagnosaPasienRequest) err
 		StatusPenyakit: statusPenyakit,
 	}
 
-	return u.Repository.Update(&diagnosa)
+	return u.Repository.Update(c, &diagnosa)
 }
 
-func (u *DiagnosaPasienUseCase) Delete(noRawat, kdPenyakit string) error {
-	return u.Repository.Delete(noRawat, kdPenyakit)
+func (u *DiagnosaPasienUseCase) Delete(c *fiber.Ctx, noRawat, kdPenyakit string) error {
+	return u.Repository.Delete(c, noRawat, kdPenyakit)
 }

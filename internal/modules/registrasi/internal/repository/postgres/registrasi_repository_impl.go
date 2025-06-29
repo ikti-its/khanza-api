@@ -4,37 +4,67 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type RegistrasiRepository interface {
-	Insert(registrasi *entity.Registrasi) error
+	Insert(c *fiber.Ctx, registrasi *entity.Registrasi) error
+	Update(c *fiber.Ctx, registrasi *entity.Registrasi) error
+	Delete(c *fiber.Ctx, nomorReg string) error
+	UpdateStatusKamar(c *fiber.Ctx, nomorReg string, status string) error
+	AssignKamar(c *fiber.Ctx, nomorReg string, nomorBed string) error
+
 	Find() ([]entity.Registrasi, error)
 	FindAll() ([]entity.Registrasi, error)
 	FindByNomorReg(nomorReg string) (entity.Registrasi, error)
 	FindByNomorRM(nomorReg string) (entity.Registrasi, error)
 	FindByTanggal(nomorReg string) (entity.Registrasi, error)
-	Update(registrasi *entity.Registrasi) error
-	Delete(nomorReg string) error
-	UpdateStatusKamar(nomorReg string, status string) error
-	AssignKamar(nomorReg string, kamarID string) error
+	GetByNoRawat(noRawat string) (model.RegistrasiResponse, error)
 	GetAllDokter() ([]model.DokterResponse, error)
 	GetNamaDokter(kode string) (string, error)
-
 	CheckDokterExists(kodeDokter string) (bool, error)
+	FindPendingRoomRequests() ([]entity.Registrasi, error)
+	setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error
 }
 
 type registrasiRepositoryImpl struct {
 	DB *sqlx.DB
 }
 
-func (r *registrasiRepositoryImpl) UpdateStatusKamar(nomorReg, status string) error {
-	query := `UPDATE registrasi SET status_kamar = $1 WHERE nomor_reg = $2`
-	_, err := r.DB.Exec(query, status, nomorReg)
+func (r *registrasiRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
+	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
 	return err
+}
+
+func (r *registrasiRepositoryImpl) UpdateStatusKamar(c *fiber.Ctx, nomorReg, status string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `UPDATE registrasi SET status_kamar = $1 WHERE nomor_reg = $2`
+	_, err = tx.Exec(query, status, nomorReg)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *registrasiRepositoryImpl) CheckDokterExists(kodeDokter string) (bool, error) {
@@ -53,7 +83,16 @@ func NewRegistrasiRepository(db *sqlx.DB) repository.RegistrasiRepository {
 	return &registrasiRepositoryImpl{DB: db}
 }
 
-func (r *registrasiRepositoryImpl) Insert(registrasi *entity.Registrasi) error {
+func (r *registrasiRepositoryImpl) Insert(c *fiber.Ctx, registrasi *entity.Registrasi) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
 	query := `
 		INSERT INTO registrasi (
 			nomor_reg, nomor_rawat, tanggal, jam, kode_dokter, nama_dokter, nomor_rm,
@@ -66,7 +105,7 @@ func (r *registrasiRepositoryImpl) Insert(registrasi *entity.Registrasi) error {
 			$19, $20, $21, $22
 		)
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		registrasi.NomorReg, registrasi.NomorRawat, registrasi.Tanggal, registrasi.Jam,
 		registrasi.KodeDokter, registrasi.NamaDokter, registrasi.NomorRM, registrasi.Nama,
 		registrasi.JenisKelamin, registrasi.Umur, registrasi.Poliklinik, registrasi.JenisBayar,
@@ -74,7 +113,11 @@ func (r *registrasiRepositoryImpl) Insert(registrasi *entity.Registrasi) error {
 		registrasi.StatusRegistrasi, registrasi.NoTelepon, registrasi.StatusRawat,
 		registrasi.StatusPoli, registrasi.StatusBayar, registrasi.StatusKamar, // ✅ Added
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *registrasiRepositoryImpl) Find() ([]entity.Registrasi, error) {
@@ -127,7 +170,16 @@ func (r *registrasiRepositoryImpl) FindByTanggal(nomorReg string) (entity.Regist
 	return record, err
 }
 
-func (r *registrasiRepositoryImpl) Update(registrasi *entity.Registrasi) error {
+func (r *registrasiRepositoryImpl) Update(c *fiber.Ctx, registrasi *entity.Registrasi) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
 	query := `
 		UPDATE registrasi SET 
 			nomor_rawat = $2, tanggal = $3, jam = $4, kode_dokter = $5, nama_dokter = $6,
@@ -137,7 +189,7 @@ func (r *registrasiRepositoryImpl) Update(registrasi *entity.Registrasi) error {
 			status_rawat = $19, status_poli = $20, status_bayar = $21, status_kamar = $22
 		WHERE nomor_reg = $1
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		registrasi.NomorReg, registrasi.NomorRawat, registrasi.Tanggal, registrasi.Jam,
 		registrasi.KodeDokter, registrasi.NamaDokter, registrasi.NomorRM, registrasi.Nama,
 		registrasi.JenisKelamin, registrasi.Umur, registrasi.Poliklinik, registrasi.JenisBayar,
@@ -145,15 +197,31 @@ func (r *registrasiRepositoryImpl) Update(registrasi *entity.Registrasi) error {
 		registrasi.StatusRegistrasi, registrasi.NoTelepon, registrasi.StatusRawat,
 		registrasi.StatusPoli, registrasi.StatusBayar, registrasi.StatusKamar, // ✅ Added
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *registrasiRepositoryImpl) Delete(nomorReg string) error {
-	query := `
-		DELETE FROM registrasi WHERE nomor_reg = $1
-	`
-	_, err := r.DB.Exec(query, nomorReg)
-	return err
+func (r *registrasiRepositoryImpl) Delete(c *fiber.Ctx, nomorReg string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `DELETE FROM registrasi WHERE nomor_reg = $1`
+	_, err = tx.Exec(query, nomorReg)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registrasi, error) {
@@ -192,11 +260,19 @@ func (r *registrasiRepositoryImpl) FindPendingRoomRequests() ([]entity.Registras
 	return results, err
 }
 
-func (r *registrasiRepositoryImpl) AssignKamar(nomorReg string, nomorBed string) error {
-	// 1. Update registrasi
-	updateQuery := `UPDATE registrasi SET nomor_bed = $1, status_kamar = 'diterima' WHERE nomor_reg = $2`
-	_, err := r.DB.Exec(updateQuery, nomorBed, nomorReg)
+func (r *registrasiRepositoryImpl) AssignKamar(c *fiber.Ctx, nomorReg, nomorBed string) error {
+	tx, err := r.DB.Beginx()
 	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	updateQuery := `UPDATE registrasi SET nomor_bed = $1, status_kamar = 'diterima' WHERE nomor_reg = $2`
+	if _, err := tx.Exec(updateQuery, nomorBed, nomorReg); err != nil {
 		return err
 	}
 
@@ -214,8 +290,11 @@ func (r *registrasiRepositoryImpl) AssignKamar(nomorReg string, nomorBed string)
 	JOIN kamar k ON k.nomor_bed = $1
 	WHERE r.nomor_reg = $2
 	`
-	_, err = r.DB.Exec(insertQuery, nomorBed, nomorReg)
-	return err
+	if _, err := tx.Exec(insertQuery, nomorBed, nomorReg); err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *registrasiRepositoryImpl) GetPendingRoomRequests() ([]model.PendingRoomRequest, error) {

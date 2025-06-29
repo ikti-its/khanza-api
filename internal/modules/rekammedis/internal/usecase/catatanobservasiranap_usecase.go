@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
@@ -17,7 +18,7 @@ func NewCatatanObservasiRanapUseCase(repo repository.CatatanObservasiRanapReposi
 	return &CatatanObservasiRanapUseCase{Repository: repo}
 }
 
-func (u *CatatanObservasiRanapUseCase) Create(request *model.CatatanObservasiRanapRequest) (*model.CatatanObservasiRanapResponse, error) {
+func (u *CatatanObservasiRanapUseCase) Create(c *fiber.Ctx, request *model.CatatanObservasiRanapRequest) (*model.CatatanObservasiRanapResponse, error) {
 	fmt.Println("DEBUG jam_rawat (request.Jam):", request.Jam)
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
@@ -38,7 +39,7 @@ func (u *CatatanObservasiRanapUseCase) Create(request *model.CatatanObservasiRan
 		NIP:          request.NIP,
 	}
 
-	if err := u.Repository.Insert(&data); err != nil {
+	if err := u.Repository.Insert(c, &data); err != nil {
 		return nil, fmt.Errorf("gagal insert catatan observasi: %v", err)
 	}
 
@@ -104,7 +105,7 @@ func (u *CatatanObservasiRanapUseCase) GetByNoRawat(noRawat string) ([]model.Cat
 	return responses, nil
 }
 
-func (u *CatatanObservasiRanapUseCase) Update(request *model.CatatanObservasiRanapRequest) error {
+func (u *CatatanObservasiRanapUseCase) Update(c *fiber.Ctx, request *model.CatatanObservasiRanapRequest) error {
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
 		return fmt.Errorf("format tanggal salah: %v", err)
@@ -123,11 +124,11 @@ func (u *CatatanObservasiRanapUseCase) Update(request *model.CatatanObservasiRan
 		NIP:          request.NIP,
 	}
 
-	return u.Repository.Update(&entity)
+	return u.Repository.Update(c, &entity)
 }
 
-func (u *CatatanObservasiRanapUseCase) Delete(noRawat string, tanggal string, jam string) error {
-	return u.Repository.Delete(noRawat, tanggal, jam)
+func (u *CatatanObservasiRanapUseCase) Delete(c *fiber.Ctx, noRawat string, tanggal string, jam string) error {
+	return u.Repository.Delete(c, noRawat, tanggal, jam)
 }
 
 // Helper functions

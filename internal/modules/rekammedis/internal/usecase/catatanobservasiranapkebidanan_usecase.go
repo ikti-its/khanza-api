@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
@@ -17,7 +18,7 @@ func NewCatatanObservasiRanapKebidananUseCase(repo repository.CatatanObservasiRa
 	return &CatatanObservasiRanapKebidananUseCase{Repository: repo}
 }
 
-func (u *CatatanObservasiRanapKebidananUseCase) Create(request *model.CatatanObservasiRanapKebidananRequest) (*model.CatatanObservasiRanapKebidananResponse, error) {
+func (u *CatatanObservasiRanapKebidananUseCase) Create(c *fiber.Ctx, request *model.CatatanObservasiRanapKebidananRequest) (*model.CatatanObservasiRanapKebidananResponse, error) {
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
 		return nil, fmt.Errorf("format tanggal salah: %v", err)
@@ -44,7 +45,7 @@ func (u *CatatanObservasiRanapKebidananUseCase) Create(request *model.CatatanObs
 		NIP:          request.NIP,
 	}
 
-	if err := u.Repository.Insert(&observasi); err != nil {
+	if err := u.Repository.Insert(c, &observasi); err != nil {
 		return nil, fmt.Errorf("gagal insert catatan observasi: %v", err)
 	}
 
@@ -122,7 +123,7 @@ func (u *CatatanObservasiRanapKebidananUseCase) GetByNoRawat(noRawat string) ([]
 	return responses, nil
 }
 
-func (u *CatatanObservasiRanapKebidananUseCase) Update(noRawat string, request *model.CatatanObservasiRanapKebidananRequest) error {
+func (u *CatatanObservasiRanapKebidananUseCase) Update(c *fiber.Ctx, noRawat string, request *model.CatatanObservasiRanapKebidananRequest) error {
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
 		return fmt.Errorf("format tanggal salah: %v", err)
@@ -146,11 +147,11 @@ func (u *CatatanObservasiRanapKebidananUseCase) Update(noRawat string, request *
 		NIP:          request.NIP,
 	}
 
-	return u.Repository.Update(&entity)
+	return u.Repository.Update(c, &entity)
 }
 
-func (u *CatatanObservasiRanapKebidananUseCase) Delete(noRawat string, tanggal string, jam string) error {
-	return u.Repository.Delete(noRawat, tanggal, jam)
+func (u *CatatanObservasiRanapKebidananUseCase) Delete(c *fiber.Ctx, noRawat string, tanggal string, jam string) error {
+	return u.Repository.Delete(c, noRawat, tanggal, jam)
 }
 
 func getString(s *string) string {

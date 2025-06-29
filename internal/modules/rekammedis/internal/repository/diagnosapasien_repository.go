@@ -1,13 +1,16 @@
 package repository
 
-import "github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
+)
 
 type DiagnosaPasienRepository interface {
-	Insert(diagnosa *entity.DiagnosaPasien) error
+	Insert(c *fiber.Ctx, data *entity.DiagnosaPasien) error
 	FindAll() ([]entity.DiagnosaPasien, error)
 	FindByNoRawat(noRawat string) ([]entity.DiagnosaPasien, error)
 	FindByKodePenyakit(kode string) ([]entity.DiagnosaPasien, error)
 	FindByNoRawatAndStatus(noRawat string, status string) ([]entity.DiagnosaPasien, error)
-	Update(diagnosa *entity.DiagnosaPasien) error
-	Delete(noRawat string, kdPenyakit string) error
+	Update(c *fiber.Ctx, data *entity.DiagnosaPasien) error
+	Delete(c *fiber.Ctx, noRawat string, kdPenyakit string) error
 }

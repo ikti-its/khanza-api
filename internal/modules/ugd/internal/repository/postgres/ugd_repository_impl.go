@@ -1,19 +1,24 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ugd/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/ugd/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type UGDRepository interface {
-	Insert(ugd *entity.UGD) error
+	Insert(c *fiber.Ctx, ugd *entity.UGD) error
 	Find() ([]entity.UGD, error)
 	FindAll() ([]entity.UGD, error)
 	FindByNomorReg(nomorReg string) (entity.UGD, error)
 	FindByNomorRM(nomorRM string) (entity.UGD, error)
 	FindByTanggal(tanggal string) ([]entity.UGD, error)
-	Update(ugd *entity.UGD) error
+	Update(c *fiber.Ctx, ugd *entity.UGD) error
 	Delete(nomorReg string) error
 	CheckDokterExists(kodeDokter string) (bool, error)
 }
@@ -26,7 +31,37 @@ func NewUGDRepository(db *sqlx.DB) repository.UGDRepository {
 	return &ugdRepositoryImpl{DB: db}
 }
 
-func (r *ugdRepositoryImpl) Insert(ugd *entity.UGD) error {
+func (r *ugdRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	// Escape for SQL safety
+	safeUserID := pq.QuoteLiteral(userID) // e.g. "abc'def" becomes `'abc''def'`
+
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	}
+	return err
+}
+
+func (r *ugdRepositoryImpl) Insert(c *fiber.Ctx, ugd *entity.UGD) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO ugd (
 			nomor_reg, nomor_rawat, tanggal, jam, kode_dokter, dokter_dituju, nomor_rm,
@@ -37,16 +72,31 @@ func (r *ugdRepositoryImpl) Insert(ugd *entity.UGD) error {
 			$11, $12, $13, $14, $15, $16, $17, $18, $19
 		)
 	`
-	_, err := r.DB.Exec(query,
+
+	_, err = tx.Exec(query,
 		ugd.NomorReg, ugd.NomorRawat, ugd.Tanggal, ugd.Jam, ugd.KodeDokter, ugd.DokterDituju,
 		ugd.NomorRM, ugd.NamaPasien, ugd.JenisKelamin, ugd.Umur, ugd.Poliklinik,
 		ugd.JenisBayar, ugd.PenanggungJawab, ugd.AlamatPJ, ugd.HubunganPJ, ugd.BiayaRegistrasi,
 		ugd.Status, ugd.StatusRawat, ugd.StatusBayar,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *ugdRepositoryImpl) Update(ugd *entity.UGD) error {
+func (r *ugdRepositoryImpl) Update(c *fiber.Ctx, ugd *entity.UGD) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE ugd SET 
 			nomor_rawat = $2, tanggal = $3, jam = $4, kode_dokter = $5, dokter_dituju = $6,
@@ -55,13 +105,38 @@ func (r *ugdRepositoryImpl) Update(ugd *entity.UGD) error {
 			biaya_registrasi = $16, status = $17, status_rawat = $18, status_bayar = $19
 		WHERE nomor_reg = $1
 	`
-	_, err := r.DB.Exec(query,
+
+	_, err = tx.Exec(query,
 		ugd.NomorReg, ugd.NomorRawat, ugd.Tanggal, ugd.Jam, ugd.KodeDokter, ugd.DokterDituju,
 		ugd.NomorRM, ugd.NamaPasien, ugd.JenisKelamin, ugd.Umur, ugd.Poliklinik,
 		ugd.JenisBayar, ugd.PenanggungJawab, ugd.AlamatPJ, ugd.HubunganPJ, ugd.BiayaRegistrasi,
 		ugd.Status, ugd.StatusRawat, ugd.StatusBayar,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (r *ugdRepositoryImpl) Delete(c *fiber.Ctx, nomorReg string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `DELETE FROM ugd WHERE nomor_reg = $1`
+	_, err = tx.Exec(query, nomorReg)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *ugdRepositoryImpl) Find() ([]entity.UGD, error) {
@@ -94,12 +169,6 @@ func (r *ugdRepositoryImpl) FindByTanggal(tanggal string) ([]entity.UGD, error) 
 	var records []entity.UGD
 	err := r.DB.Select(&records, query, tanggal)
 	return records, err
-}
-
-func (r *ugdRepositoryImpl) Delete(nomorReg string) error {
-	query := `DELETE FROM ugd WHERE nomor_reg = $1`
-	_, err := r.DB.Exec(query, nomorReg)
-	return err
 }
 
 func (r *ugdRepositoryImpl) CheckDokterExists(kodeDokter string) (bool, error) {

@@ -95,7 +95,7 @@ func (c *AmbulansController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(noAmbulans, &request)
+	response, err := c.UseCase.Update(ctx, noAmbulans, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -112,7 +112,7 @@ func (c *AmbulansController) Update(ctx *fiber.Ctx) error {
 
 func (c *AmbulansController) Delete(ctx *fiber.Ctx) error {
 	noAmbulans := ctx.Params("no_ambulans")
-	err := c.UseCase.Delete(noAmbulans)
+	err := c.UseCase.Delete(ctx, noAmbulans)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

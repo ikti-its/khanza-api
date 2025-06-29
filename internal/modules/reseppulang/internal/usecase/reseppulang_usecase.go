@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/repository"
@@ -17,7 +18,7 @@ func NewResepPulangUseCase(repo repository.ResepPulangRepository) *ResepPulangUs
 	return &ResepPulangUseCase{Repository: repo}
 }
 
-func (u *ResepPulangUseCase) Create(request *model.ResepPulangRequest) (model.ResepPulangResponse, error) {
+func (u *ResepPulangUseCase) Create(c *fiber.Ctx, request *model.ResepPulangRequest) (model.ResepPulangResponse, error) {
 	tanggal, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
 		return model.ResepPulangResponse{}, fmt.Errorf("invalid tanggal format: %v", err)
@@ -42,7 +43,7 @@ func (u *ResepPulangUseCase) Create(request *model.ResepPulangRequest) (model.Re
 		NoFaktur:  request.NoFaktur,
 	}
 
-	if err := u.Repository.Insert(&data); err != nil {
+	if err := u.Repository.Insert(c, &data); err != nil {
 		return model.ResepPulangResponse{}, fmt.Errorf("failed to insert resep pulang: %v", err)
 	}
 
@@ -87,7 +88,7 @@ func (u *ResepPulangUseCase) GetByCompositeKey(noRawat, kodeBrng, tanggal, jam s
 	return mapToResepPulangResponse(data), nil
 }
 
-func (u *ResepPulangUseCase) Update(noRawat, kodeBrng, tanggal, jam string, request *model.ResepPulangRequest) (model.ResepPulangResponse, error) {
+func (u *ResepPulangUseCase) Update(c *fiber.Ctx, noRawat, kodeBrng, tanggal, jam string, request *model.ResepPulangRequest) (model.ResepPulangResponse, error) {
 	data, err := u.Repository.FindByCompositeKey(noRawat, kodeBrng, tanggal, jam)
 	if err != nil || data == nil {
 		return model.ResepPulangResponse{}, fmt.Errorf("data not found")
@@ -102,15 +103,15 @@ func (u *ResepPulangUseCase) Update(noRawat, kodeBrng, tanggal, jam string, requ
 	data.NoBatch = request.NoBatch
 	data.NoFaktur = request.NoFaktur
 
-	if err := u.Repository.Update(data); err != nil {
+	if err := u.Repository.Update(c, data); err != nil {
 		return model.ResepPulangResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
 	return mapToResepPulangResponse(data), nil
 }
 
-func (u *ResepPulangUseCase) Delete(noRawat, kodeBrng, tanggal, jam string) error {
-	return u.Repository.Delete(noRawat, kodeBrng, tanggal, jam)
+func (u *ResepPulangUseCase) Delete(c *fiber.Ctx, noRawat, kodeBrng, tanggal, jam string) error {
+	return u.Repository.Delete(c, noRawat, kodeBrng, tanggal, jam)
 }
 
 // Helper

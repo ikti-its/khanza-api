@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/repository"
@@ -17,7 +18,7 @@ func NewRujukanKeluarUseCase(repo repository.RujukanKeluarRepository) *RujukanKe
 	return &RujukanKeluarUseCase{Repository: repo}
 }
 
-func (u *RujukanKeluarUseCase) Create(request *model.RujukanKeluarRequest) (model.RujukanKeluarResponse, error) {
+func (u *RujukanKeluarUseCase) Create(c *fiber.Ctx, request *model.RujukanKeluarRequest) (model.RujukanKeluarResponse, error) {
 	tanggalRujuk, err := time.Parse("2006-01-02", request.TanggalRujuk)
 	if err != nil {
 		return model.RujukanKeluarResponse{}, fmt.Errorf("invalid tanggal_rujuk format: %v", err)
@@ -43,7 +44,7 @@ func (u *RujukanKeluarUseCase) Create(request *model.RujukanKeluarRequest) (mode
 		Keterangan:         request.Keterangan,
 	}
 
-	if err := u.Repository.Insert(&entityData); err != nil {
+	if err := u.Repository.Insert(c, &entityData); err != nil {
 		return model.RujukanKeluarResponse{}, fmt.Errorf("failed to insert: %v", err)
 	}
 
@@ -111,7 +112,7 @@ func (u *RujukanKeluarUseCase) GetByNomorRawat(nomorRawat string) (model.Rujukan
 	}, nil
 }
 
-func (u *RujukanKeluarUseCase) Update(nomorRawat string, request *model.RujukanKeluarRequest) (model.RujukanKeluarResponse, error) {
+func (u *RujukanKeluarUseCase) Update(c *fiber.Ctx, nomorRawat string, request *model.RujukanKeluarRequest) (model.RujukanKeluarResponse, error) {
 	r, err := u.Repository.FindByNomorRawat(nomorRawat)
 	if err != nil {
 		return model.RujukanKeluarResponse{}, fmt.Errorf("data not found")
@@ -137,13 +138,13 @@ func (u *RujukanKeluarUseCase) Update(nomorRawat string, request *model.RujukanK
 		return model.RujukanKeluarResponse{}, fmt.Errorf("invalid jam_rujuk format")
 	}
 
-	if err := u.Repository.Update(&r); err != nil {
+	if err := u.Repository.Update(c, &r); err != nil {
 		return model.RujukanKeluarResponse{}, fmt.Errorf("failed to update")
 	}
 
 	return u.GetByNomorRawat(nomorRawat)
 }
 
-func (u *RujukanKeluarUseCase) Delete(nomorRawat string) error {
-	return u.Repository.Delete(nomorRawat)
+func (u *RujukanKeluarUseCase) Delete(c *fiber.Ctx, nomorRawat string) error {
+	return u.Repository.Delete(c, nomorRawat)
 }

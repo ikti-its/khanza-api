@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/repository"
@@ -16,7 +17,7 @@ func NewResepDokterRacikanUseCase(repo repository.ResepDokterRacikanRepository) 
 	return &ResepDokterRacikanUseCase{Repository: repo}
 }
 
-func (u *ResepDokterRacikanUseCase) Create(request *model.ResepDokterRacikanRequest) (model.ResepDokterRacikanResponse, error) {
+func (u *ResepDokterRacikanUseCase) Create(c *fiber.Ctx, request *model.ResepDokterRacikanRequest) (model.ResepDokterRacikanResponse, error) {
 	entity := entity.ResepDokterRacikan{
 		NoResep:     request.NoResep,
 		NoRacik:     request.NoRacik,
@@ -27,7 +28,7 @@ func (u *ResepDokterRacikanUseCase) Create(request *model.ResepDokterRacikanRequ
 		Keterangan:  request.Keterangan,
 	}
 
-	if err := u.Repository.Insert(&entity); err != nil {
+	if err := u.Repository.Insert(c, &entity); err != nil {
 		return model.ResepDokterRacikanResponse{}, fmt.Errorf("failed to insert resep dokter racikan: %v", err)
 	}
 
@@ -60,7 +61,7 @@ func (u *ResepDokterRacikanUseCase) GetByNoResep(noResep string) ([]model.ResepD
 	return result, nil
 }
 
-func (u *ResepDokterRacikanUseCase) Update(request *model.ResepDokterRacikanRequest) (model.ResepDokterRacikanResponse, error) {
+func (u *ResepDokterRacikanUseCase) Update(c *fiber.Ctx, request *model.ResepDokterRacikanRequest) (model.ResepDokterRacikanResponse, error) {
 	entity := entity.ResepDokterRacikan{
 		NoResep:     request.NoResep,
 		NoRacik:     request.NoRacik,
@@ -71,13 +72,13 @@ func (u *ResepDokterRacikanUseCase) Update(request *model.ResepDokterRacikanRequ
 		Keterangan:  request.Keterangan,
 	}
 
-	if err := u.Repository.Update(&entity); err != nil {
+	if err := u.Repository.Update(c, &entity); err != nil {
 		return model.ResepDokterRacikanResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
 	return model.ResepDokterRacikanResponse(entity), nil
 }
 
-func (u *ResepDokterRacikanUseCase) Delete(noResep, noRacik string) error {
-	return u.Repository.Delete(noResep, noRacik)
+func (u *ResepDokterRacikanUseCase) Delete(c *fiber.Ctx, noResep, noRacik string) error {
+	return u.Repository.Delete(c, noResep, noRacik)
 }

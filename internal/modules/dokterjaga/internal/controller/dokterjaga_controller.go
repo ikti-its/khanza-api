@@ -34,7 +34,7 @@ func (c *DokterJagaController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -89,7 +89,7 @@ func (c *DokterJagaController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(&request)
+	response, err := c.UseCase.Update(ctx, &request)
 	if err != nil {
 		log.Println("[Update DokterJaga ERROR]", err.Error()) // log it to console
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -117,7 +117,7 @@ func (c *DokterJagaController) Delete(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.Delete(kode, hari)
+	err := c.UseCase.Delete(ctx, kode, hari)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

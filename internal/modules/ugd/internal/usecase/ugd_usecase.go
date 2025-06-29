@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ugd/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/ugd/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/ugd/internal/repository"
@@ -18,7 +19,7 @@ func NewUGDUseCase(repo repository.UGDRepository) *UGDUseCase {
 }
 
 // Create a new UGD entry
-func (u *UGDUseCase) Create(request *model.UGDRequest) (model.UGDResponse, error) {
+func (u *UGDUseCase) Create(c *fiber.Ctx, request *model.UGDRequest) (model.UGDResponse, error) {
 	// Validate if kode_dokter exists
 	exists, err := u.Repository.CheckDokterExists(request.KodeDokter)
 	if err != nil {
@@ -71,7 +72,7 @@ func (u *UGDUseCase) Create(request *model.UGDRequest) (model.UGDResponse, error
 		StatusBayar:     request.StatusBayar,
 	}
 
-	err = u.Repository.Insert(&ugdEntity)
+	err = u.Repository.Insert(c, &ugdEntity)
 	if err != nil {
 		return model.UGDResponse{}, fmt.Errorf("failed to create UGD: %v", err)
 	}
@@ -162,7 +163,7 @@ func (u *UGDUseCase) GetByNomorReg(nomorReg string) (model.UGDResponse, error) {
 	}, nil
 }
 
-func (u *UGDUseCase) Update(nomorReg string, request *model.UGDRequest) (model.UGDResponse, error) {
+func (u *UGDUseCase) Update(c *fiber.Ctx, nomorReg string, request *model.UGDRequest) (model.UGDResponse, error) {
 	ugd, err := u.Repository.FindByNomorReg(nomorReg)
 	if err != nil {
 		return model.UGDResponse{}, fmt.Errorf("UGD not found")
@@ -177,7 +178,7 @@ func (u *UGDUseCase) Update(nomorReg string, request *model.UGDRequest) (model.U
 	ugd.AlamatPJ = request.AlamatPJ
 	ugd.Tanggal = parsedDate
 
-	err = u.Repository.Update(&ugd)
+	err = u.Repository.Update(c, &ugd)
 	if err != nil {
 		return model.UGDResponse{}, fmt.Errorf("failed to update UGD: %v", err)
 	}
@@ -185,8 +186,8 @@ func (u *UGDUseCase) Update(nomorReg string, request *model.UGDRequest) (model.U
 	return u.GetByNomorReg(nomorReg)
 }
 
-func (u *UGDUseCase) Delete(nomorReg string) error {
-	err := u.Repository.Delete(nomorReg)
+func (u *UGDUseCase) Delete(c *fiber.Ctx, nomorReg string) error {
+	err := u.Repository.Delete(c, nomorReg)
 	if err != nil {
 		return fmt.Errorf("failed to delete UGD: %v", err)
 	}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
@@ -17,7 +18,7 @@ func NewPemeriksaanRanapUseCase(repo repository.PemeriksaanRanapRepository) *Pem
 	return &PemeriksaanRanapUseCase{Repository: repo}
 }
 
-func (u *PemeriksaanRanapUseCase) Create(request *model.PemeriksaanRanapRequest) (*model.PemeriksaanRanapResponse, error) {
+func (u *PemeriksaanRanapUseCase) Create(c *fiber.Ctx, request *model.PemeriksaanRanapRequest) (*model.PemeriksaanRanapResponse, error) {
 	// Check if the doctor exists
 
 	// Parse the date and time strings into time.Time (for internal use)
@@ -55,7 +56,7 @@ func (u *PemeriksaanRanapUseCase) Create(request *model.PemeriksaanRanapRequest)
 	}
 
 	// Insert the data into the repository
-	if err := u.Repository.Insert(&entityData); err != nil {
+	if err := u.Repository.Insert(c, &entityData); err != nil {
 		return nil, fmt.Errorf("gagal insert pemeriksaan ranap: %v", err)
 	}
 
@@ -153,7 +154,7 @@ func (u *PemeriksaanRanapUseCase) GetByNomorRawat(nomorRawat string) (*model.Pem
 	}, nil
 }
 
-func (u *PemeriksaanRanapUseCase) Update(nomorRawat string, request *model.PemeriksaanRanapRequest) error {
+func (u *PemeriksaanRanapUseCase) Update(c *fiber.Ctx, nomorRawat string, request *model.PemeriksaanRanapRequest) error {
 	// Parse tanggal and jam
 	tgl, err := time.Parse("2006-01-02", request.Tanggal)
 	if err != nil {
@@ -189,13 +190,13 @@ func (u *PemeriksaanRanapUseCase) Update(nomorRawat string, request *model.Pemer
 	}
 
 	// Call repository to update
-	if err := u.Repository.Update(record); err != nil {
+	if err := u.Repository.Update(c, record); err != nil {
 		return fmt.Errorf("gagal update data: %v", err)
 	}
 
 	return nil
 }
 
-func (u *PemeriksaanRanapUseCase) Delete(nomorRawat string) error {
-	return u.Repository.Delete(nomorRawat)
+func (u *PemeriksaanRanapUseCase) Delete(c *fiber.Ctx, nomorRawat string) error {
+	return u.Repository.Delete(c, nomorRawat)
 }

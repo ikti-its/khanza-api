@@ -1,13 +1,14 @@
 package repository
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 )
 
 type ResepDokterRacikanRepository interface {
-	Insert(racikan *entity.ResepDokterRacikan) error
+	Insert(c *fiber.Ctx, p *entity.ResepDokterRacikan) error
 	FindAll() ([]entity.ResepDokterRacikan, error)
 	FindByNoResep(noResep string) ([]entity.ResepDokterRacikan, error)
-	Update(racikan *entity.ResepDokterRacikan) error
-	Delete(noResep string, noRacik string) error
+	Update(c *fiber.Ctx, p *entity.ResepDokterRacikan) error
+	Delete(c *fiber.Ctx, noResep, noRacik string) error
 }

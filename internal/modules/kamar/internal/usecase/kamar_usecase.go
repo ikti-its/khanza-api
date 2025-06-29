@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/kamar/internal/entity"     // Change the path to match Kamar module
 	"github.com/ikti-its/khanza-api/internal/modules/kamar/internal/model"      // Change the path to match Kamar module
 	"github.com/ikti-its/khanza-api/internal/modules/kamar/internal/repository" // Change the path to match Kamar module
@@ -17,9 +18,7 @@ func NewKamarUseCase(repo repository.KamarRepository) *KamarUseCase {
 }
 
 // Create a new kamar entry
-func (u *KamarUseCase) Create(request *model.KamarRequest) (model.KamarResponse, error) {
-
-	// Convert request model to entity model
+func (u *KamarUseCase) Create(ctx *fiber.Ctx, request *model.KamarRequest) (model.KamarResponse, error) {
 	kamarEntity := entity.Kamar{
 		NomorBed:    request.NomorBed,
 		KodeKamar:   request.KodeKamar,
@@ -29,13 +28,11 @@ func (u *KamarUseCase) Create(request *model.KamarRequest) (model.KamarResponse,
 		StatusKamar: request.StatusKamar,
 	}
 
-	// Insert into database
-	err := u.Repository.Insert(&kamarEntity)
+	err := u.Repository.Insert(ctx, &kamarEntity)
 	if err != nil {
 		return model.KamarResponse{}, fmt.Errorf("failed to create kamar: %v", err)
 	}
 
-	// Return response
 	return model.KamarResponse{
 		NomorBed:    kamarEntity.NomorBed,
 		KodeKamar:   kamarEntity.KodeKamar,
@@ -86,7 +83,7 @@ func (u *KamarUseCase) GetByNomorBed(nomorBed string) (model.KamarResponse, erro
 }
 
 // Update an existing kamar record
-func (u *KamarUseCase) Update(nomorBed string, request *model.KamarRequest) (model.KamarResponse, error) {
+func (u *KamarUseCase) Update(ctx *fiber.Ctx, nomorBed string, request *model.KamarRequest) (model.KamarResponse, error) {
 	kamar, err := u.Repository.FindByNomorBed(nomorBed)
 	if err != nil {
 		return model.KamarResponse{}, fmt.Errorf("kamar not found")
@@ -98,7 +95,7 @@ func (u *KamarUseCase) Update(nomorBed string, request *model.KamarRequest) (mod
 	kamar.TarifKamar = request.TarifKamar
 	kamar.StatusKamar = request.StatusKamar
 
-	err = u.Repository.Update(&kamar)
+	err = u.Repository.Update(ctx, &kamar)
 	if err != nil {
 		return model.KamarResponse{}, fmt.Errorf("failed to update kamar: %v", err)
 	}
@@ -114,8 +111,8 @@ func (u *KamarUseCase) Update(nomorBed string, request *model.KamarRequest) (mod
 }
 
 // Delete a kamar record by NomorBed
-func (u *KamarUseCase) Delete(nomorBed string) error {
-	err := u.Repository.Delete(nomorBed)
+func (u *KamarUseCase) Delete(ctx *fiber.Ctx, nomorBed string) error {
+	err := u.Repository.Delete(ctx, nomorBed)
 	if err != nil {
 		return fmt.Errorf("failed to delete kamar: %v", err)
 	}

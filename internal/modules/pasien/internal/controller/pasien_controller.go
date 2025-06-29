@@ -84,7 +84,7 @@ func (c *PasienController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.Create(&pasien)
+	err := c.UseCase.Create(ctx, &pasien)
 	if err != nil {
 		return ctx.Status(http.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
@@ -133,7 +133,7 @@ func (c *PasienController) Update(ctx *fiber.Ctx) error {
 	pasien.NoRkmMedis = noRkm
 
 	// ✅ Call usecase update
-	err := c.UseCase.Update(&pasien)
+	err := c.UseCase.Update(ctx, &pasien)
 	if err != nil {
 		fmt.Println("❌ Failed to update pasien:", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -154,7 +154,7 @@ func (c *PasienController) Update(ctx *fiber.Ctx) error {
 func (c *PasienController) Delete(ctx *fiber.Ctx) error {
 	noRkm := ctx.Params("no_rkm_medis")
 
-	err := c.UseCase.Delete(noRkm)
+	err := c.UseCase.Delete(ctx, noRkm)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",

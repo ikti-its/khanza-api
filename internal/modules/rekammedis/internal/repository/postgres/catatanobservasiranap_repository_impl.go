@@ -4,10 +4,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/rekammedis/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type catatanObservasiRanapRepositoryImpl struct {
@@ -18,15 +21,22 @@ func NewCatatanObservasiRanapRepository(db *sqlx.DB) repository.CatatanObservasi
 	return &catatanObservasiRanapRepositoryImpl{DB: db}
 }
 
-func (r *catatanObservasiRanapRepositoryImpl) Insert(data *entity.CatatanObservasiRanap) error {
-	query := `
-		INSERT INTO catatan_observasi_ranap (
-			no_rawat, tgl_perawatan, jam_rawat, gcs, td, hr, rr, suhu, spo2, nip
-		) VALUES (
-			:no_rawat, :tgl_perawatan, :jam_rawat, :gcs, :td, :hr, :rr, :suhu, :spo2, :nip
-		)`
-	_, err := r.DB.NamedExec(query, data)
-	return err
+func (r *catatanObservasiRanapRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID) // escapes single quotes safely
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	if _, err := tx.Exec(query); err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+		return err
+	}
+	return nil
 }
 
 func (r *catatanObservasiRanapRepositoryImpl) FindAll() ([]entity.CatatanObservasiRanap, error) {
@@ -57,20 +67,73 @@ func (r *catatanObservasiRanapRepositoryImpl) FindByNoRawatAndTanggal(noRawat st
 	return list, err
 }
 
-func (r *catatanObservasiRanapRepositoryImpl) Update(data *entity.CatatanObservasiRanap) error {
+func (r *catatanObservasiRanapRepositoryImpl) Insert(c *fiber.Ctx, data *entity.CatatanObservasiRanap) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `
+		INSERT INTO catatan_observasi_ranap (
+			no_rawat, tgl_perawatan, jam_rawat, gcs, td, hr, rr, suhu, spo2, nip
+		) VALUES (
+			:no_rawat, :tgl_perawatan, :jam_rawat, :gcs, :td, :hr, :rr, :suhu, :spo2, :nip
+		)`
+	_, err = tx.NamedExec(query, data)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (r *catatanObservasiRanapRepositoryImpl) Update(c *fiber.Ctx, data *entity.CatatanObservasiRanap) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE catatan_observasi_ranap SET
 			gcs = :gcs, td = :td, hr = :hr, rr = :rr, suhu = :suhu, spo2 = :spo2, nip = :nip
 		WHERE no_rawat = :no_rawat AND tgl_perawatan = :tgl_perawatan AND jam_rawat = :jam_rawat
 	`
-	_, err := r.DB.NamedExec(query, data)
-	return err
+	_, err = tx.NamedExec(query, data)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *catatanObservasiRanapRepositoryImpl) Delete(noRawat string, tglPerawatan string, jamRawat string) error {
+func (r *catatanObservasiRanapRepositoryImpl) Delete(c *fiber.Ctx, noRawat string, tglPerawatan string, jamRawat string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM catatan_observasi_ranap WHERE no_rawat = $1 AND tgl_perawatan = $2 AND jam_rawat = $3`
-	_, err := r.DB.Exec(query, noRawat, tglPerawatan, jamRawat)
-	return err
+	_, err = tx.Exec(query, noRawat, tglPerawatan, jamRawat)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *catatanObservasiRanapRepositoryImpl) FindByNoRawatAndTanggal2(noRawat string, tanggal string) (*entity.CatatanObservasiRanap, error) {

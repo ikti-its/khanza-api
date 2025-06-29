@@ -33,7 +33,7 @@ func (c *ResepPulangController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		fmt.Println("❌ Error in usecase.Create():", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -118,7 +118,7 @@ func (c *ResepPulangController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(noRawat, kodeBrng, tanggal, jam, &request)
+	response, err := c.UseCase.Update(ctx, noRawat, kodeBrng, tanggal, jam, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -143,7 +143,7 @@ func (c *ResepPulangController) Delete(ctx *fiber.Ctx) error {
 	// Debug log
 	// fmt.Println("[DEBUG] Delete reseppulang params:", noRawat, kodeBrng, tanggal, jam)
 
-	err := c.UseCase.Delete(noRawat, kodeBrng, tanggal, jam)
+	err := c.UseCase.Delete(ctx, noRawat, kodeBrng, tanggal, jam)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

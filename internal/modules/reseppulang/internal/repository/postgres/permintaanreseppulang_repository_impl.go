@@ -2,10 +2,14 @@ package postgres
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/repository"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type permintaanResepPulangRepositoryImpl struct {
@@ -16,37 +20,23 @@ func NewPermintaanResepPulangRepository(db *sqlx.DB) repository.PermintaanResepP
 	return &permintaanResepPulangRepositoryImpl{DB: db}
 }
 
-func (r *permintaanResepPulangRepositoryImpl) InsertMany(perms []*entity.PermintaanResepPulang) error {
-	tx, err := r.DB.Beginx()
-	if err != nil {
+func (r *permintaanResepPulangRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID) // Escapes string safely for SQL
+
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+	if _, err := tx.Exec(query); err != nil {
+		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
 		return err
 	}
 
-	query := `
-		INSERT INTO permintaan_resep_pulang (
-			no_permintaan, tgl_permintaan, jam, no_rawat, kd_dokter,
-			status, tgl_validasi, jam_validasi,
-			kode_brng, jumlah, aturan_pakai
-		) VALUES (
-			$1, $2, $3, $4, $5,
-			$6, $7, $8,
-			$9, $10, $11
-		)
-	`
-
-	for _, p := range perms {
-		_, err := tx.Exec(query,
-			p.NoPermintaan, p.TglPermintaan, p.Jam, p.NoRawat, p.KdDokter,
-			p.Status, p.TglValidasi, p.JamValidasi,
-			p.KodeBrng, p.Jumlah, p.AturanPakai,
-		)
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-	}
-
-	return tx.Commit()
+	return nil
 }
 
 func (r *permintaanResepPulangRepositoryImpl) FindAll() ([]entity.PermintaanResepPulang, error) {
@@ -76,7 +66,56 @@ func (r *permintaanResepPulangRepositoryImpl) FindByNoPermintaan(noPermintaan st
 	return &data, nil
 }
 
-func (r *permintaanResepPulangRepositoryImpl) Update(p *entity.PermintaanResepPulang) error {
+func (r *permintaanResepPulangRepositoryImpl) InsertMany(c *fiber.Ctx, perms []*entity.PermintaanResepPulang) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	// ✅ Set audit user
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+	query := `
+		INSERT INTO permintaan_resep_pulang (
+			no_permintaan, tgl_permintaan, jam, no_rawat, kd_dokter,
+			status, tgl_validasi, jam_validasi,
+			kode_brng, jumlah, aturan_pakai
+		) VALUES (
+			$1, $2, $3, $4, $5,
+			$6, $7, $8,
+			$9, $10, $11
+		)
+	`
+
+	for _, p := range perms {
+		_, err := tx.Exec(query,
+			p.NoPermintaan, p.TglPermintaan, p.Jam, p.NoRawat, p.KdDokter,
+			p.Status, p.TglValidasi, p.JamValidasi,
+			p.KodeBrng, p.Jumlah, p.AturanPakai,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit()
+}
+
+func (r *permintaanResepPulangRepositoryImpl) Update(c *fiber.Ctx, p *entity.PermintaanResepPulang) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	// ✅ Set audit user
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE permintaan_resep_pulang SET 
 			tgl_permintaan = $2, jam = $3, no_rawat = $4,
@@ -84,18 +123,38 @@ func (r *permintaanResepPulangRepositoryImpl) Update(p *entity.PermintaanResepPu
 			kode_brng = $9, jumlah = $10, aturan_pakai = $11
 		WHERE no_permintaan = $1 AND kode_brng = $9
 	`
-	_, err := r.DB.Exec(query,
+
+	_, err = tx.Exec(query,
 		p.NoPermintaan, p.TglPermintaan, p.Jam, p.NoRawat,
 		p.KdDokter, p.Status, p.TglValidasi, p.JamValidasi,
 		p.KodeBrng, p.Jumlah, p.AturanPakai,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *permintaanResepPulangRepositoryImpl) Delete(noPermintaan string) error {
+func (r *permintaanResepPulangRepositoryImpl) Delete(c *fiber.Ctx, noPermintaan string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	// ✅ Set audit user
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM permintaan_resep_pulang WHERE no_permintaan = $1`
-	_, err := r.DB.Exec(query, noPermintaan)
-	return err
+	_, err = tx.Exec(query, noPermintaan)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *permintaanResepPulangRepositoryImpl) GetByNoPermintaan(noPermintaan string) ([]entity.PermintaanResepPulang, error) {

@@ -34,7 +34,7 @@ func (c *KamarController) Create(ctx *fiber.Ctx) error {
 	}
 
 	// Call the Create method of the KamarUseCase
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -90,7 +90,7 @@ func (c *KamarController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(nomorBed, &request)
+	response, err := c.UseCase.Update(ctx, nomorBed, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -107,7 +107,7 @@ func (c *KamarController) Update(ctx *fiber.Ctx) error {
 
 func (c *KamarController) Delete(ctx *fiber.Ctx) error {
 	nomorBed := ctx.Params("nomor_bed")
-	err := c.UseCase.Delete(nomorBed)
+	err := c.UseCase.Delete(ctx, nomorBed)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

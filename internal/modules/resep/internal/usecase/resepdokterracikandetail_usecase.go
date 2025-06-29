@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/repository"
@@ -19,7 +20,7 @@ func NewResepDokterRacikanDetailUseCase(repo repository.ResepDokterRacikanDetail
 	return &ResepDokterRacikanDetailUseCase{Repository: repo}
 }
 
-func (u *ResepDokterRacikanDetailUseCase) Create(request *model.ResepDokterRacikanDetailRequest) (model.ResepDokterRacikanDetailResponse, error) {
+func (u *ResepDokterRacikanDetailUseCase) Create(c *fiber.Ctx, request *model.ResepDokterRacikanDetailRequest) (model.ResepDokterRacikanDetailResponse, error) {
 	entity := entity.ResepDokterRacikanDetail{
 		NoResep:   request.NoResep,
 		NoRacik:   request.NoRacik,
@@ -30,7 +31,7 @@ func (u *ResepDokterRacikanDetailUseCase) Create(request *model.ResepDokterRacik
 		Jml:       request.Jml,
 	}
 
-	if err := u.Repository.Insert(&entity); err != nil {
+	if err := u.Repository.Insert(c, &entity); err != nil {
 		return model.ResepDokterRacikanDetailResponse{}, fmt.Errorf("failed to insert detail racikan: %v", err)
 	}
 
@@ -63,7 +64,7 @@ func (u *ResepDokterRacikanDetailUseCase) GetByNoResepAndNoRacik(noResep, noRaci
 	return result, nil
 }
 
-func (u *ResepDokterRacikanDetailUseCase) Update(request *model.ResepDokterRacikanDetailRequest) (model.ResepDokterRacikanDetailResponse, error) {
+func (u *ResepDokterRacikanDetailUseCase) Update(c *fiber.Ctx, request *model.ResepDokterRacikanDetailRequest) (model.ResepDokterRacikanDetailResponse, error) {
 	entity := entity.ResepDokterRacikanDetail{
 		NoResep:   request.NoResep,
 		NoRacik:   request.NoRacik,
@@ -74,15 +75,15 @@ func (u *ResepDokterRacikanDetailUseCase) Update(request *model.ResepDokterRacik
 		Jml:       request.Jml,
 	}
 
-	if err := u.Repository.Update(&entity); err != nil {
+	if err := u.Repository.Update(c, &entity); err != nil {
 		return model.ResepDokterRacikanDetailResponse{}, fmt.Errorf("update failed: %v", err)
 	}
 
 	return model.ResepDokterRacikanDetailResponse(entity), nil
 }
 
-func (u *ResepDokterRacikanDetailUseCase) Delete(noResep, noRacik, kodeBrng string) error {
-	return u.Repository.Delete(noResep, noRacik, kodeBrng)
+func (u *ResepDokterRacikanDetailUseCase) Delete(c *fiber.Ctx, noResep, noRacik, kodeBrng string) error {
+	return u.Repository.Delete(c, noResep, noRacik, kodeBrng)
 }
 
 func (u *ResepDokterRacikanDetailUseCase) GetByNoResep(noResep string) ([]model.ResepDokterRacikanDetail, error) {

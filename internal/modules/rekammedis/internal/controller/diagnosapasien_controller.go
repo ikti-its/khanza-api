@@ -30,7 +30,7 @@ func (c *DiagnosaPasienController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -105,7 +105,7 @@ func (c *DiagnosaPasienController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	err := c.UseCase.Update(&request)
+	err := c.UseCase.Update(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -125,7 +125,7 @@ func (c *DiagnosaPasienController) Delete(ctx *fiber.Ctx) error {
 	noRawat := ctx.Params("no_rawat")
 	kdPenyakit := ctx.Params("kd_penyakit")
 
-	err := c.UseCase.Delete(noRawat, kdPenyakit)
+	err := c.UseCase.Delete(ctx, noRawat, kdPenyakit)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

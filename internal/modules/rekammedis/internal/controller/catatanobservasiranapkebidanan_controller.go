@@ -32,7 +32,7 @@ func (c *CatatanObservasiRanapKebidananController) Create(ctx *fiber.Ctx) error 
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -89,7 +89,7 @@ func (c *CatatanObservasiRanapKebidananController) Update(ctx *fiber.Ctx) error 
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	err := c.UseCase.Update(noRawat, &request)
+	err := c.UseCase.Update(ctx, noRawat, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -110,7 +110,7 @@ func (c *CatatanObservasiRanapKebidananController) Delete(ctx *fiber.Ctx) error 
 	tanggal := ctx.Query("tanggal")
 	jam := ctx.Query("jam")
 
-	err := c.UseCase.Delete(noRawat, tanggal, jam)
+	err := c.UseCase.Delete(ctx, noRawat, tanggal, jam)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

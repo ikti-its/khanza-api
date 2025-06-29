@@ -33,7 +33,7 @@ func (c *RujukanMasukController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -90,7 +90,7 @@ func (c *RujukanMasukController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(nomorRawat, &request)
+	response, err := c.UseCase.Update(ctx, nomorRawat, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -108,7 +108,7 @@ func (c *RujukanMasukController) Update(ctx *fiber.Ctx) error {
 
 func (c *RujukanMasukController) Delete(ctx *fiber.Ctx) error {
 	nomorRawat := ctx.Params("nomor_rawat")
-	err := c.UseCase.Delete(nomorRawat)
+	err := c.UseCase.Delete(ctx, nomorRawat)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

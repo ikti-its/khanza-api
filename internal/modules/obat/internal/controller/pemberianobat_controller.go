@@ -33,7 +33,7 @@ func (c *PemberianObatController) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		fmt.Println("❌ Error in usecase.Create():", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
@@ -93,7 +93,7 @@ func (c *PemberianObatController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(nomorRawat, &request)
+	response, err := c.UseCase.Update(ctx, nomorRawat, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -120,7 +120,7 @@ func (c *PemberianObatController) Delete(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.Delete(nomorRawat, jamBeri)
+	err := c.UseCase.Delete(ctx, nomorRawat, jamBeri)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":   500,

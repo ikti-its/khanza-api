@@ -3,16 +3,18 @@ package repository
 import (
 	"fmt"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/entity"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type DokterJagaRepository interface {
-	Insert(dokter *entity.DokterJaga) error
+	Insert(c *fiber.Ctx, d *entity.DokterJaga) error
 	FindAll() ([]entity.DokterJaga, error)
 	FindByKodeDokter(kodeDokter string) ([]entity.DokterJaga, error)
-	Update(dokter *entity.DokterJaga) error
-	Delete(kodeDokter string, hariKerja string) error
+	Update(c *fiber.Ctx, d *entity.DokterJaga) error
+	Delete(c *fiber.Ctx, kodeDokter string, hariKerja string) error
 	FindByStatus(status string) ([]entity.DokterJaga, error)
 	UpdateStatus(kodeDokter string, hariKerja string, status string) error
 	GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error)
@@ -27,18 +29,46 @@ func NewDokterJagaRepository(db *sqlx.DB) DokterJagaRepository {
 	return &dokterJagaRepositoryImpl{DB: db}
 }
 
-func (r *dokterJagaRepositoryImpl) Insert(d *entity.DokterJaga) error {
+func (r *dokterJagaRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
+	}
+
+	safeUserID := pq.QuoteLiteral(userID) // Escapes for SQL
+	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+
+	_, err := tx.Exec(query)
+	return err
+}
+
+func (r *dokterJagaRepositoryImpl) Insert(c *fiber.Ctx, d *entity.DokterJaga) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO dokter_jaga (
 			kode_dokter, nama_dokter, hari_kerja,
 			jam_mulai, jam_selesai, poliklinik, status
 		) VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		d.KodeDokter, d.NamaDokter, d.HariKerja,
 		d.JamMulai, d.JamSelesai, d.Poliklinik, d.Status,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *dokterJagaRepositoryImpl) FindAll() ([]entity.DokterJaga, error) {
@@ -55,7 +85,17 @@ func (r *dokterJagaRepositoryImpl) FindByKodeDokter(kode string) ([]entity.Dokte
 	return records, err
 }
 
-func (r *dokterJagaRepositoryImpl) Update(d *entity.DokterJaga) error {
+func (r *dokterJagaRepositoryImpl) Update(c *fiber.Ctx, d *entity.DokterJaga) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE dokter_jaga SET 
 			nama_dokter = $2,
@@ -65,7 +105,7 @@ func (r *dokterJagaRepositoryImpl) Update(d *entity.DokterJaga) error {
 			status = $6
 		WHERE kode_dokter = $1 AND hari_kerja = $7
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		d.KodeDokter,
 		d.NamaDokter,
 		d.JamMulai,
@@ -74,13 +114,31 @@ func (r *dokterJagaRepositoryImpl) Update(d *entity.DokterJaga) error {
 		d.Status,
 		d.HariKerja,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *dokterJagaRepositoryImpl) Delete(kodeDokter string, hariKerja string) error {
+func (r *dokterJagaRepositoryImpl) Delete(c *fiber.Ctx, kodeDokter string, hariKerja string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM dokter_jaga WHERE kode_dokter = $1 AND hari_kerja = $2`
-	_, err := r.DB.Exec(query, kodeDokter, hariKerja)
-	return err
+	_, err = tx.Exec(query, kodeDokter, hariKerja)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *dokterJagaRepositoryImpl) FindByStatus(status string) ([]entity.DokterJaga, error) {

@@ -37,7 +37,7 @@ func (c *RegistrasiController) Create(ctx *fiber.Ctx) error {
 
 	}
 
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -93,7 +93,7 @@ func (c *RegistrasiController) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(nomorReg, &request)
+	response, err := c.UseCase.Update(ctx, nomorReg, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -110,7 +110,7 @@ func (c *RegistrasiController) Update(ctx *fiber.Ctx) error {
 
 func (c *RegistrasiController) Delete(ctx *fiber.Ctx) error {
 	nomorReg := ctx.Params("nomor_reg")
-	err := c.UseCase.Delete(nomorReg)
+	err := c.UseCase.Delete(ctx, nomorReg)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -125,7 +125,7 @@ func (c *RegistrasiController) Delete(ctx *fiber.Ctx) error {
 }
 
 func (r *RegistrasiController) GetPendingRoomRequests(c *fiber.Ctx) error {
-	results, err := r.UseCase.GetPendingRoomRequests()
+	results, err := r.UseCase.GetPendingRoomRequests(c)
 	fmt.Println("📥 Received GET /pending-room")
 
 	if err != nil {
@@ -169,7 +169,7 @@ func (c *RegistrasiController) UpdateStatusKamar(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.UpdateStatusKamar(nomorReg, req.StatusKamar)
+	err := c.UseCase.UpdateStatusKamar(ctx, nomorReg, req.StatusKamar)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
@@ -187,7 +187,7 @@ func (c *RegistrasiController) AssignRoomStatus(ctx *fiber.Ctx) error {
 	nomorReg := ctx.Params("nomor_reg")
 	status := ctx.Params("status") // "menunggu", "selesai", etc.
 
-	err := c.UseCase.UpdateStatusKamar(nomorReg, status)
+	err := c.UseCase.UpdateStatusKamar(ctx, nomorReg, status)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
@@ -221,7 +221,7 @@ func (c *RegistrasiController) AssignKamar(ctx *fiber.Ctx) error {
 
 	fmt.Println("➡️ Kamar to assign:", req.KamarID)
 
-	err := c.UseCase.AssignKamar(nomorReg, req.KamarID)
+	err := c.UseCase.AssignKamar(ctx, nomorReg, req.KamarID)
 	if err != nil {
 		fmt.Println("❌ Error assigning kamar:", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

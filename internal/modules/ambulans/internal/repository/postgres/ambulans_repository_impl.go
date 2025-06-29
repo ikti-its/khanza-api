@@ -15,8 +15,9 @@ type AmbulansRepository interface {
 	Find() ([]entity.Ambulans, error)
 	FindAll() ([]entity.Ambulans, error)
 	FindByNoAmbulans(noAmbulans string) (entity.Ambulans, error)
-	Update(ambulans *entity.Ambulans) error
-	Delete(noAmbulans string) error
+	Update(c *fiber.Ctx, ambulans *entity.Ambulans) error
+	Delete(c *fiber.Ctx, noAmbulans string) error
+
 	InsertAmbulansRequest(noAmbulans string) error
 	FindPendingRequests() ([]entity.Ambulans, error)
 	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
@@ -115,24 +116,52 @@ func (r *ambulansRepositoryImpl) FindByNoAmbulans(noAmbulans string) (entity.Amb
 	return record, err
 }
 
-func (r *ambulansRepositoryImpl) Update(ambulans *entity.Ambulans) error {
+func (r *ambulansRepositoryImpl) Update(c *fiber.Ctx, ambulans *entity.Ambulans) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE ambulans SET 
 			status = $2, supir = $3
 		WHERE no_ambulans = $1
 	`
-	_, err := r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		ambulans.NoAmbulans,
 		ambulans.Status,
 		ambulans.Supir,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *ambulansRepositoryImpl) Delete(noAmbulans string) error {
+func (r *ambulansRepositoryImpl) Delete(c *fiber.Ctx, noAmbulans string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM ambulans WHERE no_ambulans = $1`
-	_, err := r.DB.Exec(query, noAmbulans)
-	return err
+	_, err = tx.Exec(query, noAmbulans)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *ambulansRepositoryImpl) InsertAmbulansRequest(noAmbulans string) error {

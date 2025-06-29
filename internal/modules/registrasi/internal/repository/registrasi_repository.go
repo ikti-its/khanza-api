@@ -1,24 +1,26 @@
 package repository
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/entity"
 	"github.com/ikti-its/khanza-api/internal/modules/registrasi/internal/model"
 )
 
 type RegistrasiRepository interface {
-	Insert(registrasi *entity.Registrasi) error
+	Insert(c *fiber.Ctx, registrasi *entity.Registrasi) error
+	Update(c *fiber.Ctx, registrasi *entity.Registrasi) error
+	Delete(c *fiber.Ctx, nomorReg string) error
+	UpdateStatusKamar(c *fiber.Ctx, nomorReg string, status string) error
+	AssignKamar(c *fiber.Ctx, nomorReg string, nomorBed string) error
+
+	Find() ([]entity.Registrasi, error)
 	FindAll() ([]entity.Registrasi, error)
 	FindByNomorReg(nomorReg string) (entity.Registrasi, error)
-	FindByTanggal(tanggal string) (entity.Registrasi, error)
-	FindByNomorRM(nomorRM string) (entity.Registrasi, error)
-	Update(registrasi *entity.Registrasi) error
-	Delete(nomorReg string) error
-	UpdateStatusKamar(nomorReg string, status string) error
-	FindPendingRoomRequests() ([]entity.Registrasi, error)
-	AssignKamar(nomorReg string, kamarID string) error
+	FindByNomorRM(nomorReg string) (entity.Registrasi, error)
+	FindByTanggal(nomorReg string) (entity.Registrasi, error)
+	GetByNoRawat(noRawat string) (model.RegistrasiResponse, error)
 	GetAllDokter() ([]model.DokterResponse, error)
 	GetNamaDokter(kode string) (string, error)
-	GetByNoRawat(noRawat string) (model.RegistrasiResponse, error)
-
 	CheckDokterExists(kodeDokter string) (bool, error)
+	FindPendingRoomRequests() ([]entity.Registrasi, error)
 }

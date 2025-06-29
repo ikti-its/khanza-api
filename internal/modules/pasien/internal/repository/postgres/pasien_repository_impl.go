@@ -1,8 +1,13 @@
 package postgres
 
 import (
+	"fmt"
+	"log"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/pasien/internal/entity"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type PasienRepository struct {
@@ -13,7 +18,32 @@ func NewPasienRepository(db *sqlx.DB) *PasienRepository {
 	return &PasienRepository{DB: db}
 }
 
-func (r *PasienRepository) Insert(pasien *entity.Pasien) error {
+func (r *PasienRepository) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		log.Println("⚠️ user_id is not a string")
+		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
+	if err != nil {
+		log.Printf("❌ Failed to set user_id: %v", err)
+	}
+	return err
+}
+
+func (r *PasienRepository) Insert(c *fiber.Ctx, pasien *entity.Pasien) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO pasien (
 			no_rkm_medis, nm_pasien, no_ktp, jk, tmp_lahir, tgl_lahir,
@@ -31,8 +61,13 @@ func (r *PasienRepository) Insert(pasien *entity.Pasien) error {
 			:email, :nip, :kd_prop, :propinsipj
 		)
 	`
-	_, err := r.DB.NamedExec(query, pasien)
-	return err
+
+	_, err = tx.NamedExec(query, pasien)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *PasienRepository) Find() ([]entity.Pasien, error) {
@@ -63,7 +98,17 @@ func (r *PasienRepository) FindByNoRkmMedis(noRkmMedis string) (entity.Pasien, e
 	return pasien, err
 }
 
-func (r *PasienRepository) Update(pasien *entity.Pasien) error {
+func (r *PasienRepository) Update(c *fiber.Ctx, pasien *entity.Pasien) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE pasien SET
 			nm_pasien = :nm_pasien,
@@ -103,14 +148,33 @@ func (r *PasienRepository) Update(pasien *entity.Pasien) error {
 			propinsipj = :propinsipj
 		WHERE no_rkm_medis = :no_rkm_medis
 	`
-	_, err := r.DB.NamedExec(query, pasien)
-	return err
+
+	_, err = tx.NamedExec(query, pasien)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
-func (r *PasienRepository) Delete(noRkmMedis string) error {
+func (r *PasienRepository) Delete(c *fiber.Ctx, noRkmMedis string) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `DELETE FROM pasien WHERE no_rkm_medis = $1`
-	_, err := r.DB.Exec(query, noRkmMedis)
-	return err
+	_, err = tx.Exec(query, noRkmMedis)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *PasienRepository) GetByNoKTP(noKTP string) (*entity.Pasien, error) {

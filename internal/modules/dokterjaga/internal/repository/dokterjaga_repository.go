@@ -1,15 +1,16 @@
 package repository
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/dokterjaga/internal/entity"
 )
 
 type DokterJagaRepository interface {
-	Insert(dokter *entity.DokterJaga) error
+	Insert(c *fiber.Ctx, d *entity.DokterJaga) error
 	FindAll() ([]entity.DokterJaga, error)
 	FindByKodeDokter(kodeDokter string) ([]entity.DokterJaga, error)
-	Update(dokter *entity.DokterJaga) error
-	Delete(kodeDokter string, hariKerja string) error
+	Update(c *fiber.Ctx, d *entity.DokterJaga) error
+	Delete(c *fiber.Ctx, kodeDokter string, hariKerja string) error
 	GetByPoliklinik(poliklinik string) ([]entity.DokterJaga, error)
 	GetPoliklinikList() ([]string, error)
 
