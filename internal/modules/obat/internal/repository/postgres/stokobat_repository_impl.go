@@ -72,9 +72,17 @@ func (r *gudangBarangRepository) Insert(c *fiber.Ctx, barang *entity.GudangBaran
 func (r *gudangBarangRepository) FindAll() ([]entity.GudangBarang, error) {
 	var result []entity.GudangBarang
 	query := `
-		SELECT id, id_barang_medis, id_ruangan, stok, no_batch, no_faktur
-		FROM sik.gudang_barang
-		ORDER BY id ASC
+		SELECT 
+			gb.id, 
+			gb.id_barang_medis, 
+			gb.id_ruangan, 
+			gb.stok, 
+			gb.no_batch, 
+			gb.no_faktur,
+			db.kapasitas
+		FROM sik.gudang_barang gb
+		JOIN sik.databarang db ON gb.id_barang_medis = db.kode_brng
+		ORDER BY gb.id ASC
 	`
 	err := r.db.Select(&result, query)
 	return result, err
@@ -82,12 +90,23 @@ func (r *gudangBarangRepository) FindAll() ([]entity.GudangBarang, error) {
 
 func (r *gudangBarangRepository) FindByID(id string) (*entity.GudangBarang, error) {
 	var result entity.GudangBarang
+
 	query := `
-		SELECT id, id_barang_medis, id_ruangan, stok, no_batch, no_faktur
-		FROM sik.gudang_barang
-		WHERE id_barang_medis = $1
+		SELECT 
+			gb.id, 
+			gb.id_barang_medis, 
+			gb.id_ruangan, 
+			gb.stok, 
+			gb.no_batch, 
+			gb.no_faktur,
+			db.kapasitas
+		FROM sik.gudang_barang gb
+		JOIN sik.databarang db ON gb.id_barang_medis = db.kode_brng
+		WHERE gb.id_barang_medis = $1
+		LIMIT 1
 	`
 	err := r.db.Get(&result, query, id)
+	log.Printf("🔍 GudangBarang response: %+v", result)
 	if err != nil {
 		return nil, err
 	}

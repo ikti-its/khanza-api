@@ -78,6 +78,7 @@ func (u *GudangBarangUseCase) GetByID(id string) (model.GudangBarangResponse, er
 		Stok:          entity.Stok,
 		NoBatch:       entity.NoBatch,
 		NoFaktur:      entity.NoFaktur,
+		Kapasitas:     entity.Kapasitas,
 	}, nil
 }
 

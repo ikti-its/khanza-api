@@ -24,6 +24,7 @@ type GudangBarangResponse struct {
 	Stok          int    `json:"stok"`
 	NoBatch       string `json:"no_batch"`
 	NoFaktur      string `json:"no_faktur"`
+	Kapasitas     int    `json:"kapasitas"`
 }
 
 type GudangBarangPageResponse struct {
