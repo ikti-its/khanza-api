@@ -1,5 +1,6 @@
 package entity
 
+import "time"
 
 
 type MasterPasien struct {
@@ -8,14 +9,14 @@ type MasterPasien struct {
 	No_ktp            string    `json:"no_ktp" db:"no_ktp"`
 	Jk     string    `json:"jk" db:"jk"`
 	Tmp_lahir      string    `json:"tmp_lahir" db:"tmp_lahir"`
-	Tgl_lahir     string `json:"tgl_lahir" db:"tgl_lahir"`
+	Tgl_lahir     time.Time `json:"tgl_lahir" db:"tgl_lahir"`
 	Nm_ibu          string    `json:"nm_ibu" db:"nm_ibu"`
 	Alamat           string    `json:"alamat" db:"alamat"`
 	Gol_darah    string    `json:"gol_darah" db:"gol_darah"`
 	Pekerjaan        string    `json:"pekerjaan" db:"pekerjaan"`
 	Stts_nikah string    `json:"stts_nikah" db:"stts_nikah"`
 	Agama            string    `json:"agama" db:"agama"`
-	Tgl_daftar    string `json:"tgl_daftar" db:"tgl_daftar"`
+	Tgl_daftar    time.Time `json:"tgl_daftar" db:"tgl_daftar"`
 	No_tlp        string    `json:"no_tlp" db:"no_tlp"`
 	Umur             string    `json:"umur" db:"umur"`
 	Pnd       string    `json:"pnd" db:"pnd"`
