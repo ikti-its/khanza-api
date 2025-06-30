@@ -56,7 +56,7 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 
 func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 	query := `
-		UPDATE thr_pegawai SET 
+		UPDATE thr SET 
 			masa_kerja = $2, pengali_upah = $3
 		WHERE no_thr = $1
 	`
@@ -70,7 +70,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 
 func (r *RepositoryImpl) Delete(id string) error {
 	query := `
-		DELETE FROM thr_pegawai WHERE no_thr = $1
+		DELETE FROM thr WHERE no_thr = $1
 	`
 	_, err := r.DB.Exec(query, id)
 	return err
