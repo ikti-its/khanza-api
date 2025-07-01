@@ -7,10 +7,10 @@ import (
 
 type Repository interface {
 	FindAll() ([]entity.MasterPasien, error)
-	FindById(id string) (entity.MasterPasien, error)
-	Insert(data *entity.MasterPasien) error
-	Update(data *entity.MasterPasien) error
-	Delete(id string) error
+	FindById(noRkmMedis string) (entity.MasterPasien, error)
+	Insert(pasien *entity.MasterPasien) error
+	Update(pasien *entity.MasterPasien) error
+	Delete(noRkmMedis string) error
 }
 
 type RepositoryImpl struct {
