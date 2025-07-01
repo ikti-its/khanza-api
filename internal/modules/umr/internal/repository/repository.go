@@ -60,6 +60,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 	query := `
 		UPDATE umr SET 
 			provinsi = $2, kotakab = $3, jenis = $4, upah_minimum = $5
+		WHERE no_umr = $1
 	`
 	_, err := r.DB.Exec(query,
 		entity.No_umr,    
