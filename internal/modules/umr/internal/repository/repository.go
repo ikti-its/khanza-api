@@ -43,7 +43,7 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 		INSERT INTO umr (
 			no_umr, provinsi, kotakab, jenis, upah_minimum
 		) VALUES (
-			$1, $2, $3, $4, $5, $6
+			$1, $2, $3, $4, $5
 		)
 	`
 	_, err := r.DB.Exec(query,
@@ -60,6 +60,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 	query := `
 		UPDATE umr SET 
 			provinsi = $2, kotakab = $3, jenis = $4, upah_minimum = $5
+		WHERE no_umr = $1
 	`
 	_, err := r.DB.Exec(query,
 		entity.No_umr,    

@@ -43,7 +43,7 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 		INSERT INTO jabatan_pegawai (
 			no_jabatan, jenis_jabatan, nama_jabatan, jenjang, tunjangan
 		) VALUES (
-			$1, $2, $3, $4, $5, $6
+			$1, $2, $3, $4, $5
 		)
 	`
 	_, err := r.DB.Exec(query,
