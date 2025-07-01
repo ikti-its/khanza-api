@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
@@ -90,15 +91,28 @@ func (c *PermintaanResepPulangController) GetByNoRawat(ctx *fiber.Ctx) error {
 
 func (c *PermintaanResepPulangController) GetByNoPermintaan(ctx *fiber.Ctx) error {
 	noPermintaan := ctx.Params("no_permintaan")
+	log.Printf("📥 Incoming GET /v1/permintaan-resep-pulang/%s", noPermintaan)
+
+	if noPermintaan == "" {
+		log.Println("⚠️ no_permintaan param is missing")
+		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
+			Code:   fiber.StatusBadRequest,
+			Status: "Bad Request",
+			Data:   "no_permintaan is required",
+		})
+	}
 
 	response, err := c.UseCase.GetByNoPermintaan(noPermintaan)
 	if err != nil {
+		log.Printf("❌ UseCase.GetByNoPermintaan failed: %v", err)
 		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
 			Code:   fiber.StatusNotFound,
 			Status: "Not Found",
 			Data:   err.Error(),
 		})
 	}
+
+	log.Printf("✅ Successfully fetched data for no_permintaan %s: %+v", noPermintaan, response)
 
 	return ctx.JSON(web.Response{
 		Code:   fiber.StatusOK,

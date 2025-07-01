@@ -59,9 +59,10 @@ func (r *permintaanResepPulangRepositoryImpl) FindByNoPermintaan(noPermintaan st
 	err := r.DB.Get(&data, query, noPermintaan)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil // ❗ Data tidak ketemu, tapi bukan error fatal
+			// ✅ Kembalikan error agar usecase tahu data tidak ada
+			return nil, fmt.Errorf("data not found for no_permintaan %s", noPermintaan)
 		}
-		return nil, err // ❗ Error fatal lain, kayak query syntax error
+		return nil, err
 	}
 	return &data, nil
 }

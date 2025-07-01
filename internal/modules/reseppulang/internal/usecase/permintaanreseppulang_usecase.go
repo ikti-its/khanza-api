@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -54,8 +55,8 @@ func (u *PermintaanResepPulangUseCase) Create(c *fiber.Ctx, requests []*model.Pe
 			NoRawat:       req.NoRawat,
 			KdDokter:      req.KdDokter,
 			Status:        req.Status,
-			TglValidasi:   tglValidasi,
-			JamValidasi:   jamValidasi,
+			TglValidasi:   &tglValidasi,
+			JamValidasi:   &jamValidasi,
 			KodeBrng:      req.KodeBrng,
 			Jumlah:        req.Jumlah,
 			AturanPakai:   req.AturanPakai,
@@ -74,12 +75,13 @@ func (u *PermintaanResepPulangUseCase) Create(c *fiber.Ctx, requests []*model.Pe
 			NoRawat:       data.NoRawat,
 			KdDokter:      data.KdDokter,
 			Status:        data.Status,
-			TglValidasi:   data.TglValidasi.Format("2006-01-02"),
-			JamValidasi:   data.JamValidasi.Format("15:04:05"),
+			TglValidasi:   formatTimePtr(data.TglValidasi, "2006-01-02"),
+			JamValidasi:   formatTimePtr(data.JamValidasi, "15:04:05"),
 			KodeBrng:      data.KodeBrng,
 			Jumlah:        data.Jumlah,
 			AturanPakai:   data.AturanPakai,
 		})
+
 	}
 
 	return responses, nil
@@ -100,8 +102,8 @@ func (u *PermintaanResepPulangUseCase) GetAll() ([]model.PermintaanResepPulangRe
 			NoRawat:       p.NoRawat,
 			KdDokter:      p.KdDokter,
 			Status:        p.Status,
-			TglValidasi:   p.TglValidasi.Format("2006-01-02"),
-			JamValidasi:   p.JamValidasi.Format("15:04:05"),
+			TglValidasi:   formatTimePtr(p.TglValidasi, "2006-01-02"),
+			JamValidasi:   formatTimePtr(p.JamValidasi, "15:04:05"),
 			KodeBrng:      p.KodeBrng,
 			Jumlah:        p.Jumlah,
 			AturanPakai:   p.AturanPakai,
@@ -126,20 +128,46 @@ func (u *PermintaanResepPulangUseCase) GetByNoRawat(noRawat string) ([]model.Per
 			NoRawat:       p.NoRawat,
 			KdDokter:      p.KdDokter,
 			Status:        p.Status,
-			TglValidasi:   p.TglValidasi.Format("2006-01-02"),
-			JamValidasi:   p.JamValidasi.Format("15:04:05"),
+			TglValidasi:   formatTimePtr(p.TglValidasi, "2006-01-02"),
+			JamValidasi:   formatTimePtr(p.JamValidasi, "15:04:05"),
 			KodeBrng:      p.KodeBrng,
 			Jumlah:        p.Jumlah,
 			AturanPakai:   p.AturanPakai,
 		})
 	}
+
 	return result, nil
 }
 
+func formatTimePtr(t *time.Time, layout string) *string {
+	if t == nil {
+		return nil
+	}
+	s := t.Format(layout)
+	return &s
+}
+
 func (u *PermintaanResepPulangUseCase) GetByNoPermintaan(noPermintaan string) (model.PermintaanResepPulangResponse, error) {
+	log.Printf("🔍 UseCase.GetByNoPermintaan called with: %s", noPermintaan)
+
 	data, err := u.Repository.FindByNoPermintaan(noPermintaan)
 	if err != nil {
+		log.Printf("❌ Repository.FindByNoPermintaan failed: %v", err)
 		return model.PermintaanResepPulangResponse{}, fmt.Errorf("data not found")
+	}
+
+	log.Printf("✅ Repository returned: %+v", data)
+
+	var tglValidasiStr *string
+	if data.TglValidasi != nil {
+		str := data.TglValidasi.Format("2006-01-02")
+		tglValidasiStr = &str
+	}
+
+	var jamValidasiStr *string
+	if data.JamValidasi != nil {
+		str := data.JamValidasi.Format("15:04:05")
+		jamValidasiStr = &str
 	}
 
 	return model.PermintaanResepPulangResponse{
@@ -149,8 +177,8 @@ func (u *PermintaanResepPulangUseCase) GetByNoPermintaan(noPermintaan string) (m
 		NoRawat:       data.NoRawat,
 		KdDokter:      data.KdDokter,
 		Status:        data.Status,
-		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
-		JamValidasi:   data.JamValidasi.Format("15:04:05"),
+		TglValidasi:   tglValidasiStr,
+		JamValidasi:   jamValidasiStr,
 		KodeBrng:      data.KodeBrng,
 		Jumlah:        data.Jumlah,
 		AturanPakai:   data.AturanPakai,
@@ -189,8 +217,8 @@ func (u *PermintaanResepPulangUseCase) Update(c *fiber.Ctx, noPermintaan string,
 	data.NoRawat = request.NoRawat
 	data.KdDokter = request.KdDokter
 	data.Status = request.Status
-	data.TglValidasi = tglValidasi
-	data.JamValidasi = jamValidasi
+	data.TglValidasi = &tglValidasi
+	data.JamValidasi = &jamValidasi
 
 	if err := u.Repository.Update(c, data); err != nil {
 		return model.PermintaanResepPulangResponse{}, fmt.Errorf("update failed: %v", err)
@@ -203,12 +231,13 @@ func (u *PermintaanResepPulangUseCase) Update(c *fiber.Ctx, noPermintaan string,
 		NoRawat:       data.NoRawat,
 		KdDokter:      data.KdDokter,
 		Status:        data.Status,
-		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
-		JamValidasi:   data.JamValidasi.Format("15:04:05"),
+		TglValidasi:   formatTimePtr(data.TglValidasi, "2006-01-02"),
+		JamValidasi:   formatTimePtr(data.JamValidasi, "15:04:05"),
 		KodeBrng:      data.KodeBrng,
 		Jumlah:        data.Jumlah,
 		AturanPakai:   data.AturanPakai,
 	}, nil
+
 }
 
 func (u *PermintaanResepPulangUseCase) Delete(c *fiber.Ctx, noPermintaan string) error {
@@ -255,12 +284,13 @@ func (u *PermintaanResepPulangUseCase) UpdateStatus(c *fiber.Ctx, noPermintaan s
 		NoRawat:       data.NoRawat,
 		KdDokter:      data.KdDokter,
 		Status:        data.Status,
-		TglValidasi:   data.TglValidasi.Format("2006-01-02"),
-		JamValidasi:   data.JamValidasi.Format("15:04:05"),
+		TglValidasi:   formatTimePtr(data.TglValidasi, "2006-01-02"),
+		JamValidasi:   formatTimePtr(data.JamValidasi, "15:04:05"),
 		KodeBrng:      data.KodeBrng,
 		Jumlah:        data.Jumlah,
 		AturanPakai:   data.AturanPakai,
 	}, nil
+
 }
 
 func (u *PermintaanResepPulangUseCase) GetObatByNoPermintaan(noPermintaan string) ([]entity.PermintaanResepPulang, error) {

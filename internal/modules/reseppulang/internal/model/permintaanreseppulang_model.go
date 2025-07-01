@@ -29,17 +29,17 @@ type PermintaanResepPulangRequest struct {
 }
 
 type PermintaanResepPulangResponse struct {
-	NoPermintaan  string `json:"no_permintaan"`
-	TglPermintaan string `json:"tgl_permintaan"`
-	Jam           string `json:"jam"`
-	NoRawat       string `json:"no_rawat"`
-	KdDokter      string `json:"kd_dokter"`
-	Status        string `json:"status"`
-	TglValidasi   string `json:"tgl_validasi"`
-	JamValidasi   string `json:"jam_validasi"`
-	KodeBrng      string `json:"kode_brng" db:"kode_brng"`
-	Jumlah        int    `json:"jumlah" db:"jumlah"`
-	AturanPakai   string `json:"aturan_pakai" db:"aturan_pakai"`
+	NoPermintaan  string  `json:"no_permintaan"`
+	TglPermintaan string  `json:"tgl_permintaan"`
+	Jam           string  `json:"jam"`
+	NoRawat       string  `json:"no_rawat"`
+	KdDokter      string  `json:"kd_dokter"`
+	Status        string  `json:"status"`
+	TglValidasi   *string `json:"tgl_validasi"`
+	JamValidasi   *string `json:"jam_validasi"`
+	KodeBrng      string  `json:"kode_brng" db:"kode_brng"`
+	Jumlah        int     `json:"jumlah" db:"jumlah"`
+	AturanPakai   string  `json:"aturan_pakai" db:"aturan_pakai"`
 }
 
 type PermintaanResepPulangPageResponse struct {
