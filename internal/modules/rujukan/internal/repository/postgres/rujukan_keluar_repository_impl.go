@@ -94,7 +94,7 @@ func (r *rujukanKeluarRepositoryImpl) FindAll() ([]entity.RujukanKeluar, error) 
 }
 
 func (r *rujukanKeluarRepositoryImpl) FindByNomorRawat(nomorRawat string) (entity.RujukanKeluar, error) {
-	query := `SELECT * FROM rujukan_keluar WHERE nomor_rawat = $1`
+	query := `SELECT * FROM rujukan_keluar WHERE nomor_rujuk = $1`
 	var record entity.RujukanKeluar
 	err := r.DB.Get(&record, query, nomorRawat)
 	return record, err

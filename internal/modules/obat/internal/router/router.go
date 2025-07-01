@@ -10,7 +10,7 @@ func PemberianObatRoute(app *fiber.App, pemberianObatController *controller.Pemb
 	obat := app.Group("/v1/pemberian-obat")
 
 	obat.Get("/databarang", middleware.Authenticate([]int{1337, 0, 1, 2, 3}), pemberianObatController.GetAllDataBarang)
-	obat.Post("/", middleware.Authenticate([]int{1337, 1}), pemberianObatController.Create)
+	obat.Post("/", middleware.Authenticate([]int{1337, 1, 0}), pemberianObatController.Create)
 	obat.Get("/", middleware.Authenticate([]int{1337, 0, 1, 2, 3}), pemberianObatController.GetAll)
 	obat.Get("/:nomor_rawat", middleware.Authenticate([]int{1337, 0, 1, 2, 3}), pemberianObatController.GetByNomorRawat)
 	obat.Put("/:nomor_rawat", middleware.Authenticate([]int{1337, 1}), pemberianObatController.Update)

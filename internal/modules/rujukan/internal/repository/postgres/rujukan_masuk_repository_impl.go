@@ -87,7 +87,7 @@ func (r *rujukanMasukRepositoryImpl) FindAll() ([]entity.RujukanMasuk, error) {
 }
 
 func (r *rujukanMasukRepositoryImpl) FindByNomorRawat(nomorRawat string) (entity.RujukanMasuk, error) {
-	query := `SELECT * FROM rujukan_masuk WHERE nomor_rawat = $1`
+	query := `SELECT * FROM rujukan_masuk WHERE nomor_rujuk = $1`
 	var record entity.RujukanMasuk
 	err := r.DB.Get(&record, query, nomorRawat)
 	return record, err
@@ -130,13 +130,13 @@ func (r *rujukanMasukRepositoryImpl) Update(c *fiber.Ctx, rujukan *entity.Rujuka
 			tanggal_masuk = $8,
 			tanggal_keluar = $9,
 			diagnosa_awal = $10
-		WHERE nomor_rawat = $11
+		WHERE nomor_rujuk = $11
 	`
 	_, err = tx.Exec(query,
 		rujukan.NomorRujuk, rujukan.Perujuk, rujukan.AlamatPerujuk,
 		rujukan.NomorRM, rujukan.NamaPasien, rujukan.Alamat,
 		rujukan.Umur, rujukan.TanggalMasuk, rujukan.TanggalKeluar,
-		rujukan.DiagnosaAwal, rujukan.NomorRawat,
+		rujukan.DiagnosaAwal, rujukan.NomorRujuk,
 	)
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func (r *rujukanMasukRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat string) err
 		return err
 	}
 
-	query := `DELETE FROM rujukan_masuk WHERE nomor_rawat = $1`
+	query := `DELETE FROM rujukan_masuk WHERE nomor_rujuk = $1`
 	_, err = tx.Exec(query, nomorRawat)
 	if err != nil {
 		return err

@@ -66,7 +66,7 @@ func (c *RujukanKeluarController) GetAll(ctx *fiber.Ctx) error {
 }
 
 func (c *RujukanKeluarController) GetByNomorRawat(ctx *fiber.Ctx) error {
-	nomorRawat := ctx.Params("nomor_rawat")
+	nomorRawat := ctx.Params("nomor_rujuk")
 	response, err := c.UseCase.GetByNomorRawat(nomorRawat)
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{

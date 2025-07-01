@@ -66,7 +66,7 @@ func (c *RujukanMasukController) GetAll(ctx *fiber.Ctx) error {
 }
 
 func (c *RujukanMasukController) GetByNomorRawat(ctx *fiber.Ctx) error {
-	nomorRawat := ctx.Params("nomor_rawat")
+	nomorRawat := ctx.Params("nomor_rujuk")
 	response, err := c.UseCase.GetByNomorRawat(nomorRawat)
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
@@ -83,7 +83,7 @@ func (c *RujukanMasukController) GetByNomorRawat(ctx *fiber.Ctx) error {
 }
 
 func (c *RujukanMasukController) Update(ctx *fiber.Ctx) error {
-	nomorRawat := ctx.Params("nomor_rawat")
+	nomorRawat := ctx.Params("nomor_rujuk")
 	var request model.RujukanMasukRequest
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -107,7 +107,7 @@ func (c *RujukanMasukController) Update(ctx *fiber.Ctx) error {
 }
 
 func (c *RujukanMasukController) Delete(ctx *fiber.Ctx) error {
-	nomorRawat := ctx.Params("nomor_rawat")
+	nomorRawat := ctx.Params("nomor_rujuk")
 	err := c.UseCase.Delete(ctx, nomorRawat)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
