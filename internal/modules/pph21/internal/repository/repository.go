@@ -43,7 +43,7 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 		INSERT INTO pph21 (
 			no_pph21, pkp_bawah, pkp_atas, tarif_pajak
 		) VALUES (
-			$1, $2, $3, $4, $5, $6
+			$1, $2, $3, $4
 		)
 	`
 	_, err := r.DB.Exec(query,
