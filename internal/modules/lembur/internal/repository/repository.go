@@ -43,7 +43,7 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 		INSERT INTO lembur (
 			no_lembur, jenis_lembur, jam_lembur, pengali_upah
 		) VALUES (
-			$1, $2, $3, $4, $5, $6
+			$1, $2, $3, $4
 		)
 	`
 	_, err := r.DB.Exec(query,
@@ -57,8 +57,9 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 
 func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 	query := `
-		UPDATE lembur_pegawai SET 
+		UPDATE lembur SET 
 			jenis_lembur = $2, jam_lembur = $3, pengali_upah = $4
+		WHERE no_lembur = $1
 	`
 	_, err := r.DB.Exec(query,
 		entity.No_lembur,    
@@ -71,7 +72,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 
 func (r *RepositoryImpl) Delete(id string) error {
 	query := `
-		DELETE FROM lembur_pegawai WHERE no_lembur = $1
+		DELETE FROM lembur WHERE no_lembur = $1
 	`
 	_, err := r.DB.Exec(query, id)
 	return err

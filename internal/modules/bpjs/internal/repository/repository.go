@@ -61,7 +61,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 	query := `
 		UPDATE bpjs SET 
 			nama_program = $2, penyelenggara = $3, tarif = $4, batas_bawah = $5, batas_atas = $6
-		WHERE nomor_bed = $1
+		WHERE no_bpjs = $1
 	`
 	_, err := r.DB.Exec(query,
 		entity.No_bpjs,    

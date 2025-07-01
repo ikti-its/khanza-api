@@ -43,6 +43,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/ikti-its/khanza-api/internal/modules/masterpasien"
 	"github.com/ikti-its/khanza-api/internal/modules/datadokter"
+	"github.com/ikti-its/khanza-api/internal/modules/datainstansi"
+
 
 
 )
@@ -94,6 +96,8 @@ func (p *Provider) Provide() {
 	upmk.Provide(p.App, p.PG, p.Validator)
 	masterpasien.ProvideMasterPasien(p.App, p.PG, p.Validator)
 	datadokter.ProvideDataDokter(p.App, p.PG, p.Validator)
+	datainstansi.ProvideDataInstansi(p.App, p.PG, p.Validator)
+
 
 
 }
