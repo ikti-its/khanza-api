@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rujukan/internal/entity"
@@ -32,17 +31,19 @@ func (r *rujukanMasukRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.C
 	userIDRaw := c.Locals("user_id")
 	userID, ok := userIDRaw.(string)
 	if !ok {
-		log.Println("⚠️ user_id is not a string")
-		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
 	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
 
-	safeUserID := pq.QuoteLiteral(userID) // escapes single quotes safely
-	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
-
-	_, err := tx.Exec(query)
-	if err != nil {
-		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	ip_address_Raw := c.Locals("ip_address")
+	ip_address, ok2 := ip_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid ip_address type: %T", ip_address_Raw)
 	}
+	safe_ip_address := pq.QuoteLiteral(ip_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
+
 	return err
 }
 

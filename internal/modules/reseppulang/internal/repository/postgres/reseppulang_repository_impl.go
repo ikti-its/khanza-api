@@ -3,7 +3,6 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/reseppulang/internal/entity"
@@ -24,18 +23,20 @@ func (r *resepPulangRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ct
 	userIDRaw := c.Locals("user_id")
 	userID, ok := userIDRaw.(string)
 	if !ok {
-		log.Println("⚠️ user_id is not a string")
-		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
 	}
-
 	safeUserID := pq.QuoteLiteral(userID)
-	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
 
-	if _, err := tx.Exec(query); err != nil {
-		log.Printf("❌ Failed to set my.user_id: %v", err)
-		return err
+	ip_address_Raw := c.Locals("ip_address")
+	ip_address, ok2 := ip_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid ip_address type: %T", ip_address_Raw)
 	}
-	return nil
+	safe_ip_address := pq.QuoteLiteral(ip_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
+
+	return err
 }
 
 func (r *resepPulangRepositoryImpl) FindAll() ([]entity.ResepPulang, error) {

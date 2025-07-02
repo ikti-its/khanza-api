@@ -37,19 +37,19 @@ func (r *ambulansRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) 
 	userIDRaw := c.Locals("user_id")
 	userID, ok := userIDRaw.(string)
 	if !ok {
-		log.Println("⚠️ user_id is not a string")
-		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
 	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
 
-	// ✅ Escape userID safely for SQL string context
-	safeUserID := pq.QuoteLiteral(userID) // e.g., turns abc'def -> 'abc''def'
-
-	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
-
-	_, err := tx.Exec(query)
-	if err != nil {
-		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v\n", userID, err)
+	ip_address_Raw := c.Locals("ip_address")
+	ip_address, ok2 := ip_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid ip_address type: %T", ip_address_Raw)
 	}
+	safe_ip_address := pq.QuoteLiteral(ip_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
+
 	return err
 }
 
@@ -119,13 +119,17 @@ func (r *ambulansRepositoryImpl) FindByNoAmbulans(noAmbulans string) (entity.Amb
 func (r *ambulansRepositoryImpl) Update(c *fiber.Ctx, ambulans *entity.Ambulans) error {
 	tx, err := r.DB.Beginx()
 	if err != nil {
+		log.Printf("❌ Failed to begin transaction: %v", err)
 		return err
 	}
 	defer tx.Rollback()
 
 	if err := r.setUserAuditContext(tx, c); err != nil {
+		log.Printf("❌ setUserAuditContext failed: %v", err)
 		return err
 	}
+
+	log.Printf("🛠️  Updating ambulans: no=%s, status=%s, supir=%s", ambulans.NoAmbulans, ambulans.Status, ambulans.Supir)
 
 	query := `
 		UPDATE ambulans SET 
@@ -138,10 +142,17 @@ func (r *ambulansRepositoryImpl) Update(c *fiber.Ctx, ambulans *entity.Ambulans)
 		ambulans.Supir,
 	)
 	if err != nil {
+		log.Printf("❌ Failed to execute update query: %v", err)
 		return err
 	}
 
-	return tx.Commit()
+	if err := tx.Commit(); err != nil {
+		log.Printf("❌ Commit failed: %v", err)
+		return err
+	}
+
+	log.Printf("✅ Successfully updated ambulans %s", ambulans.NoAmbulans)
+	return nil
 }
 
 func (r *ambulansRepositoryImpl) Delete(c *fiber.Ctx, noAmbulans string) error {

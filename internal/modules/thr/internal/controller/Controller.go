@@ -34,7 +34,7 @@ func (c *Controller) Create(ctx *fiber.Ctx) error {
 	}
 
 	// Call the Create method of the UseCase
-	response, err := c.UseCase.Create(&request)
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -90,7 +90,7 @@ func (c *Controller) Update(ctx *fiber.Ctx) error {
 		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(id, &request)
+	response, err := c.UseCase.Update(ctx, id, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -107,7 +107,7 @@ func (c *Controller) Update(ctx *fiber.Ctx) error {
 
 func (c *Controller) Delete(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	err := c.UseCase.Delete(id)
+	err := c.UseCase.Delete(ctx, id)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

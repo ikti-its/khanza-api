@@ -35,11 +35,17 @@ func (r *dokterJagaRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx
 	if !ok {
 		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
 	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
 
-	safeUserID := pq.QuoteLiteral(userID) // Escapes for SQL
-	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+	ip_address_Raw := c.Locals("ip_address")
+	ip_address, ok2 := ip_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid ip_address type: %T", ip_address_Raw)
+	}
+	safe_ip_address := pq.QuoteLiteral(ip_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
 
-	_, err := tx.Exec(query)
 	return err
 }
 
