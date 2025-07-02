@@ -71,7 +71,7 @@ tx, err := r.DB.Beginx()
 			$1, $2, $3, $4, $5
 		)
 	`
-	_, err = r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		entity.No_umr,    
 		entity.Provinsi,   
 		entity.Kotakab,   
@@ -101,7 +101,7 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 			provinsi = $2, kotakab = $3, jenis = $4, upah_minimum = $5
 		WHERE no_umr = $1
 	`
-	_, err = r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		entity.No_umr,    
 		entity.Provinsi,   
 		entity.Kotakab,   
@@ -129,7 +129,7 @@ func (r *RepositoryImpl) Delete(c *fiber.Ctx, id string) error {
     query := `
 		DELETE FROM umr WHERE no_umr = $1
 	`
-	_, err = r.DB.Exec(query, id)
+	_, err = tx.Exec(query, id)
 	if err != nil {
 		return err
 	}

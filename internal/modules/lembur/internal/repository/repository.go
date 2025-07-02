@@ -71,7 +71,7 @@ tx, err := r.DB.Beginx()
 			$1, $2, $3, $4
 		)
 	`
-	_, err = r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		entity.No_lembur,    
 		entity.Jenis_lembur,   
 		entity.Jam_lembur,   
@@ -100,7 +100,7 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 			jenis_lembur = $2, jam_lembur = $3, pengali_upah = $4
 		WHERE no_lembur = $1
 	`
-	_, err = r.DB.Exec(query,
+	_, err = tx.Exec(query,
 		entity.No_lembur,    
 		entity.Jenis_lembur,   
 		entity.Jam_lembur,   
@@ -127,7 +127,7 @@ func (r *RepositoryImpl) Delete(c *fiber.Ctx, id string) error {
     query := `
 		DELETE FROM lembur WHERE no_lembur = $1
 	`
-	_, err = r.DB.Exec(query, id)
+	_, err = tx.Exec(query, id)
 	if err != nil {
 		return err
 	}
