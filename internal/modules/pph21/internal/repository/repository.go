@@ -8,13 +8,25 @@ import (
 type Repository interface {
 	FindAll() ([]entity.Entity, error)
 	FindById(id string) (entity.Entity, error)
-	Insert(entity *entity.Entity) error
-	Update(entity *entity.Entity) error
-	Delete(id string) error
+	Insert(c *fiber.Ctx, entity *entity.Entity) error
+	Update(c *fiber.Ctx, entity *entity.Entity) error
+	Delete(c *fiber.Ctx, id string) error 
+    setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error
 }
 
 type RepositoryImpl struct {
 	DB *sqlx.DB
+}
+
+func (r *RepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
+	userIDRaw := c.Locals("user_id")
+	userID, ok := userIDRaw.(string)
+	if !ok {
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
+	}
+	safeUserID := pq.QuoteLiteral(userID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
+	return err
 }
 
 func NewRepository(db *sqlx.DB) Repository {
@@ -39,6 +51,16 @@ func (r *RepositoryImpl) FindById(id string) (entity.Entity, error) {
 }
 
 func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
+tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		INSERT INTO pph21 (
 			no_pph21, pkp_bawah, pkp_atas, tarif_pajak
@@ -52,10 +74,24 @@ func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
 		entity.Pkp_atas,  
 		entity.Tarif_pajak,   
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *RepositoryImpl) Update(entity *entity.Entity) error {
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `
 		UPDATE pph21 SET 
 			pkp_bawah = $2, pkp_atas = $3, tarif_pajak = $4
@@ -67,13 +103,31 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 		entity.Pkp_atas,  
 		entity.Tarif_pajak,   
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (r *RepositoryImpl) Delete(id string) error {
-	query := `
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
+    query := `
 		DELETE FROM pph21 WHERE no_pph21 = $1
 	`
 	_, err := r.DB.Exec(query, id)
-	return err
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
