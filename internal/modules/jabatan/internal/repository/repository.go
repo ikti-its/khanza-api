@@ -98,7 +98,7 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 
 	query := `
 		UPDATE jabatan_pegawai SET 
-			jenis_jabatan = $2, nama_jabatan = $3, jenis = $4, tunjangan = $5
+			jenis_jabatan = $2, nama_jabatan = $3, jenjang = $4, tunjangan = $5
 		WHERE no_jabatan = $1
 	`
 	_, err = tx.Exec(query,
