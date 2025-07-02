@@ -42,6 +42,9 @@ func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 			ctx.Locals("user_id", sub)
 			ctx.Locals("user", sub)
 			ctx.Locals("role", role)
+			ctx.Locals("ip_address", ctx.IP())
+			log.Printf("IP Address: %s", ctx.IP())
+
 
 			// Special access mapping
 			pegawai := []int{1, 1337, 2, 3, 4001, 4002, 4003, 4004, 5001}
