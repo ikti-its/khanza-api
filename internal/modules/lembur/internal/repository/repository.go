@@ -1,7 +1,10 @@
 package repository
 
 import (
-	"github.com/jmoiron/sqlx"
+	"fmt"
+    "github.com/gofiber/fiber/v2"
+    "github.com/lib/pq"
+    "github.com/jmoiron/sqlx"
 	"github.com/ikti-its/khanza-api/internal/modules/lembur/internal/entity"
 )
 
@@ -50,7 +53,7 @@ func (r *RepositoryImpl) FindById(id string) (entity.Entity, error) {
 	return record, err
 }
 
-func (r *RepositoryImpl) Insert(entity *entity.Entity) error {
+func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
 tx, err := r.DB.Beginx()
 	if err != nil {
 		return err
@@ -68,7 +71,7 @@ tx, err := r.DB.Beginx()
 			$1, $2, $3, $4
 		)
 	`
-	_, err := r.DB.Exec(query,
+	_, err = r.DB.Exec(query,
 		entity.No_lembur,    
 		entity.Jenis_lembur,   
 		entity.Jam_lembur,   
@@ -81,7 +84,7 @@ tx, err := r.DB.Beginx()
 	return tx.Commit()
 }
 
-func (r *RepositoryImpl) Update(entity *entity.Entity) error {
+func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 	tx, err := r.DB.Beginx()
 	if err != nil {
 		return err
@@ -97,7 +100,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 			jenis_lembur = $2, jam_lembur = $3, pengali_upah = $4
 		WHERE no_lembur = $1
 	`
-	_, err := r.DB.Exec(query,
+	_, err = r.DB.Exec(query,
 		entity.No_lembur,    
 		entity.Jenis_lembur,   
 		entity.Jam_lembur,   
@@ -110,7 +113,7 @@ func (r *RepositoryImpl) Update(entity *entity.Entity) error {
 	return tx.Commit()
 }
 
-func (r *RepositoryImpl) Delete(id string) error {
+func (r *RepositoryImpl) Delete(c *fiber.Ctx, id string) error {
 	tx, err := r.DB.Beginx()
 	if err != nil {
 		return err
@@ -124,7 +127,7 @@ func (r *RepositoryImpl) Delete(id string) error {
     query := `
 		DELETE FROM lembur WHERE no_lembur = $1
 	`
-	_, err := r.DB.Exec(query, id)
+	_, err = r.DB.Exec(query, id)
 	if err != nil {
 		return err
 	}

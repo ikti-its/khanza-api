@@ -75,7 +75,7 @@ func (u *UseCase) Update(c *fiber.Ctx, id string, request *model.Request) (model
 
 	copier.Copy(&Entity, &request)
 	
-	err = u.Repository.Update(c, &Entity)ty)
+	err = u.Repository.Update(c, &Entity)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("failed to update: %v", err)
 	}
