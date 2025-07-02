@@ -23,17 +23,19 @@ func (r *pemeriksaanRanapRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fib
 	userIDRaw := c.Locals("user_id")
 	userID, ok := userIDRaw.(string)
 	if !ok {
-		log.Println("⚠️ user_id is not a string")
-		return fmt.Errorf("invalid user_id type: expected string, got %T", userIDRaw)
+		return fmt.Errorf("invalid user_id type: %T", userIDRaw)
 	}
-
 	safeUserID := pq.QuoteLiteral(userID)
-	query := fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID)
+	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
 
-	_, err := tx.Exec(query)
-	if err != nil {
-		log.Printf("❌ Failed to SET LOCAL my.user_id = %v: %v", userID, err)
+	ip_address_Raw := c.Locals("ip_address")
+	ip_address, ok2 := ip_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid ip_address type: %T", ip_address_Raw)
 	}
+	safe_ip_address := pq.QuoteLiteral(ip_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
+
 	return err
 }
 
