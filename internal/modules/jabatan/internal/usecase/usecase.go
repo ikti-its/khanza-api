@@ -17,14 +17,14 @@ func NewUseCase(repo repository.Repository) *UseCase {
 }
 
 // Create a new kamar entry
-func (u *UseCase) Create(request *model.Request) (model.Response, error) {
+func (u *UseCase) Create(c *fiber.Ctx, request *model.Request) (model.Response, error) {
 
 	// Convert request model to entity model
 	var Entity entity.Entity
 	copier.Copy(&Entity, &request)
 
 	// Insert into database
-	err := u.Repository.Insert(&Entity)
+	err := u.Repository.Insert(c, &Entity)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("failed to create: %v", err)
 	}
@@ -66,7 +66,7 @@ func (u *UseCase) GetById(id string) (model.Response, error) {
 }
 
 // Update an existing kamar record
-func (u *UseCase) Update(id string, request *model.Request) (model.Response, error) {
+func (u *UseCase) Update(c *fiber.Ctx, id string, request *model.Request) (model.Response, error) {
 	Entity, err := u.Repository.FindById(id)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("not found")
@@ -74,7 +74,7 @@ func (u *UseCase) Update(id string, request *model.Request) (model.Response, err
 
 	copier.Copy(&Entity, &request)
 	
-	err = u.Repository.Update(&Entity)
+	err = u.Repository.Update(c, &Entity)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("failed to update: %v", err)
 	}
@@ -86,8 +86,8 @@ func (u *UseCase) Update(id string, request *model.Request) (model.Response, err
 }
 
 // Delete a kamar record by NomorBed
-func (u *UseCase) Delete(id string) error {
-	err := u.Repository.Delete(id)
+func (u *UseCase) Delete(c *fiber.Ctx, id string) error {
+	err := u.Repository.Delete(c, id)
 	if err != nil {
 		return fmt.Errorf("failed to delete: %v", err)
 	}
