@@ -2,7 +2,6 @@ package entity
 
 import "time"
 
-
 type MasterPasien struct {
 	No_rkm_medis             string    `json:"no_rkm_medis" db:"no_rkm_medis"`
 	Nm_pasien       string    `json:"nm_pasien" db:"nm_pasien"`
