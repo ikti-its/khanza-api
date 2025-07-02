@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt" 
 	"github.com/jinzhu/copier"
+    "github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ptkp/internal/repository"
 	"github.com/ikti-its/khanza-api/internal/modules/ptkp/internal/model"
 	"github.com/ikti-its/khanza-api/internal/modules/ptkp/internal/entity"
