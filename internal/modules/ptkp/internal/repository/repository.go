@@ -29,6 +29,15 @@ func (r *RepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
 	}
 	safeUserID := pq.QuoteLiteral(userID)
 	_, err := tx.Exec(fmt.Sprintf(`SET LOCAL my.user_id = %s`, safeUserID))
+
+	ip_address_Raw := c.Locals("ip_address")
+	ip_address, ok2 := ip_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid ip_address type: %T", ip_address_Raw)
+	}
+	safe_ip_address := pq.QuoteLiteral(ip_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
+
 	return err
 }
 
