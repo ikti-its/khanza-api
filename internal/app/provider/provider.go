@@ -44,6 +44,8 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/masterpasien"
 	"github.com/ikti-its/khanza-api/internal/modules/datadokter"
 	"github.com/ikti-its/khanza-api/internal/modules/datainstansi"
+	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal"
+	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi"
 
 
 
@@ -97,6 +99,8 @@ func (p *Provider) Provide() {
 	masterpasien.ProvideMasterPasien(p.App, p.PG, p.Validator)
 	datadokter.ProvideDataDokter(p.App, p.PG, p.Validator)
 	datainstansi.ProvideDataInstansi(p.App, p.PG, p.Validator)
+	pasienmeninggal.ProvidePasienMeninggal(p.App, p.PG, p.Validator)
+	kelahiranbayi.ProvideKelahiranBayi(p.App, p.PG, p.Validator)
 
 
 
