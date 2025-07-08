@@ -152,6 +152,6 @@ func (u *ResepObatUseCase) GetByNomorRawat(nomorRawat string) ([]entity.ResepOba
 	return u.Repository.GetByNomorRawat(nomorRawat)
 }
 
-func (u *ResepObatUseCase) UpdateValidasi(ctx context.Context, noResep string, validasi bool) error {
-	return u.Repository.UpdateValidasi(ctx, noResep, validasi)
+func (u *ResepObatUseCase) UpdateValidasi(c *fiber.Ctx, ctx context.Context, noResep string, validasi bool) error {
+	return u.Repository.UpdateValidasi(c, noResep, validasi)
 }

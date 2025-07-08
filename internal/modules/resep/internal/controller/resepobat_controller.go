@@ -172,7 +172,7 @@ func (c *ResepObatController) UpdateValidasi(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.UseCase.UpdateValidasi(ctx.Context(), noResep, payload.Validasi)
+	err := c.UseCase.UpdateValidasi(ctx, ctx.Context(), noResep, payload.Validasi)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status": "error", "message": err.Error(),

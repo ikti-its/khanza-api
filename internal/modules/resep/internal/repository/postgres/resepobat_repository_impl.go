@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"context"
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
@@ -150,8 +150,31 @@ func (r *resepObatRepositoryImpl) GetByNomorRawat(nomorRawat string) ([]entity.R
 	return resepObats, err
 }
 
-func (r *resepObatRepositoryImpl) UpdateValidasi(ctx context.Context, noResep string, validasi bool) error {
+func (r *resepObatRepositoryImpl) UpdateValidasi(c *fiber.Ctx, noResep string, validasi bool) error {
+	log.Printf("🧪 Update resep_obat: noResep=%s, validasi=%v", noResep, validasi)
+
+	tx, err := r.DB.Beginx()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := r.setUserAuditContext(tx, c); err != nil {
+		return err
+	}
+
 	query := `UPDATE resep_obat SET validasi = $1 WHERE no_resep = $2`
-	_, err := r.DB.ExecContext(ctx, query, validasi, noResep)
-	return err
+	res, err := tx.Exec(query, validasi, noResep)
+	if err != nil {
+		log.Printf("❌ DB Exec Error: %v", err)
+		return err
+	}
+
+	rows, _ := res.RowsAffected()
+	if rows == 0 {
+		log.Printf("⚠️ No matching resep found: %s", noResep)
+		return fmt.Errorf("no resep found with ID %s", noResep)
+	}
+
+	return tx.Commit()
 }
