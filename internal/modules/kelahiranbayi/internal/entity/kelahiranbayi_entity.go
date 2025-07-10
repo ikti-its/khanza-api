@@ -4,6 +4,7 @@ type KelahiranBayi struct {
 	NoRkmMedis        string `json:"no_rkm_medis" db:"no_rkm_medis"`
 	NmPasien          string `json:"nm_pasien" db:"nm_pasien"`
 	JK                string `json:"jk" db:"jk"`
+	TmpLahir          string `json:"tmp_lahir" db:"tmp_lahir"`
 	TglLahir          string `json:"tgl_lahir" db:"tgl_lahir"`
 	Jam               string `json:"jam" db:"jam"`
 	Umur              string `json:"umur" db:"umur"`
@@ -13,7 +14,7 @@ type KelahiranBayi struct {
 	UmurIbu           string `json:"umur_ibu" db:"umur_ibu"`
 	NmAyah            string `json:"nm_ayah" db:"nm_ayah"`
 	UmurAyah          string `json:"umur_ayah" db:"umur_ayah"`
-	AlamatIbu         string `json:"alamat_ibu" db:"alamat_ibu"`
+	Alamat        string `json:"alamat" db:"alamat"`
 
 	BB                int    `json:"bb" db:"bb"`
 	PB                float64 `json:"pb" db:"pb"`
