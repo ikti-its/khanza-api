@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
@@ -52,12 +53,14 @@ func (c *TindakanController) Create(ctx *fiber.Ctx) error {
 func (c *TindakanController) GetAll(ctx *fiber.Ctx) error {
 	response, err := c.UseCase.GetAll()
 	if err != nil {
+		log.Printf("❌ Error querying tindakan: %v", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
 			Status: "Error",
 			Data:   err.Error(),
 		})
 	}
+
 	return ctx.JSON(web.Response{
 		Code:   fiber.StatusOK,
 		Status: "OK",
@@ -76,7 +79,7 @@ func (c *TindakanController) GetByNomorRawat(ctx *fiber.Ctx) error {
 			Data:   err.Error(),
 		})
 	}
-
+	log.Printf("❌ Error querying tindakan: %v", err)
 	return ctx.JSON(web.Response{
 		Code:   fiber.StatusOK,
 		Status: "OK",

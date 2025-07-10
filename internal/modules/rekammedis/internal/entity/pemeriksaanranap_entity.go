@@ -2,6 +2,7 @@ package entity
 
 import (
 	"database/sql"
+	"time"
 )
 
 // PemeriksaanRanap represents the data structure for inpatient examination (pemeriksaan rawat inap).
@@ -37,4 +38,5 @@ type PemeriksaanRanap struct {
 	Instruksi         string         `json:"instruksi,omitempty" db:"instruksi"`
 	Evaluasi          string         `json:"evaluasi,omitempty" db:"evaluasi"`
 	NIP               string         `json:"nip" db:"nip" validate:"required"`
+	CreatedAt         *time.Time     `json:"created_at,omitempty" db:"created_at"` // ✅ Added field
 }

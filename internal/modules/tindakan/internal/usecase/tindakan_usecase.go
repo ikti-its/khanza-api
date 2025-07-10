@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -102,6 +103,7 @@ func (u *TindakanUseCase) Create(c *fiber.Ctx, request *model.TindakanRequest) (
 func (u *TindakanUseCase) GetAll() ([]model.TindakanResponse, error) {
 	list, err := u.Repository.FindAll()
 	if err != nil {
+		log.Printf("❌ Repo error fetching tindakan: %v", err)
 		return nil, err
 	}
 

@@ -9,9 +9,10 @@ type Tindakan struct {
 	NamaDokter   string  `json:"nama_dokter"`
 	NIP          string  `json:"nip"`
 	NamaPetugas  string  `json:"nama_petugas"`
-	TanggalRawat string  `json:"tanggal_rawat"` // as string (e.g. "2025-04-13")
-	JamRawat     string  `json:"jam_rawat"`     // as string (e.g. "14:30:00")
+	TanggalRawat string  `json:"tanggal_rawat"` // e.g., "2025-04-13"
+	JamRawat     string  `json:"jam_rawat"`     // e.g., "14:30:00"
 	Biaya        float64 `json:"biaya"`
+	CreatedAt    string  `json:"created_at"` // e.g., "2025-07-10T12:00:00Z"
 }
 
 type TindakanRequest struct {
@@ -26,6 +27,7 @@ type TindakanRequest struct {
 	TanggalRawat string  `json:"tanggal_rawat" validate:"required"` // format: yyyy-mm-dd
 	JamRawat     string  `json:"jam_rawat" validate:"required"`     // format: HH:mm:ss
 	Biaya        float64 `json:"biaya"`
+	// Note: created_at is usually auto-generated, so it's typically omitted from request
 }
 
 type TindakanResponse struct {
@@ -40,6 +42,7 @@ type TindakanResponse struct {
 	TanggalRawat string  `json:"tanggal_rawat"`
 	JamRawat     string  `json:"jam_rawat"`
 	Biaya        float64 `json:"biaya"`
+	CreatedAt    string  `json:"created_at"` // included in response
 }
 
 type JenisTindakan struct {
