@@ -28,7 +28,6 @@ func (c *Config) GetInt(key string, def int) int {
 		log.Printf("Failed to parse %s to int, using default value: %d", key, def)
 		return def
 	}
-
 	return value
 }
 
@@ -38,6 +37,10 @@ func (c *Config) GetBool(key string, def bool) bool {
 		log.Printf("Failed to parse %s to bool, using default value: %t", key, def)
 		return def
 	}
+	return value
+}
 
+func (c *Config) GetString(key string, def string) string {
+	value := os.Getenv(key)
 	return value
 }
