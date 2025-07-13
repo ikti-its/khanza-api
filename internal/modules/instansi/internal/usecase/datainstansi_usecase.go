@@ -3,9 +3,9 @@ package usecase
 import (
 	"fmt"
 	"github.com/jinzhu/copier"
-	"github.com/ikti-its/khanza-api/internal/modules/datainstansi/internal/repository"
-	"github.com/ikti-its/khanza-api/internal/modules/datainstansi/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/datainstansi/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/entity"
 )
 
 type UseCase struct {
