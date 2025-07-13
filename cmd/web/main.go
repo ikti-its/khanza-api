@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-
+	"fmt"
 	fiberv2 "github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/config"
 	"github.com/ikti-its/khanza-api/internal/app/provider"
@@ -38,8 +38,10 @@ func main() {
 	// 	log.Printf("METHOD: %s | PATH: %s", route.Method, route.Path)
 	// }
 
-	// if err := fiber.Listen(fmt.Sprintf(":%d", cfg.GetInt("APP_PORT", 8080))); err != nil {
-	if err := fiber.Listen("[::]:8080"); err != nil {
+	err := fiber.Listen(fmt.Sprintf("%s:%d", 
+		cfg.GetString("APP_URL", "localhost"),
+		cfg.GetInt("APP_PORT", 8080)));
+	if err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 
