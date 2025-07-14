@@ -42,7 +42,6 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/upmk"		
 	"github.com/jmoiron/sqlx"
 	"github.com/ikti-its/khanza-api/internal/modules/masterpasien"
-	"github.com/ikti-its/khanza-api/internal/modules/datadokter"
 	"github.com/ikti-its/khanza-api/internal/modules/instansi"
 	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal"
 	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi"
@@ -97,7 +96,6 @@ func (p *Provider) Provide() {
 	pesangon.Provide(p.App, p.PG, p.Validator)
 	upmk.Provide(p.App, p.PG, p.Validator)
 	masterpasien.ProvideMasterPasien(p.App, p.PG, p.Validator)
-	datadokter.ProvideDataDokter(p.App, p.PG, p.Validator)
 	instansi.ProvideInstansi(p.App, p.PG, p.Validator)
 	pasienmeninggal.ProvidePasienMeninggal(p.App, p.PG, p.Validator)
 	kelahiranbayi.ProvideKelahiranBayi(p.App, p.PG, p.Validator)
