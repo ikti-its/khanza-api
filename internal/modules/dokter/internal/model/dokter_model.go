@@ -1,6 +1,6 @@
-package entity
+package model
 
-type Dokter struct {
+type Model struct {
 	Kode_dokter    string `json:"kode_dokter" db:"kode_dokter"`
 	Nama_dokter    string `json:"nama_dokter" db:"nama_dokter"`
 	Jenis_kelamin  string `json:"jenis_kelamin" db:"jenis_kelamin"`
@@ -9,3 +9,6 @@ type Dokter struct {
 	Spesialis      string `json:"spesialis" db:"spesialis"`
 	Izin_praktik   string `json:"izin_praktik" db:"izin_praktik"`
 }
+
+type Request = Model
+type Response = Model

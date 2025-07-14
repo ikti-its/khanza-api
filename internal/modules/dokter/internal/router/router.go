@@ -5,9 +5,11 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/dokter/internal/controller"
 )
 
-func DokterRoute(app *fiber.App, dokterController *controller.DokterController) {
-	dokter := app.Group("/v1/dokter")
-
-	dokter.Get("/", dokterController.GetAll)
-	dokter.Get("/:kd_dokter", dokterController.GetByKodeDokter)
+func Route(app *fiber.App, controller *controller.Controller) {
+	modul := app.Group("/v1/dokter")
+	modul.Get("/",       controller.GetAll)
+	modul.Get("/:id",    controller.GetById)
+	modul.Post("/",      controller.Create)
+	modul.Put("/:id",    controller.Update)
+	modul.Delete("/:id", controller.Delete)
 }

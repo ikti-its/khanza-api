@@ -79,7 +79,7 @@ func (p *Provider) Provide() {
 	dokterjaga.ProvideDokterJaga(p.App, p.PG, p.Validator)
 	obat.ProvidePemberianObat(p.App, p.PG)
 	resep.ProvideResep(p.App, p.PG)
-	dokter.ProvideDokter(p.App, p.PG)
+	dokter.ProvideDokter(p.App, p.PG, p.Validator)
 	permintaanreseppulang.ProvidePermintaanResepPulang(p.App, p.PG)
 	stokobatpasien.ProvideStokObatPasien(p.App, p.PG, p.Validator)
 	rekammedis.ProvideRekamMedis(p.App, p.PG, p.Validator)
