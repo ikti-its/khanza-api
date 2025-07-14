@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/ikti-its/khanza-api/internal/modules/datainstansi/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/entity"
 )
 
 type Repository interface {

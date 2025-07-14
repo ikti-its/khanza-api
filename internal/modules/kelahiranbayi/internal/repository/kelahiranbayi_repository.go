@@ -22,7 +22,7 @@ func NewRepository(db *sqlx.DB) Repository {
 }
 
 func (r *RepositoryImpl) FindAll() ([]entity.KelahiranBayi, error) {
-	query := `SELECT * FROM sik.kelahiran_bayi ORDER BY tgl_lahir DESC`
+	query := `SELECT * FROM sik.kelahiran_bayi ORDER BY tgl_daftar DESC, no_rkm_medis DESC`
 
 	var records []entity.KelahiranBayi
 	err := r.DB.Select(&records, query)

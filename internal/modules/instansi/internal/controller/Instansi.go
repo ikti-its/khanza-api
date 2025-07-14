@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	web "github.com/ikti-its/khanza-api/internal/app/model"
-	"github.com/ikti-its/khanza-api/internal/modules/datainstansi/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/datainstansi/internal/usecase"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/usecase"
 )
 
 type Controller struct {

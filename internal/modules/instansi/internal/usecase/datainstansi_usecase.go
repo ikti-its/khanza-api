@@ -2,11 +2,10 @@ package usecase
 
 import (
 	"fmt"
-
 	"github.com/jinzhu/copier"
-	"github.com/ikti-its/khanza-api/internal/modules/datadokter/internal/repository"
-	"github.com/ikti-its/khanza-api/internal/modules/datadokter/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/datadokter/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/instansi/internal/entity"
 )
 
 type UseCase struct {
@@ -18,16 +17,16 @@ func NewUseCase(repo repository.Repository) *UseCase {
 }
 
 func (u *UseCase) Create(request *model.Request) (model.Response, error) {
-	var Entity entity.Dokter
-	copier.Copy(&Entity, &request)
+	var data entity.Entity
+	copier.Copy(&data, &request)
 
-	err := u.Repository.Insert(&Entity)
+	err := u.Repository.Insert(&data)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("failed to create: %v", err)
 	}
 
 	var response model.Response
-	copier.Copy(&response, &Entity)
+	copier.Copy(&response, &data)
 	return response, nil
 }
 
@@ -38,39 +37,40 @@ func (u *UseCase) GetAll() ([]model.Response, error) {
 	}
 
 	var response []model.Response
-	for _, Entity := range List {
+	for _, data := range List {
 		var r model.Response
-		copier.Copy(&r, &Entity)
+		copier.Copy(&r, &data)
 		response = append(response, r)
 	}
 	return response, nil
 }
 
 func (u *UseCase) GetById(id string) (model.Response, error) {
-	Entity, err := u.Repository.FindById(id)
+	data, err := u.Repository.FindById(id)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("data not found")
 	}
 
 	var response model.Response
-	copier.Copy(&response, &Entity)
+	copier.Copy(&response, &data)
 	return response, nil
 }
 
 func (u *UseCase) Update(id string, request *model.Request) (model.Response, error) {
-	Entity, err := u.Repository.FindById(id)
+	data, err := u.Repository.FindById(id)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("not found")
 	}
 
-	copier.Copy(&Entity, &request)
-	err = u.Repository.Update(&Entity)
+	copier.Copy(&data, &request)
+
+	err = u.Repository.Update(&data)
 	if err != nil {
 		return model.Response{}, fmt.Errorf("failed to update: %v", err)
 	}
 
 	var response model.Response
-	copier.Copy(&response, &Entity)
+	copier.Copy(&response, &data)
 	return response, nil
 }
 
