@@ -35,6 +35,17 @@ func (r *catatanObservasiRanapPostpartumRepositoryImpl) setUserAuditContext(tx *
 	safe_ip_address := pq.QuoteLiteral(ip_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
 
+	mac_address_Raw := c.Locals("mac_address")
+	mac_address, ok2 := mac_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid mac_address type: %T", mac_address_Raw)
+	}
+	safe_mac_address := pq.QuoteLiteral(mac_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
+
+
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
+	
 	return err
 }
 
