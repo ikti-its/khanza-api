@@ -3,61 +3,11 @@ package middleware
 import (
 	"log"
 	"os"
-	"net"
-	"strings"
-	"os/exec"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
-
-func get_private_ip() string {	
-	ifaces, _ := net.Interfaces()
-	for _, iface := range ifaces {
-		addrs, _ := iface.Addrs()
-		for _, addr := range addrs {
-			ipNet, ok := addr.(*net.IPNet)
-			if !ok || ipNet.IP.IsLoopback() {
-				continue
-			}
-			ip := ipNet.IP
-			return ip.String()
-		}
-	}
-	return ""
-}
-
-func get_mac_address(ctx *fiber.Ctx) string {
-	ip := ctx.IP()
-	out, _ := exec.Command("arping", "-c", "1", ip).Output()
-	lines := strings.Split(string(out), "\n")
-	for _, line := range lines {
-		if strings.Contains(line, "Unicast reply") {
-			parts := strings.Fields(line)
-			return parts[4] // the MAC address
-		}
-	}
-	return "";
-}
-
-func get_self_mac_address() string {
-	iface, _ := net.InterfaceByName("wlp0s20f3")
-	return iface.HardwareAddr.String()
-}
-
-func get_mac_ip_address(ctx *fiber.Ctx) (string, string) {
-	
-	ip := ctx.IP()
-	
-	mac := get_mac_address(ctx)
-	if ip == "127.0.0.1" || strings.HasPrefix(ip, "::1") {
-		// Try to detect machine's private IP (e.g., 192.168.x.x)
-		ip = get_private_ip()
-		mac = get_self_mac_address()
-	}	
-	return ip, mac
-}
 
 func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 	secret := os.Getenv("JWT_SECRET")
@@ -87,17 +37,14 @@ func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 
 			role := int(roleFloat)
 			log.Printf("✅ JWT role: %d, sub: %s", role, sub)
+
 			// Store in context
 			ctx.Locals("user_id", sub)
 			ctx.Locals("user", sub)
 			ctx.Locals("role", role)
+			ctx.Locals("ip_address", ctx.IP())
+			log.Printf("IP Address: %s", ctx.IP())
 
-			ip, mac := get_mac_ip_address(ctx)
-			log.Printf("IP Address: %s", ip)
-			log.Printf("MAC Address: %s", mac)
-			ctx.Locals("ip_address", ip)
-			ctx.Locals("mac_address", mac)
-			ctx.Locals("encryption_key", os.Getenv("ENCRYPTION_KEY"))
 
 			// Special access mapping
 			pegawai := []int{1, 1337, 2, 3, 4001, 4002, 4003, 4004, 5001}
