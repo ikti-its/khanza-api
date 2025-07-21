@@ -1,11 +1,11 @@
 package entity
 
 type Dokter struct {
-	Kode_dokter    string `json:"kode_dokter" db:"kode_dokter"`
-	Nama_dokter    string `json:"nama_dokter" db:"nama_dokter"`
-	Jenis_kelamin  string `json:"jenis_kelamin" db:"jenis_kelamin"`
-	Alamat_tinggal string `json:"alamat_tinggal" db:"alamat_tinggal"`
-	No_telp        string `json:"no_telp" db:"no_telp"`
-	Spesialis      string `json:"spesialis" db:"spesialis"`
-	Izin_praktik   string `json:"izin_praktik" db:"izin_praktik"`
+	KodeDokter    string `db:"kode_dokter" json:"kode_dokter"`
+	NamaDokter    string `db:"nama_dokter" json:"nama_dokter"`
+	JenisKelamin  string `db:"jenis_kelamin" json:"jenis_kelamin"`
+	AlamatTinggal string `db:"alamat_tinggal" json:"alamat_tinggal"`
+	NoTelp        string `db:"no_telp" json:"no_telp"`
+	Spesialis     string `db:"spesialis" json:"spesialis"`
+	IzinPraktik   string `db:"izin_praktik" json:"izin_praktik"`
 }

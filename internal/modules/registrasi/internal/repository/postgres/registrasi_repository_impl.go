@@ -107,21 +107,26 @@ func (r *registrasiRepositoryImpl) Insert(c *fiber.Ctx, registrasi *entity.Regis
 			nomor_reg, nomor_rawat, tanggal, jam, kode_dokter, nama_dokter, nomor_rm,
 			nama_pasien, jenis_kelamin, umur, poliklinik, jenis_bayar, penanggung_jawab,
 			alamat_pj, hubungan_pj, biaya_registrasi, status_registrasi, no_telepon,
-			status_rawat, status_poli, status_bayar, status_kamar
+			status_rawat, status_poli, status_bayar, status_kamar,
+			pekerjaanpj, kelurahanpj, kecamatanpj, kabupatenpj, propinsipj, notelp_pj, no_asuransi
 		) VALUES (
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
 			$11, $12, $13, $14, $15, $16, $17, $18,
-			$19, $20, $21, $22
+			$19, $20, $21, $22,
+			$23, $24, $25, $26, $27, $28, $29
 		)
-	`
-	_, err = tx.Exec(query,
-		registrasi.NomorReg, registrasi.NomorRawat, registrasi.Tanggal, registrasi.Jam,
-		registrasi.KodeDokter, registrasi.NamaDokter, registrasi.NomorRM, registrasi.Nama,
-		registrasi.JenisKelamin, registrasi.Umur, registrasi.Poliklinik, registrasi.JenisBayar,
-		registrasi.PenanggungJawab, registrasi.Alamat, registrasi.HubunganPJ, registrasi.BiayaRegistrasi,
-		registrasi.StatusRegistrasi, registrasi.NoTelepon, registrasi.StatusRawat,
-		registrasi.StatusPoli, registrasi.StatusBayar, registrasi.StatusKamar, // ✅ Added
-	)
+`
+_, err = tx.Exec(query,
+	registrasi.NomorReg, registrasi.NomorRawat, registrasi.Tanggal, registrasi.Jam,
+	registrasi.KodeDokter, registrasi.NamaDokter, registrasi.NomorRM, registrasi.Nama,
+	registrasi.JenisKelamin, registrasi.Umur, registrasi.Poliklinik, registrasi.JenisBayar,
+	registrasi.PenanggungJawab, registrasi.Alamat, registrasi.HubunganPJ, registrasi.BiayaRegistrasi,
+	registrasi.StatusRegistrasi, registrasi.NoTelepon, registrasi.StatusRawat,
+	registrasi.StatusPoli, registrasi.StatusBayar, registrasi.StatusKamar,
+	registrasi.PekerjaanPJ, registrasi.KelurahanPJ, registrasi.KecamatanPJ,
+	registrasi.KabupatenPJ, registrasi.PropinsiPJ, registrasi.NoTelpPJ, registrasi.No_asuransi,
+)
+
 	if err != nil {
 		return err
 	}
@@ -195,7 +200,8 @@ func (r *registrasiRepositoryImpl) Update(c *fiber.Ctx, registrasi *entity.Regis
 			nomor_rm = $7, nama_pasien = $8, jenis_kelamin = $9, umur = $10, poliklinik = $11,
 			jenis_bayar = $12, penanggung_jawab = $13, alamat_pj = $14, hubungan_pj = $15,
 			biaya_registrasi = $16, status_registrasi = $17, no_telepon = $18,
-			status_rawat = $19, status_poli = $20, status_bayar = $21, status_kamar = $22
+			status_rawat = $19, status_poli = $20, status_bayar = $21, status_kamar = $22,pekerjaanpj = $23,kelurahanpj = $24,
+            kecamatanpj = $25,kabupatenpj = $26, propinsipj = $27, notelp_pj = $28, no_asuransi = $29
 		WHERE nomor_reg = $1
 	`
 	_, err = tx.Exec(query,
@@ -204,7 +210,8 @@ func (r *registrasiRepositoryImpl) Update(c *fiber.Ctx, registrasi *entity.Regis
 		registrasi.JenisKelamin, registrasi.Umur, registrasi.Poliklinik, registrasi.JenisBayar,
 		registrasi.PenanggungJawab, registrasi.Alamat, registrasi.HubunganPJ, registrasi.BiayaRegistrasi,
 		registrasi.StatusRegistrasi, registrasi.NoTelepon, registrasi.StatusRawat,
-		registrasi.StatusPoli, registrasi.StatusBayar, registrasi.StatusKamar, // ✅ Added
+		registrasi.StatusPoli, registrasi.StatusBayar, registrasi.StatusKamar, registrasi.PekerjaanPJ, registrasi.KelurahanPJ,
+		registrasi.KecamatanPJ, registrasi.KabupatenPJ, registrasi.PropinsiPJ, registrasi.NoTelpPJ, registrasi.No_asuransi,
 	)
 	if err != nil {
 		return err

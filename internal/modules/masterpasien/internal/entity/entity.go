@@ -1,6 +1,6 @@
 package entity
 
-type MasterPasien struct {
+type Entity struct {
 	No_rkm_medis         string `json:"no_rkm_medis" db:"no_rkm_medis"`
 	Nm_pasien            string `json:"nm_pasien" db:"nm_pasien"`
 	No_ktp               string `json:"no_ktp" db:"no_ktp"`
@@ -17,18 +17,11 @@ type MasterPasien struct {
 	No_tlp               string `json:"no_tlp" db:"no_tlp"`
 	Umur                 string `json:"umur" db:"umur"`
 	Pnd                  string `json:"pnd" db:"pnd"`
-	Keluarga             string `json:"keluarga" db:"keluarga"`
-	Namakeluarga         string `json:"namakeluarga" db:"namakeluarga"`
-	Kd_pj                string `json:"kd_pj" db:"kd_pj"`
-	No_peserta           string `json:"no_peserta" db:"no_peserta"`
+	Asuransi             string `json:"asuransi" db:"asuransi"`
+	No_asuransi          string `json:"no_asuransi" db:"no_asuransi"`
 	Kd_kel               string `json:"kd_kel" db:"kd_kel"`
 	Kd_kec               string `json:"kd_kec" db:"kd_kec"`
 	Kd_kab               string `json:"kd_kab" db:"kd_kab"`
-	Pekerjaanpj          string `json:"pekerjaanpj" db:"pekerjaanpj"`
-	Alamatpj             string `json:"alamatpj" db:"alamatpj"`
-	Kelurahanpj          string `json:"kelurahanpj" db:"kelurahanpj"`
-	Kecamatanpj          string `json:"kecamatanpj" db:"kecamatanpj"`
-	Kabupatenpj          string `json:"kabupatenpj" db:"kabupatenpj"`
 	Suku_bangsa          string `json:"suku_bangsa" db:"suku_bangsa"`
 	Bahasa_pasien        string `json:"bahasa_pasien" db:"bahasa_pasien"`
 	Perusahaan_pasien    string `json:"perusahaan_pasien" db:"perusahaan_pasien"`
@@ -36,5 +29,5 @@ type MasterPasien struct {
 	Email                string `json:"email" db:"email"`
 	Cacat_fisik          string `json:"cacat_fisik" db:"cacat_fisik"`
 	Kd_prop              string `json:"kd_prop" db:"kd_prop"`
-	Propinsipj           string `json:"propinsipj" db:"propinsipj"`
+
 }

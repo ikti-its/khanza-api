@@ -24,6 +24,13 @@ type Registrasi struct {
 	StatusBayar      string  `json:"status_bayar"`
 	StatusKamar      string  `json:"status_kamar"`
 	Kelas            string  `json:"kelas"`
+	PekerjaanPJ      string  `json:"pekerjaanpj" db:"pekerjaanpj"`
+    KelurahanPJ      string  `json:"kelurahanpj" db:"kelurahanpj"`
+	KecamatanPJ      string  `json:"kecamatanpj" db:"kecamatanpj"`
+	KabupatenPJ      string  `json:"kabupatenpj" db:"kabupatenpj"`
+    PropinsiPJ       string  `json:"propinsipj" db:"propinsipj"`
+	NoTelpPJ         string  `json:"notelp_pj" db:"notelp_pj"`
+	No_asuransi      string  `json:"no_asuransi" db:"no_asuransi"`
 }
 
 type RegistrasiRequest struct {
@@ -50,6 +57,13 @@ type RegistrasiRequest struct {
 	StatusBayar      string  `json:"status_bayar"`
 	StatusKamar      string  `json:"status_kamar"`
 	Kelas            string  `json:"kelas"`
+	PekerjaanPJ      string  `json:"pekerjaanpj" db:"pekerjaanpj"`
+    KelurahanPJ      string  `json:"kelurahanpj" db:"kelurahanpj"`
+	KecamatanPJ      string  `json:"kecamatanpj" db:"kecamatanpj"`
+	KabupatenPJ      string  `json:"kabupatenpj" db:"kabupatenpj"`
+    PropinsiPJ       string  `json:"propinsipj" db:"propinsipj"`
+	NoTelpPJ         string  `json:"notelp_pj" db:"notelp_pj"`
+	No_asuransi      string  `json:"no_asuransi" db:"no_asuransi"`
 }
 
 type RegistrasiResponse struct {
@@ -76,6 +90,13 @@ type RegistrasiResponse struct {
 	StatusBayar      string  `db:"status_bayar" json:"status_bayar"`
 	StatusKamar      string  `db:"status_kamar" json:"status_kamar"`
 	Kelas            string  `db:"kelas" json:"kelas"`
+	PekerjaanPJ      string  `json:"pekerjaanpj" db:"pekerjaanpj"`
+    KelurahanPJ      string  `json:"kelurahanpj" db:"kelurahanpj"`
+	KecamatanPJ      string  `json:"kecamatanpj" db:"kecamatanpj"`
+	KabupatenPJ      string  `json:"kabupatenpj" db:"kabupatenpj"`
+    PropinsiPJ       string  `json:"propinsipj" db:"propinsipj"`
+	NoTelpPJ         string  `json:"notelp_pj" db:"notelp_pj"`
+	No_asuransi      string  `json:"no_asuransi" db:"no_asuransi"`
 }
 
 type PendingRoomRequest struct {
