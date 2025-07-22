@@ -5,7 +5,7 @@ import (
     "github.com/gofiber/fiber/v2"
     "github.com/lib/pq"
     "github.com/jmoiron/sqlx"
-	"github.com/ikti-its/khanza-api/internal/modules/asuransi/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal/internal/entity"
 )
 
 type Repository interface {
@@ -58,7 +58,7 @@ func NewRepository(db *sqlx.DB) Repository {
 
 func (r *RepositoryImpl) FindAll() ([]entity.Entity, error) {
 	query := `
-		SELECT * FROM asuransi ORDER BY kode_asuransi DESC
+		SELECT * FROM pasien_meninggal ORDER BY no_rkm_medis DESC
 	`
 	var records []entity.Entity
 	err := r.DB.Select(&records, query)
@@ -66,7 +66,7 @@ func (r *RepositoryImpl) FindAll() ([]entity.Entity, error) {
 }
 
 func (r *RepositoryImpl) FindById(id string) (entity.Entity, error) {
-	query := `SELECT * FROM asuransi WHERE kode_asuransi = $1`
+	query := `SELECT * FROM pasien_meninggal WHERE no_rkm_medis = $1`
 
 	var record entity.Entity
 	err := r.DB.Get(&record, query, id)
@@ -74,7 +74,7 @@ func (r *RepositoryImpl) FindById(id string) (entity.Entity, error) {
 }
 
 func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
-tx, err := r.DB.Beginx()
+	tx, err := r.DB.Beginx()
 	if err != nil {
 		return err
 	}
@@ -85,20 +85,23 @@ tx, err := r.DB.Beginx()
 	}
 
 	query := `
-		INSERT INTO asuransi (
-			kode_asuransi, nama_asuransi, perusahaan_asuransi, alamat_asuransi, no_telp, attn, tipe_asuransi
+		INSERT INTO pasien_meninggal (
+			no_rkm_medis, nm_pasien, jk, tgl_lahir, umur,
+			gol_darah, stts_nikah, agama, tanggal, jam,
+			icdx, icdx_antara1, icdx_antara2, icdx_langsung,
+			keterangan, nama_dokter, kode_dokter
 		) VALUES (
-			$1, $2, $3, $4, $5, $6, $7
+			$1, $2, $3, $4, $5,
+			$6, $7, $8, $9, $10,
+			$11, $12, $13, $14,
+			$15, $16, $17
 		)
 	`
-	_, err = tx.Exec(query,   
-		entity.Kode_asuransi,  
-		entity.Nama_asuransi, 
-		entity.Perusahaan_asuransi,   
-		entity.Alamat_asuransi,       
-		entity.No_telp,  
-		entity.Attn, 
-		entity.Tipe_asuransi,
+	_, err = tx.Exec(query,
+		entity.No_rkm_medis, entity.Nm_pasien, entity.Jk, entity.Tgl_lahir, entity.Umur,
+		entity.Gol_darah, entity.Stts_nikah, entity.Agama, entity.Tanggal, entity.Jam,
+		entity.Icdx, entity.Icdx_antara1, entity.Icdx_antara2, entity.Icdx_langsung,
+		entity.Keterangan, entity.Nama_dokter, entity.Kode_dokter,
 	)
 	if err != nil {
 		return err
@@ -117,20 +120,31 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 	if err := r.setUserAuditContext(tx, c); err != nil {
 		return err
 	}
-
 	query := `
-		UPDATE asuransi SET 
-			nama_asuransi = $2, perusahaan_asuransi = $3, alamat_asuransi = $4, no_telp = $5, attn = $6, tipe_asuransi = $7
-		WHERE kode_asuransi = $1
+		UPDATE pasien_meninggal SET
+			nm_pasien = $2,
+			jk = $3,
+			tgl_lahir = $4,
+			umur = $5,
+			gol_darah = $6,
+			stts_nikah = $7,
+			agama = $8,
+			tanggal = $9,
+			jam = $10,
+			icdx = $11,
+			icdx_antara1 = $12,
+			icdx_antara2 = $13,
+			icdx_langsung = $14,
+			keterangan = $15,
+			nama_dokter = $16,
+			kode_dokter = $17
+		WHERE no_rkm_medis = $1
 	`
-	_, err = tx.Exec(query,  
-		entity.Kode_asuransi, 
-		entity.Nama_asuransi,  
-		entity.Perusahaan_asuransi,   
-		entity.Alamat_asuransi,       
-		entity.No_telp,  
-		entity.Attn, 
-		entity.Tipe_asuransi,
+	_, err = tx.Exec(query,
+		entity.No_rkm_medis, entity.Nm_pasien, entity.Jk, entity.Tgl_lahir, entity.Umur,
+		entity.Gol_darah, entity.Stts_nikah, entity.Agama, entity.Tanggal, entity.Jam,
+		entity.Icdx, entity.Icdx_antara1, entity.Icdx_antara2, entity.Icdx_langsung,
+		entity.Keterangan, entity.Nama_dokter, entity.Kode_dokter,
 	)
 	if err != nil {
 		return err
@@ -151,7 +165,7 @@ func (r *RepositoryImpl) Delete(c *fiber.Ctx, id string) error {
 	}
 
     query := `
-		DELETE FROM asuransi WHERE kode_asuransi = $1
+		DELETE FROM pasien_meninggal WHERE no_rkm_medis = $1
 	`
 	_, err = tx.Exec(query, id)
 	if err != nil {

@@ -4,9 +4,9 @@ import (
 	"fmt" 
 	"github.com/jinzhu/copier"
     "github.com/gofiber/fiber/v2"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/repository"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal/internal/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal/internal/model"
+	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal/internal/entity"
 )
 
 type UseCase struct {

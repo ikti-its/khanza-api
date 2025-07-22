@@ -38,6 +38,17 @@ func (r *RepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error {
 	safe_ip_address := pq.QuoteLiteral(ip_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.ip_address = %s`, safe_ip_address))
 
+	mac_address_Raw := c.Locals("mac_address")
+	mac_address, ok2 := mac_address_Raw.(string)
+	if !ok2 {
+		return fmt.Errorf("invalid mac_address type: %T", mac_address_Raw)
+	}
+	safe_mac_address := pq.QuoteLiteral(mac_address)
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
+
+
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
+	
 	return err
 }
 
@@ -63,7 +74,7 @@ func (r *RepositoryImpl) FindById(id string) (entity.Entity, error) {
 }
 
 func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
-tx, err := r.DB.Beginx()
+	tx, err := r.DB.Beginx()
 	if err != nil {
 		return err
 	}
@@ -76,46 +87,46 @@ tx, err := r.DB.Beginx()
 	query := `INSERT INTO pasien (
 		no_rkm_medis, nm_pasien, no_ktp, jk, tmp_lahir, tgl_lahir,
 		nm_ibu, alamat, gol_darah, pekerjaan, stts_nikah, agama,
-		tgl_daftar, no_tlp, umur, pnd, asuransi, no_asuransi, suku_bangsa,
-		bahasa_pasien, perusahaan_pasien, nip, email, cacat_fisik,
+		tgl_daftar, no_tlp, umur, pnd, asuransi, no_asuransi,
+		suku_bangsa, bahasa_pasien, perusahaan_pasien, nip, email, cacat_fisik,
 		kd_kel, kd_kec, kd_kab, kd_prop
 	) VALUES (
 		$1, $2, $3, $4, $5, $6,
 		$7, $8, $9, $10, $11, $12,
-		$13, $14, $15, $16, $17, $18, $19,
-		$20, $21, $22, $23, $24,
+		$13, $14, $15, $16, $17, $18,
+		$19, $20, $21, $22, $23, $24,
 		$25, $26, $27, $28
 	)`
 
-	_, err = tx.Exec(query,   
+	_, err = tx.Exec(query,
 		entity.No_rkm_medis,
-        entity.Nm_pasien,
-        entity.No_ktp, 
-        entity.Jk, 
-        entity.Tmp_lahir,
-        entity.Tgl_lahir, 
-        entity.Nm_ibu,
-        entity.Alamat,
-        entity.Gol_darah,
-        entity.Pekerjaan,
-        entity.Stts_nikah,
-        entity.Agama,  
-        entity.Tgl_daftar,
-        entity.No_tlp,
-        entity.Umur,
-        entity.Pnd,
-        entity.Asuransi,
-        entity.No_asuransi, 
-        entity.Kd_kel,
-        entity.Kd_kec,
-        entity.Kd_kab,
-        entity.Suku_bangsa,
-        entity.Bahasa_pasien,
-        entity.Perusahaan_pasien,
-        entity.Nip,
-        entity.Email, 
-        entity.Cacat_fisik,
-        entity.Kd_prop,
+		entity.Nm_pasien,
+		entity.No_ktp,
+		entity.Jk,
+		entity.Tmp_lahir,
+		entity.Tgl_lahir,
+		entity.Nm_ibu,
+		entity.Alamat,
+		entity.Gol_darah,
+		entity.Pekerjaan,
+		entity.Stts_nikah,
+		entity.Agama,
+		entity.Tgl_daftar,
+		entity.No_tlp,
+		entity.Umur,
+		entity.Pnd,
+		entity.Asuransi,
+		entity.No_asuransi,
+		entity.Suku_bangsa,
+		entity.Bahasa_pasien,
+		entity.Perusahaan_pasien,
+		entity.Nip,
+		entity.Email,
+		entity.Cacat_fisik,
+		entity.Kd_kel,
+		entity.Kd_kec,
+		entity.Kd_kab,
+		entity.Kd_prop,
 	)
 	if err != nil {
 		return err
@@ -123,6 +134,7 @@ tx, err := r.DB.Beginx()
 
 	return tx.Commit()
 }
+
 
 func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 	tx, err := r.DB.Beginx()
@@ -144,35 +156,35 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 		kd_kel = $25, kd_kec = $26, kd_kab = $27, kd_prop = $28
 		WHERE no_rkm_medis = $1`
 
-	_, err = tx.Exec(query,  
+	_, err = tx.Exec(query,
 		entity.No_rkm_medis,
-        entity.Nm_pasien,
-        entity.No_ktp, 
-        entity.Jk, 
-        entity.Tmp_lahir,
-        entity.Tgl_lahir, 
-        entity.Nm_ibu,
-        entity.Alamat,
-        entity.Gol_darah,
-        entity.Pekerjaan,
-        entity.Stts_nikah,
-        entity.Agama,  
-        entity.Tgl_daftar,
-        entity.No_tlp,
-        entity.Umur,
-        entity.Pnd,
-        entity.Asuransi,
-        entity.No_asuransi, 
-        entity.Kd_kel,
-        entity.Kd_kec,
-        entity.Kd_kab,
-        entity.Suku_bangsa,
-        entity.Bahasa_pasien,
-        entity.Perusahaan_pasien,
-        entity.Nip,
-        entity.Email, 
-        entity.Cacat_fisik,
-        entity.Kd_prop,
+		entity.Nm_pasien,
+		entity.No_ktp,
+		entity.Jk,
+		entity.Tmp_lahir,
+		entity.Tgl_lahir,
+		entity.Nm_ibu,
+		entity.Alamat,
+		entity.Gol_darah,
+		entity.Pekerjaan,
+		entity.Stts_nikah,
+		entity.Agama,
+		entity.Tgl_daftar,
+		entity.No_tlp,
+		entity.Umur,
+		entity.Pnd,
+		entity.Asuransi,
+		entity.No_asuransi,
+		entity.Suku_bangsa,
+		entity.Bahasa_pasien,
+		entity.Perusahaan_pasien,
+		entity.Nip,
+		entity.Email,
+		entity.Cacat_fisik,
+		entity.Kd_kel,
+		entity.Kd_kec,
+		entity.Kd_kab,
+		entity.Kd_prop,
 	)
 	if err != nil {
 		return err
@@ -180,6 +192,7 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 
 	return tx.Commit()
 }
+
 
 func (r *RepositoryImpl) Delete(c *fiber.Ctx, id string) error {
 	tx, err := r.DB.Beginx()
