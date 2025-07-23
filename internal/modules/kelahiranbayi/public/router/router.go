@@ -3,12 +3,12 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/middleware"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/public/controller"
 )
 
 func Route(app *fiber.App, Controller *controller.Controller) {
 	var roles = []int{1337, 0, 1, 2, 3}
-	modul := app.Group("/v1/masterpasien")
+	modul := app.Group("/v1/kelahiranbayi")
 	modul.Get("/",       middleware.Authenticate(roles), Controller.GetAll)
 	modul.Get("/:id",    middleware.Authenticate(roles), Controller.GetById)
 	modul.Post("/",      middleware.Authenticate(roles), Controller.Create)

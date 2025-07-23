@@ -4,20 +4,22 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
 	"github.com/ikti-its/khanza-api/internal/app/config"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/usecase"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/repository"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/controller"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/router"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/usecase"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/controller"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/router"
+	kelahiranrepo "github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/public/repository"
 )
 
 func Provide(app *fiber.App, db *sqlx.DB, validator *config.Validator) {
-	// Initialize repository 
-	Repository := repository.NewRepository(db)
-	// Initialize use case 
-	UseCase := usecase.NewUseCase(Repository)
-	// Initialize controller 
-	Controller := controller.NewController(UseCase)
+	// Init repo
+	repo := repository.NewRepository(db)
+	kelahiranRepo := kelahiranrepo.NewRepository(db)
 
-	// Set up routes 
-	router.Route(app, Controller) 
+	// Pass 2 argumen ke usecase
+	useCase := usecase.NewUseCase(repo, kelahiranRepo)
+
+	// Init controller + route
+	controller := controller.NewController(useCase)
+	router.Route(app, controller)
 }

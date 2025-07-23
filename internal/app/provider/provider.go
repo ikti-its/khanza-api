@@ -98,7 +98,7 @@ func (p *Provider) Provide() {
 	masterpasien.Provide(p.App, p.PG, p.Validator)
 	instansi.ProvideInstansi(p.App, p.PG, p.Validator)
 	pasienmeninggal.Provide(p.App, p.PG, p.Validator)
-	kelahiranbayi.ProvideKelahiranBayi(p.App, p.PG, p.Validator)
+	kelahiranbayi.Provide(p.App, p.PG, p.Validator)
 	asuransi.Provide(p.App, p.PG, p.Validator)
 
 

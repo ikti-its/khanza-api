@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/usecase"
+	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/public/model"
+	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/public/usecase"
 )
 
 type Controller struct {
@@ -22,7 +22,7 @@ func NewController(useCase *usecase.UseCase) *Controller {
 
 func (c *Controller) Create(ctx *fiber.Ctx) error {
 	var request model.Request
-	fmt.Println("Received a POST request to /masterpasien") // Debugging log
+	fmt.Println("Received a POST request to /kelahiranbayi") // Debugging log
 
 	if err := ctx.BodyParser(&request); err != nil {
 		fmt.Println("Failed to parse request body:", err) // Debugging log

@@ -1,11 +1,13 @@
 package controller
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"fmt"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/ikti-its/khanza-api/internal/app/exception"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
-	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/internal/usecase"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/model"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/usecase"
 )
 
 type Controller struct {
@@ -13,12 +15,17 @@ type Controller struct {
 }
 
 func NewController(useCase *usecase.UseCase) *Controller {
-	return &Controller{UseCase: useCase}
+	return &Controller{
+		UseCase: useCase,
+	}
 }
 
 func (c *Controller) Create(ctx *fiber.Ctx) error {
 	var request model.Request
+	fmt.Println("Received a POST request to /masterpasien") // Debugging log
+
 	if err := ctx.BodyParser(&request); err != nil {
+		fmt.Println("Failed to parse request body:", err) // Debugging log
 		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
 			Code:   fiber.StatusBadRequest,
 			Status: "Bad Request",
@@ -26,7 +33,8 @@ func (c *Controller) Create(ctx *fiber.Ctx) error {
 		})
 	}
 
-	response, err := c.UseCase.Create(&request)
+	// Call the Create method of the UseCase
+	response, err := c.UseCase.Create(ctx, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -34,10 +42,9 @@ func (c *Controller) Create(ctx *fiber.Ctx) error {
 			Data:   err.Error(),
 		})
 	}
-
 	return ctx.Status(fiber.StatusCreated).JSON(web.Response{
 		Code:   fiber.StatusCreated,
-		Status: "Created",
+		Status: "OK",
 		Data:   response,
 	})
 }
@@ -59,9 +66,8 @@ func (c *Controller) GetAll(ctx *fiber.Ctx) error {
 }
 
 func (c *Controller) GetById(ctx *fiber.Ctx) error {
-	noRM := ctx.Params("id")
-
-	response, err := c.UseCase.GetById(noRM)
+	id := ctx.Params("id")
+	response, err := c.UseCase.GetById(id)
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(web.Response{
 			Code:   fiber.StatusNotFound,
@@ -77,18 +83,14 @@ func (c *Controller) GetById(ctx *fiber.Ctx) error {
 }
 
 func (c *Controller) Update(ctx *fiber.Ctx) error {
-	noRM := ctx.Params("id")
+	id := ctx.Params("id")
 	var request model.Request
 
 	if err := ctx.BodyParser(&request); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(web.Response{
-			Code:   fiber.StatusBadRequest,
-			Status: "Bad Request",
-			Data:   "Invalid request body",
-		})
+		panic(&exception.BadRequestError{Message: "Invalid request body"})
 	}
 
-	response, err := c.UseCase.Update(noRM, &request)
+	response, err := c.UseCase.Update(ctx, id, &request)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -104,9 +106,8 @@ func (c *Controller) Update(ctx *fiber.Ctx) error {
 }
 
 func (c *Controller) Delete(ctx *fiber.Ctx) error {
-	noRM := ctx.Params("id")
-
-	err := c.UseCase.Delete(noRM)
+	id := ctx.Params("id")
+	err := c.UseCase.Delete(ctx, id)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,

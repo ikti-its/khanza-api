@@ -4,19 +4,25 @@ import (
 	"fmt" 
 	"github.com/jinzhu/copier"
     "github.com/gofiber/fiber/v2"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/repository"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/model"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/repository"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/model"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/entity"
+	kelahiranrepo "github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/public/repository"
+	kelahiranentity "github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi/public/entity"
+
 )
 
 type UseCase struct {
 	Repository repository.Repository
+	KelahiranRepo kelahiranrepo.Repository
 }
 
-func NewUseCase(repo repository.Repository) *UseCase {
-	return &UseCase{Repository: repo}
+func NewUseCase(repo repository.Repository, kelahiran kelahiranrepo.Repository) *UseCase {
+    return &UseCase{
+        Repository: repo,
+        KelahiranRepo: kelahiran,
+    }
 }
-
 // Create 
 func (u *UseCase) Create(c *fiber.Ctx, request *model.Request) (model.Response, error) {
 
@@ -82,11 +88,25 @@ func (u *UseCase) Update(c *fiber.Ctx, id string, request *model.Request) (model
 		return model.Response{}, fmt.Errorf("failed to update: %v", err)
 	}
 
+	// Sinkron ke kelahiranbayi jika ada data bayi yang cocok
+	err = u.KelahiranRepo.UpdateIfExists(c, &kelahiranentity.Entity{
+		No_rkm_medis: Entity.No_rkm_medis,
+		Nm_pasien:    Entity.Nm_pasien,
+		Jk:           Entity.Jk,
+		Tgl_lahir:    Entity.Tgl_lahir,
+		Tmp_lahir:    Entity.Tmp_lahir,
+		Alamat:       Entity.Alamat,
+		Nm_ibu:       Entity.Nm_ibu,
+	})
+	if err != nil {
+		return model.Response{}, fmt.Errorf("failed to sync kelahiranbayi: %v", err)
+	}
+
 	var response model.Response
 	copier.Copy(&response, &Entity)
-
 	return response, nil
 }
+
 
 // Delete 
 func (u *UseCase) Delete(c *fiber.Ctx, id string) error {

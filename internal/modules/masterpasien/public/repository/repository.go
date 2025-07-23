@@ -5,7 +5,7 @@ import (
     "github.com/gofiber/fiber/v2"
     "github.com/lib/pq"
     "github.com/jmoiron/sqlx"
-	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/internal/entity"
+	"github.com/ikti-its/khanza-api/internal/modules/masterpasien/public/entity"
 )
 
 type Repository interface {
