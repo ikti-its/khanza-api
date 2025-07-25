@@ -107,6 +107,15 @@ func (u *UseCase) Update(c *fiber.Ctx, id string, request *model.Request) (model
 	return response, nil
 }
 
+func (u *UseCase) UpdateStatusPasien(c *fiber.Ctx, noRM string, status string) error {
+    Entity, err := u.Repository.FindById(noRM)
+    if err != nil {
+        return fmt.Errorf("not found")
+    }
+
+    Entity.Stts_pasien = status
+    return u.Repository.Update(c, &Entity)
+}
 
 // Delete 
 func (u *UseCase) Delete(c *fiber.Ctx, id string) error {

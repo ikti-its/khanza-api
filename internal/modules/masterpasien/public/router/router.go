@@ -14,4 +14,6 @@ func Route(app *fiber.App, Controller *controller.Controller) {
 	modul.Post("/",      middleware.Authenticate(roles), Controller.Create)
 	modul.Put("/:id",    middleware.Authenticate(roles), Controller.Update)
 	modul.Delete("/:id", middleware.Authenticate(roles), Controller.Delete)	
+	modul.Put("/:id/status", middleware.Authenticate(roles), Controller.UpdateStatus)
+	modul.Patch("/status/:id", middleware.Authenticate(roles), Controller.UpdateStatus)
 }

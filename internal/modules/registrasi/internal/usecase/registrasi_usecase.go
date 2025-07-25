@@ -361,3 +361,49 @@ func (u *RegistrasiUseCase) GetByNomorRM(nomorRM string) (model.RegistrasiRespon
 func (u *RegistrasiUseCase) GetByNoRawat(noRawat string) (model.RegistrasiResponse, error) {
 	return u.Repository.GetByNoRawat(noRawat)
 }
+
+func (u *RegistrasiUseCase) GetAllByNomorRM(nomorRM string) ([]model.RegistrasiResponse, error) {
+	registrasiList, err := u.Repository.FindAllByNomorRM(nomorRM)
+	if err != nil {
+		return nil, fmt.Errorf("registrasi tidak ditemukan: %v", err)
+	}
+
+	var response []model.RegistrasiResponse
+	for _, r := range registrasiList {
+		response = append(response, model.RegistrasiResponse{
+			NomorReg:         r.NomorReg,
+			NomorRawat:       r.NomorRawat,
+			Tanggal:          r.Tanggal.Format("2006-01-02"),
+			Jam:              r.Jam.Format("15:04:05"),
+			KodeDokter:       r.KodeDokter,
+			NamaDokter:       r.NamaDokter,
+			NomorRM:          r.NomorRM,
+			Nama:             r.Nama,
+			JenisKelamin:     r.JenisKelamin,
+			Umur:             r.Umur,
+			Poliklinik:       r.Poliklinik,
+			JenisBayar:       r.JenisBayar,
+			PenanggungJawab:  r.PenanggungJawab,
+			Alamat:           r.Alamat,
+			HubunganPJ:       r.HubunganPJ,
+			BiayaRegistrasi:  r.BiayaRegistrasi,
+			StatusRegistrasi: r.StatusRegistrasi,
+			NoTelepon:        r.NoTelepon,
+			StatusRawat:      r.StatusRawat,
+			StatusPoli:       r.StatusPoli,
+			StatusBayar:      r.StatusBayar,
+			StatusKamar:      r.StatusKamar,
+			Kelas:            r.Kelas,
+			PekerjaanPJ:      r.PekerjaanPJ,
+			KelurahanPJ:      r.KelurahanPJ,
+			KecamatanPJ:      r.KecamatanPJ,
+			KabupatenPJ:      r.KabupatenPJ,
+			PropinsiPJ:       r.PropinsiPJ,
+			NoTelpPJ:         r.NoTelpPJ,
+			No_asuransi:      r.No_asuransi,
+		})
+	}
+
+	return response, nil
+}
+

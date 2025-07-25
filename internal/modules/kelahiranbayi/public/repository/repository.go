@@ -88,7 +88,7 @@ func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
 	query := `
 		INSERT INTO kelahiran_bayi (
 			no_rkm_medis, nm_pasien, jk, tmp_lahir, tgl_lahir, jam, umur, tgl_daftar,
-			nm_ibu, umur_ibu, nm_ayah, umur_ayah, alamat,
+			no_rm_ibu, nm_ibu, umur_ibu, nm_ayah, umur_ayah, alamat,
 			bb, pb, proses_lahir, kelahiran_ke, keterangan, diagnosa, penyulit_kehamilan, ketuban,
 			lk_perut, lk_kepala, lk_dada, penolong, no_skl, gravida, para, abortus,
 			f1, u1, t1, r1, w1, n1,
@@ -103,13 +103,13 @@ func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
 			$28, $29, $30, $31, $32, $33,
 			$34, $35, $36, $37, $38, $39,
 			$40, $41, $42, $43, $44, $45,
-			$46, $47, $48, $49, $50, $51
+			$46, $47, $48, $49, $50, $51, $52
 		)
 	`
 
 	_, err = tx.Exec(query,
 		entity.No_rkm_medis, entity.Nm_pasien, entity.Jk, entity.Tmp_lahir, entity.Tgl_lahir, entity.Jam, entity.Umur, entity.Tgl_daftar,
-		entity.Nm_ibu, entity.Umur_ibu, entity.Nm_ayah, entity.Umur_ayah, entity.Alamat,
+		entity.No_rm_ibu, entity.Nm_ibu, entity.Umur_ibu, entity.Nm_ayah, entity.Umur_ayah, entity.Alamat,
 		entity.Bb, entity.Pb, entity.Proses_lahir, entity.Kelahiran_ke, entity.Keterangan, entity.Diagnosa, entity.Penyulit_kehamilan, entity.Ketuban,
 		entity.Lk_perut, entity.Lk_kepala, entity.Lk_dada, entity.Penolong, entity.No_skl, entity.Gravida, entity.Para, entity.Abortus,
 		entity.F1, entity.U1, entity.T1, entity.R1, entity.W1, entity.N1,
@@ -136,20 +136,20 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 	}
 	query := `
 		UPDATE kelahiran_bayi SET
-			nm_pasien = $2, jk = $3, tmp_lahir = $4, tgl_lahir = $5, jam = $6, umur = $7, tgl_daftar = $8,
-			nm_ibu = $9, umur_ibu = $10, nm_ayah = $11, umur_ayah = $12, alamat = $13,
-			bb = $14, pb = $15, proses_lahir = $16, kelahiran_ke = $17, keterangan = $18, diagnosa = $19,
-			penyulit_kehamilan = $20, ketuban = $21, lk_perut = $22, lk_kepala = $23, lk_dada = $24, penolong = $25, no_skl = $26,
-			gravida = $27, para = $28, abortus = $29,
-			f1 = $30, u1 = $31, t1 = $32, r1 = $33, w1 = $34, n1 = $35,
-			f5 = $36, u5 = $37, t5 = $38, r5 = $39, w5 = $40, n5 = $41,
-			f10 = $42, u10 = $43, t10 = $44, r10 = $45, w10 = $46, n10 = $47,
-			resusitas = $48, obat = $49, mikasi = $50, mikonium = $51
-		WHERE no_rkm_medis = $1
-	`
+            nm_pasien = $2, jk = $3, tmp_lahir = $4, tgl_lahir = $5, jam = $6, umur = $7, tgl_daftar = $8,
+            no_rm_ibu = $9, nm_ibu = $10, umur_ibu = $11, nm_ayah = $12, umur_ayah = $13, alamat = $14,
+            bb = $15, pb = $16, proses_lahir = $17, kelahiran_ke = $18, keterangan = $19, diagnosa = $20,
+            penyulit_kehamilan = $21, ketuban = $22, lk_perut = $23, lk_kepala = $24, lk_dada = $25, penolong = $26, no_skl = $27,
+            gravida = $28, para = $29, abortus = $30,
+            f1 = $31, u1 = $32, t1 = $33, r1 = $34, w1 = $35, n1 = $36,
+            f5 = $37, u5 = $38, t5 = $39, r5 = $40, w5 = $41, n5 = $42,
+            f10 = $43, u10 = $44, t10 = $45, r10 = $46, w10 = $47, n10 = $48,
+            resusitas = $49, obat = $50, mikasi = $51, mikonium = $52
+        WHERE no_rkm_medis = $1;
+`
 	_, err = tx.Exec(query,
 		entity.No_rkm_medis, entity.Nm_pasien, entity.Jk, entity.Tmp_lahir, entity.Tgl_lahir, entity.Jam, entity.Umur, entity.Tgl_daftar,
-		entity.Nm_ibu, entity.Umur_ibu, entity.Nm_ayah, entity.Umur_ayah, entity.Alamat,
+		entity.No_rm_ibu, entity.Nm_ibu, entity.Umur_ibu, entity.Nm_ayah, entity.Umur_ayah, entity.Alamat,
 		entity.Bb, entity.Pb, entity.Proses_lahir, entity.Kelahiran_ke, entity.Keterangan, entity.Diagnosa, entity.Penyulit_kehamilan, entity.Ketuban,
 		entity.Lk_perut, entity.Lk_kepala, entity.Lk_dada, entity.Penolong, entity.No_skl, entity.Gravida, entity.Para, entity.Abortus,
 		entity.F1, entity.U1, entity.T1, entity.R1, entity.W1, entity.N1,

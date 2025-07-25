@@ -16,6 +16,8 @@ func RegistrasiRoute(app *fiber.App, registrasiController *controller.Registrasi
 	registrasi.Get("/dokter", middleware.Authenticate([]int{0, 1, 2, 3, 1337}), registrasiController.GetAllDokter)
 	registrasi.Get("/", middleware.Authenticate([]int{0, 1, 2, 3, 1337}), registrasiController.GetAll)
 	registrasi.Get("/:nomor_reg", middleware.Authenticate([]int{0, 1, 2, 3, 1337}), registrasiController.GetByNomorReg)
+	registrasi.Get("/pasien/:nomor_rm", middleware.Authenticate([]int{0, 1, 2, 3, 1337}), registrasiController.GetAllByNomorRM)
+
 
 	// 🔐 Restricted to roles that can create/update/delete (e.g., admin, registration, nurse)
 	registrasi.Post("/", middleware.Authenticate([]int{0, 1, 2, 1337}), registrasiController.Create)

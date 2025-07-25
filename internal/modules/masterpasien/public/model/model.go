@@ -29,6 +29,7 @@ type Model struct {
 	Email                string `json:"email" db:"email"`
 	Cacat_fisik          string `json:"cacat_fisik" db:"cacat_fisik"`
 	Kd_prop              string `json:"kd_prop" db:"kd_prop"`
+	Stts_pasien          string `json:"stts_pasien" db:"stts_pasien"`
 }
 
 type Request struct {
@@ -60,6 +61,7 @@ type Request struct {
 	Email                string `json:"email" db:"email"`
 	Cacat_fisik          string `json:"cacat_fisik" db:"cacat_fisik"`
 	Kd_prop              string `json:"kd_prop" db:"kd_prop"`
+	Stts_pasien          string `json:"stts_pasien" db:"stts_pasien"`
 }
 
 type Response struct {
@@ -91,4 +93,5 @@ type Response struct {
 	Email                string `json:"email" db:"email"`
 	Cacat_fisik          string `json:"cacat_fisik" db:"cacat_fisik"`
 	Kd_prop              string `json:"kd_prop" db:"kd_prop"`
+	Stts_pasien          string `json:"stts_pasien" db:"stts_pasien"`
 }

@@ -309,4 +309,24 @@ func (c *RegistrasiController) GetRegistrasi(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *RegistrasiController) GetAllByNomorRM(ctx *fiber.Ctx) error {
+	nomorRM := ctx.Params("nomor_rm")
+
+	dataList, err := c.UseCase.GetAllByNomorRM(nomorRM)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   fiber.StatusInternalServerError,
+			Status: "Error",
+			Data:   fmt.Sprintf("Gagal mengambil data registrasi untuk RM %s", nomorRM),
+		})
+	}
+
+	return ctx.JSON(web.Response{
+		Code:   fiber.StatusOK,
+		Status: "OK",
+		Data:   dataList,
+	})
+}
+
+
 

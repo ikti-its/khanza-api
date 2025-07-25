@@ -175,6 +175,24 @@ func (r *registrasiRepositoryImpl) FindByNomorRM(nomorRM string) (entity.Registr
 	return record, err
 }
 
+func (r *registrasiRepositoryImpl) FindAllByNomorRM(nomorRM string) ([]entity.Registrasi, error) {
+	query := `
+		SELECT 
+			nomor_reg, nomor_rawat, tanggal, jam, kode_dokter, nama_dokter, nomor_rm,
+			nama_pasien, jenis_kelamin, umur, poliklinik, jenis_bayar, penanggung_jawab,
+			alamat_pj, hubungan_pj, biaya_registrasi, status_registrasi, no_telepon,
+			status_rawat, status_poli, status_bayar, status_kamar,
+			pekerjaanpj, kelurahanpj, kecamatanpj, kabupatenpj, propinsipj, notelp_pj, no_asuransi
+		FROM registrasi
+		WHERE nomor_rm = $1
+		ORDER BY tanggal DESC, jam DESC
+	`
+	var list []entity.Registrasi
+	err := r.DB.Select(&list, query, nomorRM)
+	return list, err
+}
+
+
 func (r *registrasiRepositoryImpl) FindByTanggal(nomorReg string) (entity.Registrasi, error) {
 	query := `
 		SELECT * FROM registrasi WHERE nomor_rm = $1

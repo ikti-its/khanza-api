@@ -10,6 +10,7 @@ type Model struct {
 	Umur                 string `json:"umur" db:"umur"`
 	Tgl_daftar           string `json:"tgl_daftar" db:"tgl_daftar"`
 
+	No_rm_ibu            string `json:"no_rm_ibu" db:"no_rm_ibu"`
 	Nm_ibu               string `json:"nm_ibu" db:"nm_ibu"`
 	Umur_ibu             string `json:"umur_ibu" db:"umur_ibu"`
 	Nm_ayah              string `json:"nm_ayah" db:"nm_ayah"`
@@ -73,6 +74,7 @@ type Request struct {
 	Umur                 string `json:"umur" db:"umur"`
 	Tgl_daftar           string `json:"tgl_daftar" db:"tgl_daftar"`
 
+	No_rm_ibu            string `json:"no_rm_ibu" db:"no_rm_ibu"`
 	Nm_ibu               string `json:"nm_ibu" db:"nm_ibu"`
 	Umur_ibu             string `json:"umur_ibu" db:"umur_ibu"`
 	Nm_ayah              string `json:"nm_ayah" db:"nm_ayah"`
@@ -136,6 +138,7 @@ type Response struct {
 	Umur                 string `json:"umur" db:"umur"`
 	Tgl_daftar           string `json:"tgl_daftar" db:"tgl_daftar"`
 
+	No_rm_ibu            string `json:"no_rm_ibu" db:"no_rm_ibu"`
 	Nm_ibu               string `json:"nm_ibu" db:"nm_ibu"`
 	Umur_ibu             string `json:"umur_ibu" db:"umur_ibu"`
 	Nm_ayah              string `json:"nm_ayah" db:"nm_ayah"`

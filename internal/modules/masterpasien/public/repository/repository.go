@@ -89,13 +89,13 @@ func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
 		nm_ibu, alamat, gol_darah, pekerjaan, stts_nikah, agama,
 		tgl_daftar, no_tlp, umur, pnd, asuransi, no_asuransi,
 		suku_bangsa, bahasa_pasien, perusahaan_pasien, nip, email, cacat_fisik,
-		kd_kel, kd_kec, kd_kab, kd_prop
+		kd_kel, kd_kec, kd_kab, kd_prop, stts_pasien
 	) VALUES (
 		$1, $2, $3, $4, $5, $6,
 		$7, $8, $9, $10, $11, $12,
 		$13, $14, $15, $16, $17, $18,
 		$19, $20, $21, $22, $23, $24,
-		$25, $26, $27, $28
+		$25, $26, $27, $28, $29
 	)`
 
 	_, err = tx.Exec(query,
@@ -127,6 +127,7 @@ func (r *RepositoryImpl) Insert(c *fiber.Ctx, entity *entity.Entity) error {
 		entity.Kd_kec,
 		entity.Kd_kab,
 		entity.Kd_prop,
+		entity.Stts_pasien,
 	)
 	if err != nil {
 		return err
@@ -153,7 +154,7 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 		agama = $12, tgl_daftar = $13, no_tlp = $14, umur = $15, pnd = $16,
 		asuransi = $17, no_asuransi = $18, suku_bangsa = $19, bahasa_pasien = $20,
 		perusahaan_pasien = $21, nip = $22, email = $23, cacat_fisik = $24,
-		kd_kel = $25, kd_kec = $26, kd_kab = $27, kd_prop = $28
+		kd_kel = $25, kd_kec = $26, kd_kab = $27, kd_prop = $28, stts_pasien = $29
 		WHERE no_rkm_medis = $1`
 
 	_, err = tx.Exec(query,
@@ -185,6 +186,7 @@ func (r *RepositoryImpl) Update(c *fiber.Ctx, entity *entity.Entity) error {
 		entity.Kd_kec,
 		entity.Kd_kab,
 		entity.Kd_prop,
+		entity.Stts_pasien,
 	)
 	if err != nil {
 		return err

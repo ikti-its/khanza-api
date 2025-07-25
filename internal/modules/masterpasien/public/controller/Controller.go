@@ -105,6 +105,30 @@ func (c *Controller) Update(ctx *fiber.Ctx) error {
 	})
 }
 
+func (c *Controller) UpdateStatus(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	var payload struct {
+		Stts_pasien string `json:"stts_pasien"`
+	}
+	if err := ctx.BodyParser(&payload); err != nil {
+		panic(&exception.BadRequestError{Message: "Invalid request"})
+	}
+	err := c.UseCase.UpdateStatusPasien(ctx, id, payload.Stts_pasien)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
+			Code:   500,
+			Status: "error",
+			Data:   err.Error(),
+		})
+	}
+	return ctx.JSON(web.Response{
+		Code:   200,
+		Status: "ok",
+		Data:   "Status pasien berhasil diperbarui",
+	})
+}
+
+
 func (c *Controller) Delete(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	err := c.UseCase.Delete(ctx, id)
@@ -120,3 +144,4 @@ func (c *Controller) Delete(ctx *fiber.Ctx) error {
 		Status: "Deleted",
 	})
 }
+
