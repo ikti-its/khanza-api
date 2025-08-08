@@ -77,6 +77,13 @@ func (u *RegistrasiUseCase) Create(c *fiber.Ctx, request *model.RegistrasiReques
 		StatusPoli:       request.StatusPoli,
 		StatusBayar:      request.StatusBayar,
 		StatusKamar:      request.StatusKamar,
+		PekerjaanPJ:      request.PekerjaanPJ,
+	    KelurahanPJ:      request.KelurahanPJ,
+	    KecamatanPJ:      request.KecamatanPJ,
+	    KabupatenPJ:      request.KabupatenPJ,
+	    PropinsiPJ:       request.PropinsiPJ,
+	    NoTelpPJ:         request.NoTelpPJ,
+		No_asuransi:      request.No_asuransi,
 	}
 
 	// ✅ Insert into database
@@ -110,6 +117,12 @@ func (u *RegistrasiUseCase) Create(c *fiber.Ctx, request *model.RegistrasiReques
 		StatusPoli:       registrasiEntity.StatusPoli,
 		StatusBayar:      registrasiEntity.StatusBayar,
 		StatusKamar:      registrasiEntity.StatusKamar,
+		PekerjaanPJ:   registrasiEntity.PekerjaanPJ,
+	    KelurahanPJ:   registrasiEntity.KelurahanPJ,
+	    KecamatanPJ:   registrasiEntity.KecamatanPJ,
+	    KabupatenPJ:   registrasiEntity.KabupatenPJ,
+	    PropinsiPJ:    registrasiEntity.PropinsiPJ,
+	    NoTelpPJ:      registrasiEntity.NoTelpPJ,
 	}, nil
 }
 
@@ -147,6 +160,13 @@ func (u *RegistrasiUseCase) GetAll() ([]model.RegistrasiResponse, error) {
 			StatusRawat:      registrasi.StatusRawat,
 			StatusPoli:       registrasi.StatusPoli,
 			StatusBayar:      registrasi.StatusBayar,
+			PekerjaanPJ:      registrasi.PekerjaanPJ,
+	        KelurahanPJ:      registrasi.KelurahanPJ,
+         	KecamatanPJ:      registrasi.KecamatanPJ,
+        	KabupatenPJ:      registrasi.KabupatenPJ,
+	        PropinsiPJ:       registrasi.PropinsiPJ,
+	        NoTelpPJ:         registrasi.NoTelpPJ,
+			No_asuransi:      registrasi.No_asuransi,
 		})
 	}
 
@@ -182,6 +202,13 @@ func (u *RegistrasiUseCase) GetByNomorReg(nomorReg string) (model.RegistrasiResp
 		StatusRawat:      registrasi.StatusRawat,
 		StatusPoli:       registrasi.StatusPoli,
 		StatusBayar:      registrasi.StatusBayar,
+		PekerjaanPJ:      registrasi.PekerjaanPJ,
+	    KelurahanPJ:      registrasi.KelurahanPJ,
+        KecamatanPJ:      registrasi.KecamatanPJ,
+        KabupatenPJ:      registrasi.KabupatenPJ,
+	    PropinsiPJ:       registrasi.PropinsiPJ,
+	    NoTelpPJ:         registrasi.NoTelpPJ,
+		No_asuransi:      registrasi.No_asuransi,
 	}, nil
 
 }
@@ -234,6 +261,13 @@ func (u *RegistrasiUseCase) Update(c *fiber.Ctx, nomorReg string, request *model
 		StatusRawat:      registrasi.StatusRawat,
 		StatusPoli:       registrasi.StatusPoli,
 		StatusBayar:      registrasi.StatusBayar,
+		PekerjaanPJ:      registrasi.PekerjaanPJ,
+	    KelurahanPJ:      registrasi.KelurahanPJ,
+        KecamatanPJ:      registrasi.KecamatanPJ,
+        KabupatenPJ:      registrasi.KabupatenPJ,
+	    PropinsiPJ:       registrasi.PropinsiPJ,
+	    NoTelpPJ:         registrasi.NoTelpPJ,
+		No_asuransi:      registrasi.No_asuransi,
 	}, nil
 
 }
@@ -282,7 +316,14 @@ func (u *RegistrasiUseCase) GetPendingRoomRequests(c *fiber.Ctx) ([]model.Regist
 			StatusPoli:       r.StatusPoli,
 			StatusBayar:      r.StatusBayar,
 			StatusKamar:      r.StatusKamar,
-			Kelas:            r.Kelas, // 👈 Add this line
+			Kelas:            r.Kelas, 
+			PekerjaanPJ:      r.PekerjaanPJ,
+	        KelurahanPJ:      r.KelurahanPJ,
+         	KecamatanPJ:      r.KecamatanPJ,
+        	KabupatenPJ:      r.KabupatenPJ,
+	        PropinsiPJ:       r.PropinsiPJ,
+	        NoTelpPJ:         r.NoTelpPJ,
+			No_asuransi:      r.No_asuransi,
 		})
 	}
 
@@ -320,3 +361,49 @@ func (u *RegistrasiUseCase) GetByNomorRM(nomorRM string) (model.RegistrasiRespon
 func (u *RegistrasiUseCase) GetByNoRawat(noRawat string) (model.RegistrasiResponse, error) {
 	return u.Repository.GetByNoRawat(noRawat)
 }
+
+func (u *RegistrasiUseCase) GetAllByNomorRM(nomorRM string) ([]model.RegistrasiResponse, error) {
+	registrasiList, err := u.Repository.FindAllByNomorRM(nomorRM)
+	if err != nil {
+		return nil, fmt.Errorf("registrasi tidak ditemukan: %v", err)
+	}
+
+	var response []model.RegistrasiResponse
+	for _, r := range registrasiList {
+		response = append(response, model.RegistrasiResponse{
+			NomorReg:         r.NomorReg,
+			NomorRawat:       r.NomorRawat,
+			Tanggal:          r.Tanggal.Format("2006-01-02"),
+			Jam:              r.Jam.Format("15:04:05"),
+			KodeDokter:       r.KodeDokter,
+			NamaDokter:       r.NamaDokter,
+			NomorRM:          r.NomorRM,
+			Nama:             r.Nama,
+			JenisKelamin:     r.JenisKelamin,
+			Umur:             r.Umur,
+			Poliklinik:       r.Poliklinik,
+			JenisBayar:       r.JenisBayar,
+			PenanggungJawab:  r.PenanggungJawab,
+			Alamat:           r.Alamat,
+			HubunganPJ:       r.HubunganPJ,
+			BiayaRegistrasi:  r.BiayaRegistrasi,
+			StatusRegistrasi: r.StatusRegistrasi,
+			NoTelepon:        r.NoTelepon,
+			StatusRawat:      r.StatusRawat,
+			StatusPoli:       r.StatusPoli,
+			StatusBayar:      r.StatusBayar,
+			StatusKamar:      r.StatusKamar,
+			Kelas:            r.Kelas,
+			PekerjaanPJ:      r.PekerjaanPJ,
+			KelurahanPJ:      r.KelurahanPJ,
+			KecamatanPJ:      r.KecamatanPJ,
+			KabupatenPJ:      r.KabupatenPJ,
+			PropinsiPJ:       r.PropinsiPJ,
+			NoTelpPJ:         r.NoTelpPJ,
+			No_asuransi:      r.No_asuransi,
+		})
+	}
+
+	return response, nil
+}
+

@@ -3,7 +3,6 @@ package postgres
 import (
 	"fmt"
 	"log"
-	"math"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/resep/internal/entity"
@@ -45,8 +44,9 @@ func (r *resepObatRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx)
 	safe_mac_address := pq.QuoteLiteral(mac_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
 
-	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
 
+	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
+	
 	return err
 }
 
@@ -188,28 +188,4 @@ func (r *resepObatRepositoryImpl) UpdateValidasi(c *fiber.Ctx, noResep string, v
 	}
 
 	return tx.Commit()
-}
-
-func (r *resepObatRepositoryImpl) FindPaginated(page, size int) ([]entity.ResepObat, int, error) {
-	offset := (page - 1) * size
-
-	var total int
-	err := r.DB.Get(&total, "SELECT COUNT(*) FROM sik.resep_obat")
-	if err != nil {
-		return nil, 0, err
-	}
-
-	var list []entity.ResepObat
-	query := `
-		SELECT * FROM sik.resep_obat
-		ORDER BY no_resep DESC
-		LIMIT $1 OFFSET $2
-	`
-	err = r.DB.Select(&list, query, size, offset)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	totalPages := int(math.Ceil(float64(total) / float64(size)))
-	return list, totalPages, nil
 }

@@ -45,7 +45,7 @@ import (
 	"github.com/ikti-its/khanza-api/internal/modules/instansi"
 	"github.com/ikti-its/khanza-api/internal/modules/pasienmeninggal"
 	"github.com/ikti-its/khanza-api/internal/modules/kelahiranbayi"
-
+    "github.com/ikti-its/khanza-api/internal/modules/asuransi"
 
 
 )
@@ -95,10 +95,11 @@ func (p *Provider) Provide() {
 	thr.Provide(p.App, p.PG, p.Validator)
 	pesangon.Provide(p.App, p.PG, p.Validator)
 	upmk.Provide(p.App, p.PG, p.Validator)
-	masterpasien.ProvideMasterPasien(p.App, p.PG, p.Validator)
+	masterpasien.Provide(p.App, p.PG, p.Validator)
 	instansi.ProvideInstansi(p.App, p.PG, p.Validator)
-	pasienmeninggal.ProvidePasienMeninggal(p.App, p.PG, p.Validator)
-	kelahiranbayi.ProvideKelahiranBayi(p.App, p.PG, p.Validator)
+	pasienmeninggal.Provide(p.App, p.PG, p.Validator)
+	kelahiranbayi.Provide(p.App, p.PG, p.Validator)
+	asuransi.Provide(p.App, p.PG, p.Validator)
 
 
 

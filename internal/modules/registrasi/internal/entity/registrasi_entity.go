@@ -36,4 +36,11 @@ type Registrasi struct {
 	StatusKamar      string         `db:"status_kamar" json:"status_kamar"`
 	NomorBed         sql.NullString `db:"nomor_bed" json:"nomor_bed"`
 	Kelas            string         `db:"kelas" json:"kelas"`
+    PekerjaanPJ      string         `json:"pekerjaanpj" db:"pekerjaanpj"`
+    KelurahanPJ      string         `json:"kelurahanpj" db:"kelurahanpj"`
+	KecamatanPJ      string         `json:"kecamatanpj" db:"kecamatanpj"`
+	KabupatenPJ      string         `json:"kabupatenpj" db:"kabupatenpj"`
+    PropinsiPJ       string         `json:"propinsipj" db:"propinsipj"`
+	NoTelpPJ         string         `json:"notelp_pj" db:"notelp_pj"`
+	No_asuransi      string         `json:"no_asuransi" db:"no_asuransi"`
 }

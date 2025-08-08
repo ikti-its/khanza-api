@@ -23,4 +23,5 @@ type RegistrasiRepository interface {
 	GetNamaDokter(kode string) (string, error)
 	CheckDokterExists(kodeDokter string) (bool, error)
 	FindPendingRoomRequests() ([]entity.Registrasi, error)
+	FindAllByNomorRM(nomorRM string) ([]entity.Registrasi, error)
 }
