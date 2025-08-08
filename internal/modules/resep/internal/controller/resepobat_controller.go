@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	web "github.com/ikti-its/khanza-api/internal/app/model"
@@ -50,7 +51,11 @@ func (c *ResepObatController) Create(ctx *fiber.Ctx) error {
 }
 
 func (c *ResepObatController) GetAll(ctx *fiber.Ctx) error {
-	response, err := c.UseCase.GetAll()
+	pageStr := ctx.Query("page", "1")
+	page, _ := strconv.Atoi(pageStr)
+	size := 10 // Force page size = 10
+
+	response, totalPages, err := c.UseCase.GetPaginated(page, size)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -58,10 +63,14 @@ func (c *ResepObatController) GetAll(ctx *fiber.Ctx) error {
 			Data:   err.Error(),
 		})
 	}
-	return ctx.JSON(web.Response{
-		Code:   fiber.StatusOK,
-		Status: "OK",
-		Data:   response,
+
+	return ctx.JSON(fiber.Map{
+		"data": response,
+		"meta_data": fiber.Map{
+			"page":  page,
+			"size":  size,
+			"total": totalPages,
+		},
 	})
 }
 

@@ -155,3 +155,7 @@ func (u *ResepObatUseCase) GetByNomorRawat(nomorRawat string) ([]entity.ResepOba
 func (u *ResepObatUseCase) UpdateValidasi(c *fiber.Ctx, ctx context.Context, noResep string, validasi bool) error {
 	return u.Repository.UpdateValidasi(c, noResep, validasi)
 }
+
+func (uc *ResepObatUseCase) GetPaginated(page int, size int) ([]entity.ResepObat, int, error) {
+	return uc.Repository.FindPaginated(page, size)
+}

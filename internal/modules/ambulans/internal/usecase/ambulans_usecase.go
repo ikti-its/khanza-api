@@ -121,3 +121,7 @@ func (u *AmbulansUseCase) MarkRequestAccepted(noAmbulans string) error {
 func (u *AmbulansUseCase) UpdateStatus(noAmbulans, status string) error {
 	return u.Repository.UpdateAmbulansStatus(noAmbulans, status)
 }
+
+func (uc *AmbulansUseCase) GetPaginated(page int, size int) ([]entity.Ambulans, int, error) {
+	return uc.Repository.FindPaginated(page, size)
+}

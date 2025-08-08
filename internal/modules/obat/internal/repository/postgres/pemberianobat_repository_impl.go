@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/obat/internal/entity"
@@ -43,9 +44,8 @@ func (r *pemberianObatRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.
 	safe_mac_address := pq.QuoteLiteral(mac_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
 
-
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
-	
+
 	return err
 }
 
@@ -169,4 +169,30 @@ func (r *pemberianObatRepositoryImpl) GetAllDataBarang() ([]entity.DataBarang, e
 	var list []entity.DataBarang
 	err := r.DB.Select(&list, query)
 	return list, err
+}
+
+func (r *pemberianObatRepositoryImpl) FindPaginated(page, size int) ([]entity.PemberianObat, int, error) {
+	offset := (page - 1) * size
+
+	// Get total record count
+	var total int
+	err := r.DB.Get(&total, "SELECT COUNT(*) FROM sik.pemberian_obat")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// Fetch paginated data
+	var result []entity.PemberianObat
+	query := `
+		SELECT * FROM sik.pemberian_obat
+		ORDER BY tanggal DESC, jam DESC
+		LIMIT $1 OFFSET $2
+	`
+	err = r.DB.Select(&result, query, size, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(size)))
+	return result, totalPages, nil
 }

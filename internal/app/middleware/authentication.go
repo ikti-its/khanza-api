@@ -2,17 +2,17 @@ package middleware
 
 import (
 	"log"
-	"os"
 	"net"
-	"strings"
+	"os"
 	"os/exec"
+	"strings"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func get_private_ip() string {	
+func get_private_ip() string {
 	ifaces, _ := net.Interfaces()
 	for _, iface := range ifaces {
 		addrs, _ := iface.Addrs()
@@ -30,32 +30,53 @@ func get_private_ip() string {
 
 func get_mac_address(ctx *fiber.Ctx) string {
 	ip := ctx.IP()
-	out, _ := exec.Command("arping", "-c", "1", ip).Output()
+	if ip == "" {
+		log.Println("⚠️ Empty IP address, skipping MAC detection")
+		return ""
+	}
+
+	out, err := exec.Command("arping", "-c", "1", ip).Output()
+	if err != nil {
+		log.Printf("⚠️ arping command failed for IP %s: %v", ip, err)
+		return ""
+	}
+
 	lines := strings.Split(string(out), "\n")
 	for _, line := range lines {
 		if strings.Contains(line, "Unicast reply") {
 			parts := strings.Fields(line)
-			return parts[4] // the MAC address
+			if len(parts) >= 5 {
+				return parts[4]
+			}
 		}
 	}
-	return "";
+	return ""
 }
 
 func get_self_mac_address() string {
-	iface, _ := net.InterfaceByName("wlp0s20f3")
+	iface, err := net.InterfaceByName("wlp0s20f3") // adjust if needed
+	if err != nil {
+		log.Printf("⚠️ get_self_mac_address failed: %v", err)
+		return ""
+	}
 	return iface.HardwareAddr.String()
 }
 
 func get_mac_ip_address(ctx *fiber.Ctx) (string, string) {
-	
 	ip := ctx.IP()
-	
 	mac := get_mac_address(ctx)
+
+	// Handle localhost
 	if ip == "127.0.0.1" || strings.HasPrefix(ip, "::1") {
-		// Try to detect machine's private IP (e.g., 192.168.x.x)
 		ip = get_private_ip()
 		mac = get_self_mac_address()
-	}	
+	}
+
+	// ✅ Fallback if MAC is still empty
+	if mac == "" {
+		mac = "00:00:00:00:00:00" // or optionally: get_self_mac_address()
+	}
+
 	return ip, mac
 }
 
@@ -92,12 +113,15 @@ func Authenticate(roles []int) func(ctx *fiber.Ctx) error {
 			ctx.Locals("user", sub)
 			ctx.Locals("role", role)
 
+			log.Println("🧪 Getting MAC and IP address...")
 			ip, mac := get_mac_ip_address(ctx)
+			log.Println("✅ IP and MAC fetched:", ip, mac)
 			log.Printf("IP Address: %s", ip)
 			log.Printf("MAC Address: %s", mac)
 			ctx.Locals("ip_address", ip)
 			ctx.Locals("mac_address", mac)
 			ctx.Locals("encryption_key", os.Getenv("ENCRYPTION_KEY"))
+			log.Println("🔐 Loaded encryption key:", os.Getenv("ENCRYPTION_KEY"))
 
 			// Special access mapping
 			pegawai := []int{1, 1337, 2, 3, 4001, 4002, 4003, 4004, 5001}

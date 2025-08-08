@@ -151,3 +151,7 @@ func (u *RawatInapUseCase) GetByNomorRawat(nomorRawat string) (model.RawatInapRe
 	}
 	return model.FromEntity(rawat), nil
 }
+
+func (uc *RawatInapUseCase) GetPaginated(page int, size int) ([]entity.RawatInap, int, error) {
+	return uc.Repository.FindPaginated(page, size)
+}

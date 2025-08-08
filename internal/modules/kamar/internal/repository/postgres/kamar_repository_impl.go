@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/kamar/internal/entity"
@@ -20,6 +21,7 @@ type KamarRepository interface {
 	GetAvailableRooms() ([]entity.Kamar, error)
 	UpdateStatusKamar(nomorBed string, status string) error
 	GetDistinctKelas() ([]string, error)
+	FindPaginated(page, size int) ([]entity.Kamar, int, error)
 }
 
 type kamarRepositoryImpl struct {
@@ -55,9 +57,8 @@ func (r *kamarRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) err
 	safe_mac_address := pq.QuoteLiteral(mac_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
 
-
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
-	
+
 	return err
 }
 
@@ -203,4 +204,24 @@ func (r *kamarRepositoryImpl) GetDistinctKelas() ([]string, error) {
 	}
 
 	return kelasList, nil
+}
+
+func (r *kamarRepositoryImpl) FindPaginated(page, size int) ([]entity.Kamar, int, error) {
+	offset := (page - 1) * size
+
+	var total int
+	err := r.DB.Get(&total, "SELECT COUNT(*) FROM kamar")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var list []entity.Kamar
+	query := `SELECT * FROM kamar ORDER BY nomor_bed LIMIT $1 OFFSET $2`
+	err = r.DB.Select(&list, query, size, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(size)))
+	return list, totalPages, nil
 }

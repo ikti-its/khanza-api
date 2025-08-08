@@ -16,4 +16,5 @@ type AmbulansRepository interface {
 	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
 	SetPending(noAmbulans string) error
 	InsertWithContext(c *fiber.Ctx, ambulans *entity.Ambulans) error
+	FindPaginated(page, size int) ([]entity.Ambulans, int, error)
 }

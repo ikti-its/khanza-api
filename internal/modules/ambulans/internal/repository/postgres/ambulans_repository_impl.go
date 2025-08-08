@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 	"log"
+	"math"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/ambulans/internal/entity"
@@ -23,6 +24,7 @@ type AmbulansRepository interface {
 	UpdateAmbulansStatus(noAmbulans string, newStatus string) error
 	SetPending(noAmbulans string) error
 	InsertWithContext(c *fiber.Ctx, ambulans *entity.Ambulans) error
+	FindPaginated(page, size int) ([]entity.Ambulans, int, error)
 }
 
 type ambulansRepositoryImpl struct {
@@ -58,9 +60,8 @@ func (r *ambulansRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) 
 	safe_mac_address := pq.QuoteLiteral(mac_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
 
-
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
-	
+
 	return err
 }
 
@@ -237,4 +238,27 @@ func (r *ambulansRepositoryImpl) UpdateStatus(noAmbulans string, status string) 
 		return 0, err
 	}
 	return result.RowsAffected()
+}
+
+func (r *ambulansRepositoryImpl) FindPaginated(page, size int) ([]entity.Ambulans, int, error) {
+	offset := (page - 1) * size
+
+	var total int
+	err := r.DB.Get(&total, "SELECT COUNT(*) FROM sik.ambulans")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var list []entity.Ambulans
+	err = r.DB.Select(&list, `
+		SELECT * FROM sik.ambulans
+		ORDER BY no_ambulans
+		LIMIT $1 OFFSET $2
+	`, size, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(size)))
+	return list, totalPages, nil
 }

@@ -13,4 +13,5 @@ type RawatInapRepository interface {
 	FindByNomorRM(nomorRM string) ([]entity.RawatInap, error)
 	Update(c *fiber.Ctx, rawatInap *entity.RawatInap) error
 	Delete(c *fiber.Ctx, nomorRawat string) error
+	FindPaginated(page, size int) ([]entity.RawatInap, int, error)
 }

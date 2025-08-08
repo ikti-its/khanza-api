@@ -130,3 +130,7 @@ func (u *KamarUseCase) UpdateStatusKamar(nomorBed, status string) error {
 func (uc *KamarUseCase) GetDistinctKelas() ([]string, error) {
 	return uc.Repository.GetDistinctKelas()
 }
+
+func (uc *KamarUseCase) GetPaginated(page int, size int) ([]entity.Kamar, int, error) {
+	return uc.Repository.FindPaginated(page, size)
+}

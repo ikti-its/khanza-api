@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/app/exception"
@@ -51,7 +52,13 @@ func (c *PemberianObatController) Create(ctx *fiber.Ctx) error {
 }
 
 func (c *PemberianObatController) GetAll(ctx *fiber.Ctx) error {
-	response, err := c.UseCase.GetAll()
+	// Extract page from query, force size = 10
+	pageStr := ctx.Query("page", "1")
+	page, _ := strconv.Atoi(pageStr)
+	size := 10 // ✅ force size
+
+	// Call paginated use case
+	response, totalPages, err := c.UseCase.GetPaginated(page, size)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(web.Response{
 			Code:   fiber.StatusInternalServerError,
@@ -59,10 +66,15 @@ func (c *PemberianObatController) GetAll(ctx *fiber.Ctx) error {
 			Data:   err.Error(),
 		})
 	}
-	return ctx.JSON(web.Response{
-		Code:   fiber.StatusOK,
-		Status: "OK",
-		Data:   response,
+
+	// Return paginated response
+	return ctx.JSON(fiber.Map{
+		"data": response,
+		"meta_data": fiber.Map{
+			"page":  page,
+			"size":  size,
+			"total": totalPages,
+		},
 	})
 }
 

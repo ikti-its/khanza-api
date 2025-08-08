@@ -15,4 +15,5 @@ type KamarRepository interface {
 	GetAvailableRooms() ([]entity.Kamar, error)
 	UpdateStatusKamar(nomorBed string, status string) error
 	GetDistinctKelas() ([]string, error)
+	FindPaginated(page, size int) ([]entity.Kamar, int, error)
 }

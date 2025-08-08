@@ -13,4 +13,5 @@ type ResepObatRepository interface {
 	Delete(c *fiber.Ctx, noResep string) error
 	GetByNomorRawat(nomorRawat string) ([]entity.ResepObat, error)
 	UpdateValidasi(c *fiber.Ctx, noResep string, validasi bool) error
+	FindPaginated(page, size int) ([]entity.ResepObat, int, error)
 }

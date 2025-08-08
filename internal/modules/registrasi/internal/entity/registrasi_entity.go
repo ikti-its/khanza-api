@@ -19,6 +19,12 @@ type Registrasi struct {
 	Poliklinik       string         `json:"poliklinik" db:"poliklinik"`
 	JenisBayar       string         `json:"jenis_bayar" db:"jenis_bayar"`
 	PenanggungJawab  string         `json:"penanggung_jawab" db:"penanggung_jawab"`
+	PekerjaanPJ      string         `json:"pekerjaan_pj" db:"pekerjaanpj"` // ✅ fix
+	KelurahanPJ      string         `json:"kelurahan_pj" db:"kelurahanpj"`
+	KecamatanPJ      string         `json:"kecamatan_pj" db:"kecamatanpj"`
+	KabupatenPJ      string         `json:"kabupaten_pj" db:"kabupatenpj"`
+	PropinsiPJ       string         `json:"propinsi_pj" db:"propinsipj"`
+	NoTeleponPJ      string         `json:"notelp_pj" db:"notelp_pj"`
 	Alamat           string         `json:"alamat_pj" db:"alamat_pj"`
 	HubunganPJ       string         `json:"hubungan_pj" db:"hubungan_pj"`
 	BiayaRegistrasi  float64        `json:"biaya_registrasi" db:"biaya_registrasi"`

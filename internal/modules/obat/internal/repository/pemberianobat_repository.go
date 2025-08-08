@@ -12,4 +12,5 @@ type PemberianObatRepository interface {
 	Update(c *fiber.Ctx, p *entity.PemberianObat) error
 	Delete(c *fiber.Ctx, nomorRawat, jamBeri string) error
 	GetAllDataBarang() ([]entity.DataBarang, error)
+	FindPaginated(page int, size int) ([]entity.PemberianObat, int, error)
 }

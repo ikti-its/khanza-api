@@ -253,3 +253,7 @@ func (u *PemberianObatUseCase) GetDataBarangByKelas(kelas string) ([]model.ObatW
 
 	return result, nil
 }
+
+func (uc *PemberianObatUseCase) GetPaginated(page int, size int) ([]entity.PemberianObat, int, error) {
+	return uc.Repository.FindPaginated(page, size)
+}

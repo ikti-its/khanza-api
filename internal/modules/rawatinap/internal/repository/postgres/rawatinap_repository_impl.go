@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ikti-its/khanza-api/internal/modules/rawatinap/internal/entity"
@@ -18,6 +19,7 @@ type RawatInapRepository interface {
 	Update(c *fiber.Ctx, rawatInap *entity.RawatInap) error
 	Delete(c *fiber.Ctx, nomorRawat string) error
 	setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx) error
+	FindPaginated(page, size int) ([]entity.RawatInap, int, error)
 }
 
 type rawatInapRepositoryImpl struct {
@@ -53,9 +55,8 @@ func (r *rawatInapRepositoryImpl) setUserAuditContext(tx *sqlx.Tx, c *fiber.Ctx)
 	safe_mac_address := pq.QuoteLiteral(mac_address)
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.mac_address = %s`, safe_mac_address))
 
-
 	_, err = tx.Exec(fmt.Sprintf(`SET LOCAL my.encryption_key = %s`, c.Locals("encryption_key")))
-	
+
 	return err
 }
 
@@ -177,4 +178,28 @@ func (r *rawatInapRepositoryImpl) Delete(c *fiber.Ctx, nomorRawat string) error 
 	}
 
 	return tx.Commit()
+}
+
+func (r *rawatInapRepositoryImpl) FindPaginated(page, size int) ([]entity.RawatInap, int, error) {
+	offset := (page - 1) * size
+
+	var total int
+	err := r.DB.Get(&total, "SELECT COUNT(*) FROM sik.rawat_inap")
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var data []entity.RawatInap
+	query := `
+		SELECT * FROM sik.rawat_inap
+		ORDER BY tanggal_masuk DESC, nomor_rawat DESC
+		LIMIT $1 OFFSET $2
+	`
+	err = r.DB.Select(&data, query, size, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(size)))
+	return data, totalPages, nil
 }
