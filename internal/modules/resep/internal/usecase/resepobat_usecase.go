@@ -156,6 +156,6 @@ func (u *ResepObatUseCase) UpdateValidasi(c *fiber.Ctx, ctx context.Context, noR
 	return u.Repository.UpdateValidasi(c, noResep, validasi)
 }
 
-func (uc *ResepObatUseCase) GetPaginated(page int, size int) ([]entity.ResepObat, int, error) {
-	return uc.Repository.FindPaginated(page, size)
-}
+// func (uc *ResepObatUseCase) GetPaginated(page int, size int) ([]entity.ResepObat, int, error) {
+// 	return uc.Repository.FindPaginated(page, size)
+// }
